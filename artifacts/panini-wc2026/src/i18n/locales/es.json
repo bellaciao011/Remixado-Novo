@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "catalog": "Productos",
+    "cart": "Carrito",
+    "checkout": "Finalizar Compra"
+  },
+  "buttons": {
+    "addToCart": "Añadir al Carrito",
+    "buyNow": "Comprar Ahora",
+    "viewMore": "Ver Más",
+    "checkout": "Finalizar Compra",
+    "continueShopping": "Seguir Comprando",
+    "remove": "Eliminar",
+    "backToStore": "Volver a la Tienda"
+  },
+  "labels": {
+    "featured": "Destacados",
+    "inStock": "En Stock",
+    "outOfStock": "Agotado",
+    "originalProduct": "Producto Oficial Panini",
+    "bestSeller": "MÁS VENDIDO",
+    "offer": "OFERTA",
+    "exclusive": "EXCLUSIVO",
+    "limitedEdition": "EDICIÓN LIMITADA",
+    "total": "Total",
+    "items": "Artículo(s)"
+  },
+  "cart": {
+    "title": "Tu Carrito",
+    "empty": "Tu carrito está vacío."
+  },
+  "checkout": {
+    "confirmed": "¡Pedido Confirmado!",
+    "thankYou": "Gracias por tu compra. Tu pedido está siendo procesado.",
+    "orderDetails": "Detalles del Pedido"
+  },
+  "general": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error.",
+    "brandTrust": "Consigue ya los cromos oficiales de la Copa Mundial de la FIFA 2026™ y completa tu colección."
+  }
+}

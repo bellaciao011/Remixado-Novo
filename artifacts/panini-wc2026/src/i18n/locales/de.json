@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "catalog": "Produkte",
+    "cart": "Warenkorb",
+    "checkout": "Zur Kasse"
+  },
+  "buttons": {
+    "addToCart": "In den Warenkorb",
+    "buyNow": "Jetzt kaufen",
+    "viewMore": "Mehr sehen",
+    "checkout": "Zur Kasse",
+    "continueShopping": "Weiter einkaufen",
+    "remove": "Entfernen",
+    "backToStore": "Zurück zum Shop"
+  },
+  "labels": {
+    "featured": "Im Rampenlicht",
+    "inStock": "Auf Lager",
+    "outOfStock": "Ausverkauft",
+    "originalProduct": "Offizielles Panini-Produkt",
+    "bestSeller": "BESTSELLER",
+    "offer": "ANGEBOT",
+    "exclusive": "EXKLUSIV",
+    "limitedEdition": "LIMITIERTE AUFLAGE",
+    "total": "Gesamt",
+    "items": "Artikel"
+  },
+  "cart": {
+    "title": "Ihr Warenkorb",
+    "empty": "Ihr Warenkorb ist leer."
+  },
+  "checkout": {
+    "confirmed": "Bestellung bestätigt!",
+    "thankYou": "Vielen Dank für Ihren Einkauf. Ihre Bestellung wird bearbeitet.",
+    "orderDetails": "Bestelldetails"
+  },
+  "general": {
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten.",
+    "brandTrust": "Holen Sie sich jetzt die offiziellen FIFA World Cup 2026™ Sticker und vervollständigen Sie Ihre Sammlung."
+  }
+}

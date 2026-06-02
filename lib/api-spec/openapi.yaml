@@ -3,13 +3,17 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Panini FIFA World Cup 2026 Store API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: products
+    description: Product catalog operations
+  - name: checkout
+    description: Stripe checkout operations
 paths:
   /healthz:
     get:
@@ -24,6 +28,114 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List all products
+      description: Returns all active products with their prices and multilingual content
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /products/featured:
+    get:
+      operationId: getFeaturedProducts
+      tags: [products]
+      summary: Get featured products
+      description: Returns highlighted products for the homepage hero
+      responses:
+        "200":
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /checkout/session:
+    post:
+      operationId: createCheckoutSession
+      tags: [checkout]
+      summary: Create Stripe checkout session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CheckoutSessionInput"
+      responses:
+        "200":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /checkout/verify:
+    get:
+      operationId: verifyCheckoutSession
+      tags: [checkout]
+      summary: Verify a completed checkout session
+      parameters:
+        - name: session_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Session verification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutVerification"
+        "404":
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +146,163 @@ components:
       required:
         - status
 
+    ProductTranslation:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        shortDescription:
+          type: string
+      required:
+        - name
+        - description
+        - shortDescription
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        slug:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        price:
+          type: number
+        originalPrice:
+          type: ["number", "null"]
+        currency:
+          type: string
+        priceId:
+          type: string
+        badge:
+          type: ["string", "null"]
+        featured:
+          type: boolean
+        inStock:
+          type: boolean
+        translations:
+          type: object
+          properties:
+            pt-BR:
+              $ref: "#/components/schemas/ProductTranslation"
+            en:
+              $ref: "#/components/schemas/ProductTranslation"
+            es:
+              $ref: "#/components/schemas/ProductTranslation"
+            de:
+              $ref: "#/components/schemas/ProductTranslation"
+          required:
+            - pt-BR
+            - en
+            - es
+            - de
+      required:
+        - id
+        - slug
+        - images
+        - price
+        - originalPrice
+        - currency
+        - priceId
+        - badge
+        - featured
+        - inStock
+        - translations
+
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+        priceId:
+          type: string
+        quantity:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+      required:
+        - productId
+        - priceId
+        - quantity
+        - name
+        - price
+        - image
+
+    CheckoutSessionInput:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        successUrl:
+          type: string
+        cancelUrl:
+          type: string
+        locale:
+          type: string
+      required:
+        - items
+        - successUrl
+        - cancelUrl
+
+    CheckoutSession:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        url:
+          type: string
+      required:
+        - sessionId
+        - url
+
+    CheckoutVerification:
+      type: object
+      properties:
+        status:
+          type: string
+        customerEmail:
+          type: ["string", "null"]
+        amountTotal:
+          type: ["number", "null"]
+        currency:
+          type: ["string", "null"]
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              quantity:
+                type: integer
+              amount:
+                type: number
+            required:
+              - name
+              - quantity
+              - amount
+      required:
+        - status
+        - customerEmail
+        - amountTotal
+        - currency
+        - items
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

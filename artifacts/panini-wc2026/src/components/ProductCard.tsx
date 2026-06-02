@@ -3,9 +3,6 @@ import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../contexts/CartContext';
 import { Product } from '@workspace/api-client-react';
-import { Card, CardContent, CardFooter } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
 import { ShoppingCart } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
@@ -19,19 +16,18 @@ export function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
 
   const locale = i18n.language as keyof Product['translations'];
-  // Fallback to pt-BR if locale not found
   const translation = product.translations[locale] || product.translations['pt-BR'];
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     addItem({
       productId: product.id,
       priceId: product.priceId,
       quantity: 1,
       name: translation.name,
-      price: product.price / 100, // assuming Stripe price in cents
+      price: product.price / 100,
       image: product.images[0] || '',
     });
 
@@ -44,57 +40,58 @@ export function ProductCard({ product }: ProductCardProps) {
   const price = product.price / 100;
   const originalPrice = product.originalPrice ? product.originalPrice / 100 : null;
 
+  const formatPrice = (val: number) =>
+    new Intl.NumberFormat(
+      i18n.language === 'pt-BR' ? 'pt-BR' : i18n.language === 'de' ? 'de-DE' : i18n.language === 'es' ? 'es-ES' : 'en-US',
+      { style: 'currency', currency: i18n.language === 'de' || i18n.language === 'es' ? 'EUR' : 'BRL' }
+    ).format(val);
+
   return (
     <Link href={`/produtos/${product.id}`}>
-      <Card className="h-full overflow-hidden hover-elevate transition-all duration-300 group cursor-pointer border-transparent hover:border-primary/20 bg-card flex flex-col relative">
-        {product.badge && (
-          <div className="absolute top-3 left-3 z-10">
-            <Badge className="bg-secondary text-secondary-foreground font-bold px-3 py-1 text-xs shadow-md">
+      <div className="panini-card group cursor-pointer flex flex-col h-full bg-white border border-[#e0e0e0] hover:border-[#999] transition-colors duration-200">
+        {/* Image area */}
+        <div className="relative bg-white p-4 flex items-center justify-center" style={{ minHeight: '220px' }}>
+          {product.badge && (
+            <span className="absolute top-2 left-2 z-10 bg-[#FFD600] text-black text-[11px] font-bold px-2 py-0.5 uppercase tracking-wide">
               {t(`labels.${product.badge}`)}
-            </Badge>
-          </div>
-        )}
-        
-        <div className="aspect-square w-full overflow-hidden bg-muted/30 p-6 flex items-center justify-center">
-          <img 
-            src={product.images[0]} 
-            alt={translation.name} 
-            className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500 drop-shadow-lg"
+            </span>
+          )}
+          <img
+            src={product.images[0]}
+            alt={translation.name}
+            className="max-h-[200px] w-auto object-contain group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        
-        <CardContent className="p-5 flex-grow flex flex-col">
-          <h3 className="font-bold text-lg leading-tight mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+
+        {/* Info area */}
+        <div className="flex flex-col flex-grow px-4 pt-3 pb-0">
+          <h3 className="text-[14px] font-semibold text-[#1a1a1a] leading-snug mb-1 line-clamp-3">
             {translation.name}
           </h3>
-          <p className="text-sm text-muted-foreground line-clamp-2 mt-auto">
-            {translation.shortDescription}
-          </p>
-        </CardContent>
-        
-        <CardFooter className="p-5 pt-0 flex items-center justify-between mt-auto">
-          <div className="flex flex-col">
+          <p className="text-[12px] text-[#666] mb-2">{t('labels.collectables')}</p>
+          <div className="mt-auto pb-3">
             {originalPrice && originalPrice > price && (
-              <span className="text-xs text-muted-foreground line-through decoration-destructive">
-                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(originalPrice)}
+              <span className="block text-[12px] text-[#999] line-through mb-0.5">
+                {formatPrice(originalPrice)}
               </span>
             )}
-            <span className="font-black text-xl text-primary">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)}
+            <span className="text-[16px] font-bold text-[#1a1a1a]">
+              {formatPrice(price)}
             </span>
           </div>
-          
-          <Button 
-            size="icon" 
-            className="h-10 w-10 rounded-full shadow-md hover:scale-105 transition-transform" 
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            <span className="sr-only">{t('buttons.addToCart')}</span>
-          </Button>
-        </CardFooter>
-      </Card>
+        </div>
+
+        {/* Yellow Add to Cart button */}
+        <button
+          onClick={handleAddToCart}
+          disabled={!product.inStock}
+          className="w-full flex items-center justify-center gap-2 py-3 text-[13px] font-bold uppercase tracking-wider transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ backgroundColor: '#FFD600', color: '#1a1a1a' }}
+        >
+          <ShoppingCart className="h-4 w-4 flex-shrink-0" />
+          {product.inStock ? t('buttons.addToCart') : t('labels.outOfStock')}
+        </button>
+      </div>
     </Link>
   );
 }

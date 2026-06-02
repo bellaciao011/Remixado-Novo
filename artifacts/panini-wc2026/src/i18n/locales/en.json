@@ -26,7 +26,8 @@
     "exclusive": "EXCLUSIVE",
     "limitedEdition": "LIMITED EDITION",
     "total": "Total",
-    "items": "Item(s)"
+    "items": "Item(s)",
+    "collectables": "Collectables"
   },
   "cart": {
     "title": "Your Cart",
@@ -71,6 +72,7 @@
     "legalNotice": "© 2026 Panini S.p.A. FIFA, FIFA's Official Licensed Product Logos, and the Emblems, Mascots, Posters and Trophies of the FIFA World Cup™ tournaments are copyrights and/or trademarks of FIFA."
   },
   "product": {
-    "trustBadge": "Official FIFA World Cup 2026™ collection."
+    "trustBadge": "Official FIFA World Cup 2026™ collection.",
+    "descriptionLabel": "DESCRIPTION"
   }
 }

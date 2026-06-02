@@ -17,9 +17,12 @@ export function CartDrawer() {
     navigate('/checkout');
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+  const formatPrice = (price: number, currency = 'BRL') => {
+    const locale = currency.toUpperCase() === 'EUR' ? 'de-DE' : 'pt-BR';
+    return new Intl.NumberFormat(locale, { style: 'currency', currency: currency.toUpperCase() }).format(price);
   };
+
+  const totalCurrency = items.length > 0 ? (items[0].currency || 'brl') : 'brl';
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -49,7 +52,7 @@ export function CartDrawer() {
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <h4 className="font-semibold line-clamp-2">{item.name}</h4>
-                        <p className="text-primary font-bold mt-1">{formatPrice(item.price)}</p>
+                        <p className="text-primary font-bold mt-1">{formatPrice(item.price, item.currency)}</p>
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center border rounded-md">
@@ -89,7 +92,7 @@ export function CartDrawer() {
             <div className="p-6 border-t bg-muted/30">
               <div className="flex justify-between items-center mb-6 text-lg font-bold">
                 <span>{t('labels.total')}</span>
-                <span className="text-primary">{formatPrice(totalPrice)}</span>
+                <span className="text-primary">{formatPrice(totalPrice, totalCurrency)}</span>
               </div>
               <Button 
                 className="w-full h-14 text-lg font-bold shadow-lg" 

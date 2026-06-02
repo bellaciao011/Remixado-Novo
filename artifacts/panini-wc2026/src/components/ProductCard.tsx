@@ -29,6 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
       name: translation.name,
       price: product.price / 100,
       image: product.images[0] || '',
+      currency: product.currency,
     });
 
     toast({
@@ -40,10 +41,11 @@ export function ProductCard({ product }: ProductCardProps) {
   const price = product.price / 100;
   const originalPrice = product.originalPrice ? product.originalPrice / 100 : null;
 
+  const cur = product.currency.toUpperCase();
   const formatPrice = (val: number) =>
     new Intl.NumberFormat(
-      i18n.language === 'pt-BR' ? 'pt-BR' : i18n.language === 'de' ? 'de-DE' : i18n.language === 'es' ? 'es-ES' : 'en-US',
-      { style: 'currency', currency: i18n.language === 'de' || i18n.language === 'es' ? 'EUR' : 'BRL' }
+      cur === 'EUR' ? 'de-DE' : 'pt-BR',
+      { style: 'currency', currency: cur }
     ).format(val);
 
   return (

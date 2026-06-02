@@ -59,10 +59,11 @@ export default function ProductDetail() {
   const price = product.price / 100;
   const originalPrice = product.originalPrice ? product.originalPrice / 100 : null;
 
+  const cur = product.currency.toUpperCase();
   const formatPrice = (val: number) =>
     new Intl.NumberFormat(
-      i18n.language === 'pt-BR' ? 'pt-BR' : i18n.language === 'de' ? 'de-DE' : i18n.language === 'es' ? 'es-ES' : 'en-US',
-      { style: 'currency', currency: i18n.language === 'de' || i18n.language === 'es' ? 'EUR' : 'BRL' }
+      cur === 'EUR' ? 'de-DE' : 'pt-BR',
+      { style: 'currency', currency: cur }
     ).format(val);
 
   const handleAddToCart = () => {
@@ -73,6 +74,7 @@ export default function ProductDetail() {
       name: translation.name,
       price,
       image: product.images[0] || '',
+      currency: product.currency,
     });
     toast({
       title: t('cart.addedTitle'),

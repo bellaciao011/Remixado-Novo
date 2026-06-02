@@ -28,16 +28,43 @@
   },
   "cart": {
     "title": "Your Cart",
-    "empty": "Your cart is empty."
+    "empty": "Your cart is empty.",
+    "addedTitle": "Added to cart",
+    "addedDesc": "added successfully."
+  },
+  "catalog": {
+    "subtitle": "Explore the complete collection of official Panini products for FIFA World Cup 2026™.",
+    "empty": "No products found."
+  },
+  "home": {
+    "heroLine1": "The Biggest",
+    "heroLine2": "Collection",
+    "heroLine3": "In The World",
+    "heroSubtitle": "The official FIFA World Cup 2026™ sticker collection. Get yours now and experience the excitement of the greatest football event.",
+    "featuredSubtitle": "The most coveted products among collectors.",
+    "feature1Title": "Official Collection",
+    "feature1Desc": "The only FIFA-licensed sticker collection for World Cup 2026™.",
+    "feature2Title": "Panini Quality",
+    "feature2Desc": "Quality and authenticity guaranteed by the #1 brand in collectibles.",
+    "feature3Title": "Special Editions",
+    "feature3Desc": "Find rare stickers, parallels and exclusive limited editions."
   },
   "checkout": {
     "confirmed": "Order Confirmed!",
     "thankYou": "Thank you for your purchase. Your order is being processed.",
-    "orderDetails": "Order Details"
+    "orderDetails": "Order Details",
+    "receiptSent": "A receipt was sent to:",
+    "quantity": "Qty",
+    "invalidSession": "Invalid Session",
+    "verifyError": "Error verifying order.",
+    "verifyErrorDetail": "Could not confirm payment for this session."
   },
   "general": {
     "loading": "Loading...",
     "error": "An error occurred.",
     "brandTrust": "Get the official FIFA World Cup 2026™ stickers now and complete your collection."
+  },
+  "product": {
+    "trustBadge": "Official FIFA World Cup 2026™ collection."
   }
 }

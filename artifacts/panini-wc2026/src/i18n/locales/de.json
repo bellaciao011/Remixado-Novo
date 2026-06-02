@@ -28,16 +28,43 @@
   },
   "cart": {
     "title": "Ihr Warenkorb",
-    "empty": "Ihr Warenkorb ist leer."
+    "empty": "Ihr Warenkorb ist leer.",
+    "addedTitle": "In den Warenkorb gelegt",
+    "addedDesc": "erfolgreich hinzugefügt."
+  },
+  "catalog": {
+    "subtitle": "Entdecken Sie die vollständige Kollektion offizieller Panini-Produkte für die FIFA Fußball-Weltmeisterschaft 2026™.",
+    "empty": "Keine Produkte gefunden."
+  },
+  "home": {
+    "heroLine1": "Die Größte",
+    "heroLine2": "Sammlung",
+    "heroLine3": "Der Welt",
+    "heroSubtitle": "Die offizielle FIFA Fußball-Weltmeisterschaft 2026™ Sticker-Kollektion. Sichern Sie sich jetzt Ihre und erleben Sie die Aufregung des größten Fußballereignisses.",
+    "featuredSubtitle": "Die begehrtesten Produkte unter Sammlern.",
+    "feature1Title": "Offizielle Kollektion",
+    "feature1Desc": "Die einzige FIFA-lizenzierte Sticker-Kollektion für die Weltmeisterschaft 2026™.",
+    "feature2Title": "Panini-Qualität",
+    "feature2Desc": "Qualitäts- und Echtheitsgarantie der Nummer-1-Marke für Sammlerstücke.",
+    "feature3Title": "Sonderausgaben",
+    "feature3Desc": "Finden Sie seltene Sticker, Parallelen und exklusive limitierte Auflagen."
   },
   "checkout": {
     "confirmed": "Bestellung bestätigt!",
     "thankYou": "Vielen Dank für Ihren Einkauf. Ihre Bestellung wird bearbeitet.",
-    "orderDetails": "Bestelldetails"
+    "orderDetails": "Bestelldetails",
+    "receiptSent": "Eine Quittung wurde gesendet an:",
+    "quantity": "Menge",
+    "invalidSession": "Ungültige Sitzung",
+    "verifyError": "Fehler bei der Bestellüberprüfung.",
+    "verifyErrorDetail": "Die Zahlung für diese Sitzung konnte nicht bestätigt werden."
   },
   "general": {
     "loading": "Wird geladen...",
     "error": "Ein Fehler ist aufgetreten.",
     "brandTrust": "Holen Sie sich jetzt die offiziellen FIFA World Cup 2026™ Sticker und vervollständigen Sie Ihre Sammlung."
+  },
+  "product": {
+    "trustBadge": "Offizielle FIFA Fußball-Weltmeisterschaft 2026™ Kollektion."
   }
 }

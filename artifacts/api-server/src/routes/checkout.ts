@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getUncachableStripeClient } from '../stripeClient';
+import { PRODUCTS } from '../productData';
 
 const router = Router();
 
@@ -13,17 +14,38 @@ router.post('/checkout/session', async (req, res) => {
 
     const stripe = await getUncachableStripeClient();
 
-    const lineItems = items.map((item: { name: string; price: number; quantity: number; image: string; priceId?: string }) => ({
-      price_data: {
-        currency: 'brl',
-        product_data: {
-          name: item.name,
-          images: item.image ? [item.image] : [],
+    const lineItems = [];
+    for (const item of items as { productId: string; quantity: number; name?: string }[]) {
+      if (!item.productId || !item.quantity || item.quantity < 1) {
+        return res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+      }
+
+      const product = PRODUCTS.find(p => p.id === item.productId);
+      if (!product) {
+        return res.status(400).json({ error: `Product not found: ${item.productId}` });
+      }
+
+      if (!product.inStock) {
+        return res.status(400).json({ error: `Product out of stock: ${item.productId}` });
+      }
+
+      const productName = item.name || product.stripeProductName;
+      const imageUrl = product.images[0]
+        ? `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}${product.images[0]}`
+        : undefined;
+
+      lineItems.push({
+        price_data: {
+          currency: 'brl',
+          product_data: {
+            name: productName,
+            ...(imageUrl ? { images: [imageUrl] } : {}),
+          },
+          unit_amount: product.price,
         },
-        unit_amount: Math.round(item.price * 100),
-      },
-      quantity: item.quantity,
-    }));
+        quantity: item.quantity,
+      });
+    }
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -64,8 +86,10 @@ router.get('/checkout/verify', async (req, res) => {
       amount: (item.amount_total || 0) / 100,
     })) || [];
 
+    const isPaid = session.payment_status === 'paid';
+
     res.json({
-      status: session.payment_status,
+      status: isPaid ? 'complete' : session.payment_status,
       customerEmail: session.customer_details?.email || null,
       amountTotal: session.amount_total ? session.amount_total / 100 : null,
       currency: session.currency,

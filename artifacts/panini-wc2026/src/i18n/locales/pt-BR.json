@@ -28,16 +28,43 @@
   },
   "cart": {
     "title": "Seu Carrinho",
-    "empty": "Seu carrinho está vazio."
+    "empty": "Seu carrinho está vazio.",
+    "addedTitle": "Adicionado ao carrinho",
+    "addedDesc": "adicionado com sucesso."
+  },
+  "catalog": {
+    "subtitle": "Explore a coleção completa de produtos oficiais da Panini para a FIFA World Cup 2026™.",
+    "empty": "Nenhum produto encontrado."
+  },
+  "home": {
+    "heroLine1": "A Maior",
+    "heroLine2": "Coleção",
+    "heroLine3": "Do Mundo",
+    "heroSubtitle": "A coleção oficial de cromos da FIFA World Cup 2026™. Garanta já a sua e viva a emoção do maior evento de futebol.",
+    "featuredSubtitle": "Os produtos mais desejados pelos colecionadores.",
+    "feature1Title": "Coleção Oficial",
+    "feature1Desc": "A única coleção de cromos licenciada pela FIFA para a World Cup 2026™.",
+    "feature2Title": "Qualidade Panini",
+    "feature2Desc": "Garantia de qualidade e autenticidade da marca número 1 em colecionáveis.",
+    "feature3Title": "Edições Especiais",
+    "feature3Desc": "Encontre cromos raros, paralelos e edições limitadas exclusivas."
   },
   "checkout": {
     "confirmed": "Pedido Confirmado!",
     "thankYou": "Obrigado pela sua compra. Seu pedido está sendo processado.",
-    "orderDetails": "Detalhes do Pedido"
+    "orderDetails": "Detalhes do Pedido",
+    "receiptSent": "Um recibo foi enviado para:",
+    "quantity": "Quant",
+    "invalidSession": "Sessão Inválida",
+    "verifyError": "Erro ao verificar o pedido.",
+    "verifyErrorDetail": "Não foi possível confirmar o pagamento desta sessão."
   },
   "general": {
     "loading": "Carregando...",
     "error": "Ocorreu um erro.",
     "brandTrust": "Garanta já os cromos oficiais da Copa do Mundo FIFA 2026™ e complete sua coleção."
+  },
+  "product": {
+    "trustBadge": "Coleção oficial da Copa do Mundo FIFA 2026™."
   }
 }

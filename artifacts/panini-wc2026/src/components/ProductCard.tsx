@@ -36,8 +36,8 @@ export function ProductCard({ product }: ProductCardProps) {
     });
 
     toast({
-      title: "Adicionado ao carrinho",
-      description: `${translation.name} foi adicionado ao seu carrinho.`,
+      title: t('cart.addedTitle'),
+      description: `${translation.name} ${t('cart.addedDesc')}`,
     });
   };
 

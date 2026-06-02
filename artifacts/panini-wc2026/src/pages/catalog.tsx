@@ -15,7 +15,7 @@ export default function Catalog() {
             {t('nav.catalog')}
           </h1>
           <p className="text-xl text-muted-foreground font-medium max-w-2xl">
-            Explore a coleção completa de produtos oficiais da Panini para a FIFA World Cup 2026™.
+            {t('catalog.subtitle')}
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function Catalog() {
           </div>
         ) : (
           <div className="text-center py-20 bg-muted/10 rounded-2xl">
-            <p className="text-muted-foreground font-medium text-lg">Nenhum produto encontrado.</p>
+            <p className="text-muted-foreground font-medium text-lg">{t('catalog.empty')}</p>
           </div>
         )}
       </div>

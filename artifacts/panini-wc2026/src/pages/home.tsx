@@ -31,12 +31,12 @@ export default function Home() {
               {t('labels.originalProduct')}
             </Badge>
             <h1 className="text-5xl md:text-7xl font-black text-foreground mb-6 uppercase tracking-tight leading-[1.1] drop-shadow-sm">
-              <span className="block text-primary">A Maior</span>
-              <span className="block">Coleção</span>
-              <span className="block text-secondary">Do Mundo</span>
+              <span className="block text-primary">{t('home.heroLine1')}</span>
+              <span className="block">{t('home.heroLine2')}</span>
+              <span className="block text-secondary">{t('home.heroLine3')}</span>
             </h1>
             <p className="text-lg md:text-xl text-foreground/80 mb-8 max-w-lg font-medium">
-              A coleção oficial de cromos da FIFA World Cup 2026™. Garanta já a sua e viva a emoção do maior evento de futebol.
+              {t('home.heroSubtitle')}
             </p>
             <Button size="lg" asChild className="h-14 px-8 text-lg font-bold shadow-xl hover:scale-105 transition-transform bg-primary text-primary-foreground">
               <Link href="/produtos">
@@ -56,22 +56,22 @@ export default function Home() {
               <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary">
                 <Trophy className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-bold mb-2">Coleção Oficial</h3>
-              <p className="text-muted-foreground text-sm">A única coleção de cromos licenciada pela FIFA para a World Cup 2026™.</p>
+              <h3 className="text-lg font-bold mb-2">{t('home.feature1Title')}</h3>
+              <p className="text-muted-foreground text-sm">{t('home.feature1Desc')}</p>
             </div>
             <div className="flex flex-col items-center p-4">
               <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary">
                 <ShieldCheck className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-bold mb-2">Qualidade Panini</h3>
-              <p className="text-muted-foreground text-sm">Garantia de qualidade e autenticidade da marca número 1 em colecionáveis.</p>
+              <h3 className="text-lg font-bold mb-2">{t('home.feature2Title')}</h3>
+              <p className="text-muted-foreground text-sm">{t('home.feature2Desc')}</p>
             </div>
             <div className="flex flex-col items-center p-4">
               <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 text-primary">
                 <Star className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-bold mb-2">Edições Especiais</h3>
-              <p className="text-muted-foreground text-sm">Encontre cromos raros, paralelos e edições limitadas exclusivas.</p>
+              <h3 className="text-lg font-bold mb-2">{t('home.feature3Title')}</h3>
+              <p className="text-muted-foreground text-sm">{t('home.feature3Desc')}</p>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function Home() {
               <h2 className="text-3xl md:text-4xl font-black text-primary uppercase tracking-tight mb-2">
                 {t('labels.featured')}
               </h2>
-              <p className="text-muted-foreground font-medium">Os produtos mais desejados pelos colecionadores.</p>
+              <p className="text-muted-foreground font-medium">{t('home.featuredSubtitle')}</p>
             </div>
             <Button variant="outline" asChild className="mt-4 md:mt-0 font-bold border-2 hover:bg-primary/5">
               <Link href="/produtos">

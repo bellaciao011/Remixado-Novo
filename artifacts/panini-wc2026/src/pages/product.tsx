@@ -65,8 +65,8 @@ export default function ProductDetail() {
     });
 
     toast({
-      title: "Adicionado ao carrinho",
-      description: `${quantity}x ${translation.name} adicionado com sucesso.`,
+      title: t('cart.addedTitle'),
+      description: `${quantity}x ${translation.name} ${t('cart.addedDesc')}`,
     });
   };
 
@@ -150,7 +150,7 @@ export default function ProductDetail() {
             <div className="mt-auto pt-8 border-t space-y-8">
               <div className="flex items-center gap-4 bg-muted/30 p-4 rounded-xl">
                 <ShieldCheck className="text-primary h-8 w-8 flex-shrink-0" />
-                <p className="text-sm font-medium">{t('labels.originalProduct')} - Coleção oficial da Copa do Mundo FIFA 2026™.</p>
+                <p className="text-sm font-medium">{t('labels.originalProduct')} - {t('product.trustBadge')}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">

@@ -12,7 +12,7 @@ export default function OrderConfirmation() {
   const searchString = useSearch();
   const searchParams = new URLSearchParams(searchString);
   const sessionId = searchParams.get('session_id');
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { clearCart } = useCart();
   const clearedRef = useRef(false);
 
@@ -33,10 +33,18 @@ export default function OrderConfirmation() {
     }
   }, [session?.status, clearCart]);
 
+  const formatPrice = (amount: number | null, currency: string | null) => {
+    if (amount === null) return '';
+    return new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : i18n.language === 'de' ? 'de-DE' : i18n.language === 'es' ? 'es-ES' : 'en-US', { 
+      style: 'currency', 
+      currency: (currency || 'BRL').toUpperCase() 
+    }).format(amount);
+  };
+
   if (!sessionId) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-4">
-        <h1 className="text-2xl font-bold mb-4">Sessão Inválida</h1>
+        <h1 className="text-2xl font-bold mb-4">{t('checkout.invalidSession')}</h1>
         <Button asChild>
           <Link href="/produtos">{t('buttons.backToStore')}</Link>
         </Button>
@@ -59,22 +67,14 @@ export default function OrderConfirmation() {
   if (isError || session?.status !== 'complete') {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-4 text-center">
-        <p className="text-destructive font-bold text-xl mb-4">Erro ao verificar o pedido.</p>
-        <p className="text-muted-foreground mb-8">Não foi possível confirmar o pagamento desta sessão.</p>
+        <p className="text-destructive font-bold text-xl mb-4">{t('checkout.verifyError')}</p>
+        <p className="text-muted-foreground mb-8">{t('checkout.verifyErrorDetail')}</p>
         <Button asChild>
           <Link href="/produtos">{t('buttons.backToStore')}</Link>
         </Button>
       </div>
     );
   }
-
-  const formatPrice = (amount: number | null, currency: string | null) => {
-    if (amount === null) return '';
-    return new Intl.NumberFormat('pt-BR', { 
-      style: 'currency', 
-      currency: (currency || 'BRL').toUpperCase() 
-    }).format(amount / 100);
-  };
 
   return (
     <div className="min-h-[70vh] bg-background py-12 md:py-20">
@@ -91,7 +91,7 @@ export default function OrderConfirmation() {
           </p>
           {session.customerEmail && (
             <p className="text-foreground font-medium mt-2">
-              Um recibo foi enviado para: <span className="font-bold">{session.customerEmail}</span>
+              {t('checkout.receiptSent')} <span className="font-bold">{session.customerEmail}</span>
             </p>
           )}
         </div>
@@ -108,7 +108,7 @@ export default function OrderConfirmation() {
                 <div key={index} className="flex justify-between items-center py-3 border-b last:border-0">
                   <div className="flex-1 pr-4">
                     <p className="font-bold text-lg">{item.name}</p>
-                    <p className="text-muted-foreground text-sm">Quant: {item.quantity}</p>
+                    <p className="text-muted-foreground text-sm">{t('checkout.quantity')}: {item.quantity}</p>
                   </div>
                   <div className="font-black text-lg">
                     {formatPrice(item.amount, session.currency)}

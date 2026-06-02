@@ -16,7 +16,11 @@ export function CartDrawer() {
     createCheckout.mutate(
       {
         data: {
-          items: items,
+          items: items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            name: item.name,
+          })),
           successUrl: `${window.location.origin}/pedido/confirmado?session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl: `${window.location.origin}/produtos`,
           locale: i18n.language,
@@ -39,7 +43,7 @@ export function CartDrawer() {
       <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
         <SheetHeader className="p-6 border-b">
           <SheetTitle className="text-2xl font-bold">{t('cart.title')}</SheetTitle>
-          <SheetDescription className="sr-only">Your shopping cart items</SheetDescription>
+          <SheetDescription className="sr-only">{t('cart.title')}</SheetDescription>
         </SheetHeader>
 
         {items.length === 0 ? (

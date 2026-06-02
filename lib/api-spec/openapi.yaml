@@ -136,6 +136,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /checkout/webhook:
+    post:
+      operationId: handleCheckoutWebhook
+      tags: [checkout]
+      summary: Stripe webhook endpoint
+      description: Receives Stripe webhook events for payment lifecycle processing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookPayload"
+      responses:
+        "200":
+          description: Webhook received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookAck"
+        "400":
+          description: Invalid webhook payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -237,13 +263,29 @@ components:
         - price
         - image
 
+    CheckoutLineItem:
+      type: object
+      description: Line item for checkout — price is resolved server-side from productId
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+        name:
+          type: string
+          description: Display name (optional, overrides default)
+      required:
+        - productId
+        - quantity
+
     CheckoutSessionInput:
       type: object
       properties:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/CartItem"
+            $ref: "#/components/schemas/CheckoutLineItem"
         successUrl:
           type: string
         cancelUrl:
@@ -298,6 +340,19 @@ components:
         - amountTotal
         - currency
         - items
+
+    WebhookPayload:
+      type: object
+      description: Raw Stripe webhook event payload
+      additionalProperties: true
+
+    WebhookAck:
+      type: object
+      properties:
+        received:
+          type: boolean
+      required:
+        - received
 
     ErrorResponse:
       type: object

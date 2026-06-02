@@ -8,6 +8,7 @@ import { Layout } from "@/components/Layout";
 import Home from "@/pages/home";
 import Catalog from "@/pages/catalog";
 import ProductDetail from "@/pages/product";
+import CheckoutPage from "@/pages/checkout";
 import OrderConfirmation from "@/pages/order-confirmation";
 import NotFound from "@/pages/not-found";
 
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/produtos" component={Catalog} />
         <Route path="/produtos/:id" component={ProductDetail} />
+        <Route path="/checkout" component={CheckoutPage} />
         <Route path="/pedido/confirmado" component={OrderConfirmation} />
         <Route component={NotFound} />
       </Switch>

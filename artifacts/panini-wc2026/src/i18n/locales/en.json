@@ -57,7 +57,9 @@
     "quantity": "Qty",
     "invalidSession": "Invalid Session",
     "verifyError": "Error verifying order.",
-    "verifyErrorDetail": "Could not confirm payment for this session."
+    "verifyErrorDetail": "Could not confirm payment for this session.",
+    "securePayment": "Secure payment processed by Stripe",
+    "proceedToPayment": "Proceed to Payment"
   },
   "general": {
     "loading": "Loading...",

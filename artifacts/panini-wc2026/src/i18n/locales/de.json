@@ -57,7 +57,9 @@
     "quantity": "Menge",
     "invalidSession": "Ungültige Sitzung",
     "verifyError": "Fehler bei der Bestellüberprüfung.",
-    "verifyErrorDetail": "Die Zahlung für diese Sitzung konnte nicht bestätigt werden."
+    "verifyErrorDetail": "Die Zahlung für diese Sitzung konnte nicht bestätigt werden.",
+    "securePayment": "Sichere Zahlung über Stripe",
+    "proceedToPayment": "Zur Zahlung"
   },
   "general": {
     "loading": "Wird geladen...",

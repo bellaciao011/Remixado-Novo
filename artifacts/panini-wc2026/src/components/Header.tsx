@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
-import { ShoppingCart, Menu, Globe } from 'lucide-react';
+import { ShoppingCart, Menu } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { Button } from './ui/button';
 import {
@@ -13,10 +13,10 @@ import {
 import logo from '@assets/Panini-logo_1780421261996.webp';
 
 const languages = [
-  { code: 'pt-BR', label: 'Português', flag: 'PT' },
-  { code: 'en', label: 'English', flag: 'EN' },
-  { code: 'es', label: 'Español', flag: 'ES' },
-  { code: 'de', label: 'Deutsch', flag: 'DE' },
+  { code: 'pt-BR', label: 'Português', flag: '🇧🇷' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
 ];
 
 export function Header() {
@@ -46,9 +46,8 @@ export function Header() {
         <div className="flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="w-16 px-2 text-sm font-bold flex gap-2">
-                <Globe className="h-4 w-4" />
-                {currentLang.flag}
+              <Button variant="ghost" size="sm" className="w-14 px-2 text-lg font-bold flex gap-1">
+                <span>{currentLang.flag}</span>
                 <span className="sr-only">Toggle language</span>
               </Button>
             </DropdownMenuTrigger>
@@ -59,7 +58,7 @@ export function Header() {
                   onClick={() => i18n.changeLanguage(lang.code)}
                   className="cursor-pointer flex items-center gap-2 font-medium"
                 >
-                  <span className="text-muted-foreground w-6">{lang.flag}</span>
+                  <span className="text-lg w-6">{lang.flag}</span>
                   <span>{lang.label}</span>
                 </DropdownMenuItem>
               ))}

@@ -145,15 +145,15 @@ export const GetFeaturedProductsResponse = zod.array(GetFeaturedProductsResponse
 /**
  * @summary Create Stripe checkout session
  */
+
+
+
 export const CreateCheckoutSessionBody = zod.object({
   "items": zod.array(zod.object({
   "productId": zod.string(),
-  "priceId": zod.string(),
-  "quantity": zod.number(),
-  "name": zod.string(),
-  "price": zod.number(),
-  "image": zod.string()
-})),
+  "quantity": zod.number().min(1),
+  "name": zod.string().optional().describe('Display name (optional, overrides default)')
+}).describe('Line item for checkout — price is resolved server-side from productId')),
   "successUrl": zod.string(),
   "cancelUrl": zod.string(),
   "locale": zod.string().optional()
@@ -182,6 +182,17 @@ export const VerifyCheckoutSessionResponse = zod.object({
   "quantity": zod.number(),
   "amount": zod.number()
 }))
+})
+
+
+/**
+ * Receives Stripe webhook events for payment lifecycle processing
+ * @summary Stripe webhook endpoint
+ */
+export const HandleCheckoutWebhookBody = zod.record(zod.string(), zod.unknown()).describe('Raw Stripe webhook event payload')
+
+export const HandleCheckoutWebhookResponse = zod.object({
+  "received": zod.boolean()
 })
 
 

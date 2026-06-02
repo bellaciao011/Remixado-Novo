@@ -1,37 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
 import { useCart } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
-import { useCreateCheckoutSession } from '@workspace/api-client-react';
 
 export function CartDrawer() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const [, navigate] = useLocation();
   const { items, isCartOpen, setIsCartOpen, updateQuantity, removeItem, totalPrice } = useCart();
-  const createCheckout = useCreateCheckoutSession();
 
   const handleCheckout = () => {
-    createCheckout.mutate(
-      {
-        data: {
-          items: items.map(item => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            name: item.name,
-          })),
-          successUrl: `${window.location.origin}/pedido/confirmado?session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/produtos`,
-          locale: i18n.language,
-        }
-      },
-      {
-        onSuccess: (data) => {
-          window.location.href = data.url;
-        }
-      }
-    );
+    setIsCartOpen(false);
+    navigate('/checkout');
   };
 
   const formatPrice = (price: number) => {
@@ -111,9 +94,8 @@ export function CartDrawer() {
               <Button 
                 className="w-full h-14 text-lg font-bold shadow-lg" 
                 onClick={handleCheckout}
-                disabled={createCheckout.isPending}
               >
-                {createCheckout.isPending ? t('general.loading') : t('buttons.checkout')}
+                {t('buttons.checkout')}
               </Button>
             </div>
           </>

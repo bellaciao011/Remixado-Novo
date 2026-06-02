@@ -57,7 +57,9 @@
     "quantity": "Quant",
     "invalidSession": "Sessão Inválida",
     "verifyError": "Erro ao verificar o pedido.",
-    "verifyErrorDetail": "Não foi possível confirmar o pagamento desta sessão."
+    "verifyErrorDetail": "Não foi possível confirmar o pagamento desta sessão.",
+    "securePayment": "Pagamento seguro processado pelo Stripe",
+    "proceedToPayment": "Prosseguir para Pagamento"
   },
   "general": {
     "loading": "Carregando...",

@@ -47,8 +47,19 @@ export interface CartItem {
   image: string;
 }
 
+/**
+ * Line item for checkout — price is resolved server-side from productId
+ */
+export interface CheckoutLineItem {
+  productId: string;
+  /** @minimum 1 */
+  quantity: number;
+  /** Display name (optional, overrides default) */
+  name?: string;
+}
+
 export interface CheckoutSessionInput {
-  items: CartItem[];
+  items: CheckoutLineItem[];
   successUrl: string;
   cancelUrl: string;
   locale?: string;
@@ -74,6 +85,15 @@ export interface CheckoutVerification {
   /** @nullable */
   currency: string | null;
   items: CheckoutVerificationItemsItem[];
+}
+
+/**
+ * Raw Stripe webhook event payload
+ */
+export interface WebhookPayload { [key: string]: unknown }
+
+export interface WebhookAck {
+  received: boolean;
 }
 
 export interface ErrorResponse {

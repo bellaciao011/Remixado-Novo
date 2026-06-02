@@ -26,7 +26,9 @@ import type {
   ErrorResponse,
   HealthStatus,
   Product,
-  VerifyCheckoutSessionParams
+  VerifyCheckoutSessionParams,
+  WebhookAck,
+  WebhookPayload
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -506,4 +508,76 @@ export function useVerifyCheckoutSession<TData = Awaited<ReturnType<typeof verif
 
 
 
+
+export const getHandleCheckoutWebhookUrl = () => {
+
+
+
+
+  return `/api/checkout/webhook`
+}
+
+/**
+ * Receives Stripe webhook events for payment lifecycle processing
+ * @summary Stripe webhook endpoint
+ */
+export const handleCheckoutWebhook = async (webhookPayload: WebhookPayload, options?: RequestInit): Promise<WebhookAck> => {
+
+  return customFetch<WebhookAck>(getHandleCheckoutWebhookUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      webhookPayload,)
+  }
+);}
+
+
+
+
+export const getHandleCheckoutWebhookMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof handleCheckoutWebhook>>, TError,{data: BodyType<WebhookPayload>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof handleCheckoutWebhook>>, TError,{data: BodyType<WebhookPayload>}, TContext> => {
+
+const mutationKey = ['handleCheckoutWebhook'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof handleCheckoutWebhook>>, {data: BodyType<WebhookPayload>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  handleCheckoutWebhook(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type HandleCheckoutWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof handleCheckoutWebhook>>>
+    export type HandleCheckoutWebhookMutationBody = BodyType<WebhookPayload>
+    export type HandleCheckoutWebhookMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Stripe webhook endpoint
+ */
+export const useHandleCheckoutWebhook = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof handleCheckoutWebhook>>, TError,{data: BodyType<WebhookPayload>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof handleCheckoutWebhook>>,
+        TError,
+        {data: BodyType<WebhookPayload>},
+        TContext
+      > => {
+      return useMutation(getHandleCheckoutWebhookMutationOptions(options));
+    }
 

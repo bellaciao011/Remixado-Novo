@@ -7,6 +7,7 @@
  */
 
 export * from './cartItem';
+export * from './checkoutLineItem';
 export * from './checkoutSession';
 export * from './checkoutSessionInput';
 export * from './checkoutVerification';
@@ -17,3 +18,5 @@ export * from './product';
 export * from './productTranslation';
 export * from './productTranslations';
 export * from './verifyCheckoutSessionParams';
+export * from './webhookAck';
+export * from './webhookPayload';

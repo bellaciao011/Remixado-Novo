@@ -5,10 +5,10 @@
  * Panini FIFA World Cup 2026 Store API
  * OpenAPI spec version: 0.1.0
  */
-import type { CartItem } from './cartItem';
+import type { CheckoutLineItem } from './checkoutLineItem';
 
 export interface CheckoutSessionInput {
-  items: CartItem[];
+  items: CheckoutLineItem[];
   successUrl: string;
   cancelUrl: string;
   locale?: string;

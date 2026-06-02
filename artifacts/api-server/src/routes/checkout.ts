@@ -1,8 +1,17 @@
 import { Router } from 'express';
-import { getUncachableStripeClient } from '../stripeClient';
+import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
 import { PRODUCTS } from '../productData';
 
 const router = Router();
+
+router.get('/checkout/config', async (_req, res) => {
+  try {
+    const publishableKey = await getStripePublishableKey();
+    res.json({ publishableKey });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || 'Failed to get Stripe config' });
+  }
+});
 
 router.post('/checkout/session', async (req, res) => {
   try {

@@ -119,3 +119,7 @@ export type VerifyCheckoutSessionParams = {
 session_id: string;
 };
 
+export type VerifyPaymentIntentParams = {
+payment_intent_id: string;
+};
+

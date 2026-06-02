@@ -2,7 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
-import { useVerifyCheckoutSession, getVerifyCheckoutSessionQueryKey } from '@workspace/api-client-react';
+import {
+  useVerifyCheckoutSession,
+  getVerifyCheckoutSessionQueryKey,
+  useVerifyPaymentIntent,
+  getVerifyPaymentIntentQueryKey,
+} from '@workspace/api-client-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,36 +17,51 @@ export default function OrderConfirmation() {
   const searchString = useSearch();
   const searchParams = new URLSearchParams(searchString);
   const sessionId = searchParams.get('session_id');
+  const paymentIntentId = searchParams.get('payment_intent');
   const { t, i18n } = useTranslation();
   const { clearCart } = useCart();
   const clearedRef = useRef(false);
 
-  const { data: session, isLoading, isError } = useVerifyCheckoutSession(
+  const { data: sessionData, isLoading: sessionLoading, isError: sessionError } = useVerifyCheckoutSession(
     { session_id: sessionId || '' },
-    { 
-      query: { 
+    {
+      query: {
         enabled: !!sessionId,
-        queryKey: getVerifyCheckoutSessionQueryKey({ session_id: sessionId || '' })
-      } 
+        queryKey: getVerifyCheckoutSessionQueryKey({ session_id: sessionId || '' }),
+      },
     }
   );
 
+  const { data: paymentData, isLoading: paymentLoading, isError: paymentError } = useVerifyPaymentIntent(
+    { payment_intent_id: paymentIntentId || '' },
+    {
+      query: {
+        enabled: !!paymentIntentId,
+        queryKey: getVerifyPaymentIntentQueryKey({ payment_intent_id: paymentIntentId || '' }),
+      },
+    }
+  );
+
+  const data = sessionData || paymentData;
+  const isLoading = sessionLoading || paymentLoading;
+  const isError = (!sessionId && !paymentIntentId) ? false : (sessionId ? sessionError : paymentError);
+
   useEffect(() => {
-    if (session?.status === 'complete' && !clearedRef.current) {
+    if (data?.status === 'complete' && !clearedRef.current) {
       clearCart();
       clearedRef.current = true;
     }
-  }, [session?.status, clearCart]);
+  }, [data?.status, clearCart]);
 
   const formatPrice = (amount: number | null, currency: string | null) => {
     if (amount === null) return '';
-    return new Intl.NumberFormat(i18n.language === 'pt-BR' ? 'pt-BR' : i18n.language === 'de' ? 'de-DE' : i18n.language === 'es' ? 'es-ES' : 'en-US', { 
-      style: 'currency', 
-      currency: (currency || 'BRL').toUpperCase() 
-    }).format(amount);
+    return new Intl.NumberFormat(
+      i18n.language === 'pt-BR' ? 'pt-BR' : i18n.language === 'de' ? 'de-DE' : i18n.language === 'es' ? 'es-ES' : 'en-US',
+      { style: 'currency', currency: (currency || 'BRL').toUpperCase() }
+    ).format(amount);
   };
 
-  if (!sessionId) {
+  if (!sessionId && !paymentIntentId) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-4">
         <h1 className="text-2xl font-bold mb-4">{t('checkout.invalidSession')}</h1>
@@ -64,7 +84,7 @@ export default function OrderConfirmation() {
     );
   }
 
-  if (isError || session?.status !== 'complete') {
+  if (isError || !data || data.status !== 'complete') {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-4 text-center">
         <p className="text-destructive font-bold text-xl mb-4">{t('checkout.verifyError')}</p>
@@ -89,9 +109,9 @@ export default function OrderConfirmation() {
           <p className="text-xl text-muted-foreground">
             {t('checkout.thankYou')}
           </p>
-          {session.customerEmail && (
+          {data.customerEmail && (
             <p className="text-foreground font-medium mt-2">
-              {t('checkout.receiptSent')} <span className="font-bold">{session.customerEmail}</span>
+              {t('checkout.receiptSent')} <span className="font-bold">{data.customerEmail}</span>
             </p>
           )}
         </div>
@@ -103,24 +123,26 @@ export default function OrderConfirmation() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="space-y-4 mb-8">
-              {session.items.map((item, index) => (
-                <div key={index} className="flex justify-between items-center py-3 border-b last:border-0">
-                  <div className="flex-1 pr-4">
-                    <p className="font-bold text-lg">{item.name}</p>
-                    <p className="text-muted-foreground text-sm">{t('checkout.quantity')}: {item.quantity}</p>
+            {data.items.length > 0 && (
+              <div className="space-y-4 mb-8">
+                {data.items.map((item, index) => (
+                  <div key={index} className="flex justify-between items-center py-3 border-b last:border-0">
+                    <div className="flex-1 pr-4">
+                      <p className="font-bold text-lg">{item.name}</p>
+                      <p className="text-muted-foreground text-sm">{t('checkout.quantity')}: {item.quantity}</p>
+                    </div>
+                    <div className="font-black text-lg">
+                      {formatPrice(item.amount, data.currency)}
+                    </div>
                   </div>
-                  <div className="font-black text-lg">
-                    {formatPrice(item.amount, session.currency)}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             <div className="flex justify-between items-center py-4 px-6 bg-primary/5 rounded-xl border border-primary/10">
               <span className="text-xl font-bold uppercase">{t('labels.total')}</span>
               <span className="text-3xl font-black text-primary">
-                {formatPrice(session.amountTotal, session.currency)}
+                {formatPrice(data.amountTotal, data.currency)}
               </span>
             </div>
           </CardContent>

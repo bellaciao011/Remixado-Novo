@@ -208,6 +208,26 @@ export const CreatePaymentIntentResponse = zod.object({
 
 
 /**
+ * @summary Verify a completed PaymentIntent
+ */
+export const VerifyPaymentIntentQueryParams = zod.object({
+  "payment_intent_id": zod.coerce.string()
+})
+
+export const VerifyPaymentIntentResponse = zod.object({
+  "status": zod.string(),
+  "customerEmail": zod.string().nullable(),
+  "amountTotal": zod.number().nullable(),
+  "currency": zod.string().nullable(),
+  "items": zod.array(zod.object({
+  "name": zod.string(),
+  "quantity": zod.number(),
+  "amount": zod.number()
+}))
+})
+
+
+/**
  * @summary Get Stripe publishable key
  */
 export const GetCheckoutConfigResponse = zod.object({

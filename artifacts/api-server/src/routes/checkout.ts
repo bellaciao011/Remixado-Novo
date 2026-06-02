@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
 import { PRODUCTS } from '../productData';
 
 const router = Router();
 
-router.get('/checkout/config', async (_req, res) => {
+router.get('/checkout/config', async (_req: Request, res: Response): Promise<void> => {
   try {
     const publishableKey = await getStripePublishableKey();
     res.json({ publishableKey });
@@ -13,29 +13,33 @@ router.get('/checkout/config', async (_req, res) => {
   }
 });
 
-router.post('/checkout/session', async (req, res) => {
+router.post('/checkout/session', async (req: Request, res: Response): Promise<void> => {
   try {
     const { items, successUrl, cancelUrl, locale } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: 'Items are required' });
+      res.status(400).json({ error: 'Items are required' });
+      return;
     }
 
     const stripe = await getUncachableStripeClient();
-
     const lineItems = [];
+
     for (const item of items as { productId: string; quantity: number; name?: string }[]) {
       if (!item.productId || !item.quantity || item.quantity < 1) {
-        return res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+        res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+        return;
       }
 
       const product = PRODUCTS.find(p => p.id === item.productId);
       if (!product) {
-        return res.status(400).json({ error: `Product not found: ${item.productId}` });
+        res.status(400).json({ error: `Product not found: ${item.productId}` });
+        return;
       }
 
       if (!product.inStock) {
-        return res.status(400).json({ error: `Product out of stock: ${item.productId}` });
+        res.status(400).json({ error: `Product out of stock: ${item.productId}` });
+        return;
       }
 
       const productName = item.name || product.stripeProductName;
@@ -76,29 +80,33 @@ router.post('/checkout/session', async (req, res) => {
   }
 });
 
-router.post('/checkout/payment-intent', async (req, res) => {
+router.post('/checkout/payment-intent', async (req: Request, res: Response): Promise<void> => {
   try {
     const { items } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: 'Items are required' });
+      res.status(400).json({ error: 'Items are required' });
+      return;
     }
 
     const stripe = await getUncachableStripeClient();
-
     let amountTotal = 0;
+
     for (const item of items as { productId: string; quantity: number }[]) {
       if (!item.productId || !item.quantity || item.quantity < 1) {
-        return res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+        res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+        return;
       }
 
       const product = PRODUCTS.find(p => p.id === item.productId);
       if (!product) {
-        return res.status(400).json({ error: `Product not found: ${item.productId}` });
+        res.status(400).json({ error: `Product not found: ${item.productId}` });
+        return;
       }
 
       if (!product.inStock) {
-        return res.status(400).json({ error: `Product out of stock: ${item.productId}` });
+        res.status(400).json({ error: `Product out of stock: ${item.productId}` });
+        return;
       }
 
       amountTotal += product.price * item.quantity;
@@ -122,12 +130,13 @@ router.post('/checkout/payment-intent', async (req, res) => {
   }
 });
 
-router.get('/checkout/verify', async (req, res) => {
+router.get('/checkout/verify', async (req: Request, res: Response): Promise<void> => {
   try {
     const { session_id } = req.query;
 
     if (!session_id || typeof session_id !== 'string') {
-      return res.status(400).json({ error: 'session_id is required' });
+      res.status(400).json({ error: 'session_id is required' });
+      return;
     }
 
     const stripe = await getUncachableStripeClient();
@@ -153,6 +162,42 @@ router.get('/checkout/verify', async (req, res) => {
   } catch (error: any) {
     console.error('Verify session error:', error);
     res.status(404).json({ error: error.message || 'Session not found' });
+  }
+});
+
+router.get('/checkout/verify-payment', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { payment_intent_id } = req.query;
+
+    if (!payment_intent_id || typeof payment_intent_id !== 'string') {
+      res.status(400).json({ error: 'payment_intent_id is required' });
+      return;
+    }
+
+    const stripe = await getUncachableStripeClient();
+    const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent_id);
+
+    const isSucceeded = paymentIntent.status === 'succeeded';
+
+    const items = [];
+    if (paymentIntent.description) {
+      items.push({
+        name: paymentIntent.description,
+        quantity: 1,
+        amount: paymentIntent.amount / 100,
+      });
+    }
+
+    res.json({
+      status: isSucceeded ? 'complete' : paymentIntent.status,
+      customerEmail: null,
+      amountTotal: paymentIntent.amount / 100,
+      currency: paymentIntent.currency,
+      items,
+    });
+  } catch (error: any) {
+    console.error('Verify payment intent error:', error);
+    res.status(404).json({ error: error.message || 'Payment intent not found' });
   }
 });
 

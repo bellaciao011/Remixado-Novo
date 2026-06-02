@@ -30,6 +30,7 @@ import type {
   PaymentIntentResult,
   Product,
   VerifyCheckoutSessionParams,
+  VerifyPaymentIntentParams,
   WebhookAck,
   WebhookPayload
 } from './api.schemas';
@@ -582,6 +583,90 @@ export const useCreatePaymentIntent = <TError = ErrorType<ErrorResponse>,
       > => {
       return useMutation(getCreatePaymentIntentMutationOptions(options));
     }
+
+export const getVerifyPaymentIntentUrl = (params: VerifyPaymentIntentParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/checkout/verify-payment?${stringifiedParams}` : `/api/checkout/verify-payment`
+}
+
+/**
+ * @summary Verify a completed PaymentIntent
+ */
+export const verifyPaymentIntent = async (params: VerifyPaymentIntentParams, options?: RequestInit): Promise<CheckoutVerification> => {
+
+  return customFetch<CheckoutVerification>(getVerifyPaymentIntentUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getVerifyPaymentIntentQueryKey = (params?: VerifyPaymentIntentParams,) => {
+    return [
+    `/api/checkout/verify-payment`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getVerifyPaymentIntentQueryOptions = <TData = Awaited<ReturnType<typeof verifyPaymentIntent>>, TError = ErrorType<ErrorResponse>>(params: VerifyPaymentIntentParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof verifyPaymentIntent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getVerifyPaymentIntentQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof verifyPaymentIntent>>> = ({ signal }) => verifyPaymentIntent(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof verifyPaymentIntent>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type VerifyPaymentIntentQueryResult = NonNullable<Awaited<ReturnType<typeof verifyPaymentIntent>>>
+export type VerifyPaymentIntentQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Verify a completed PaymentIntent
+ */
+
+export function useVerifyPaymentIntent<TData = Awaited<ReturnType<typeof verifyPaymentIntent>>, TError = ErrorType<ErrorResponse>>(
+ params: VerifyPaymentIntentParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof verifyPaymentIntent>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getVerifyPaymentIntentQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getGetCheckoutConfigUrl = () => {
 

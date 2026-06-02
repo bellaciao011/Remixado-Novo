@@ -12,10 +12,11 @@ router.get('/products/featured', (_req, res) => {
   res.json(featured);
 });
 
-router.get('/products/:id', (req, res) => {
+router.get('/products/:id', (req, res): void => {
   const product = PRODUCTS.find(p => p.id === req.params.id || p.slug === req.params.id);
   if (!product) {
-    return res.status(404).json({ error: 'Product not found' });
+    res.status(404).json({ error: 'Product not found' });
+    return;
   }
   res.json(product);
 });

@@ -21,5 +21,6 @@ export * from './product';
 export * from './productTranslation';
 export * from './productTranslations';
 export * from './verifyCheckoutSessionParams';
+export * from './verifyPaymentIntentParams';
 export * from './webhookAck';
 export * from './webhookPayload';

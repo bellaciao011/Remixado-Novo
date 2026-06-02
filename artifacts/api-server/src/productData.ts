@@ -67,40 +67,127 @@ export const PRODUCTS: ProductData[] = [
   },
   {
     id: 'box-100-packs',
-    slug: 'box-100-pacotes',
+    slug: 'box-bundle',
     images: [
-      '/assets/de-boxbundle-004_1780421261995.webp',
-      '/assets/de-boxbundle-005_1780421261995.webp',
+      '/assets/de2-boxbundle-001_1780429019754.webp',
+      '/assets/de2-boxbundle-002_1780429019753.webp',
+      '/assets/de2-boxbundle-003_1780429019753.webp',
+      '/assets/de2-boxbundle-004_1780429019745.webp',
+      '/assets/de2-boxbundle-005_1780429019745.webp',
+      '/assets/de2-boxbundle-006_1780429019745.webp',
+      '/assets/de2-boxbundle-007_1780429019744.webp',
+      '/assets/de2-boxbundle-008_1780429019744.webp',
+      '/assets/de2-boxbundle-009_1780429019741.webp',
     ],
-    price: 24990,
-    originalPrice: 29990,
-    currency: 'brl',
+    price: 3600,
+    originalPrice: null,
+    currency: 'eur',
     priceId: '',
-    badge: 'bestSeller',
+    badge: 'offer',
     featured: true,
     inStock: true,
-    stripeProductName: 'Box 100 Pacotes',
+    stripeProductName: 'Box-Bundle FIFA World Cup 2026',
     sortOrder: 2,
     translations: {
       'pt-BR': {
-        name: 'Box com 100 Pacotes',
-        shortDescription: 'Caixa com 100 pacotes de 7 figurinhas cada',
-        description: 'A caixa com 100 pacotes é a escolha perfeita para quem quer avançar rapidamente na coleção. Cada pacote contém 7 figurinhas exclusivas da Copa do Mundo FIFA 2026. Total de 700 figurinhas.',
+        name: 'Box-Bundle – Coleção Oficial de Figurinhas FIFA World Cup 2026™',
+        shortDescription: 'Álbum softcover + caixa com 50 envelopes (356 figurinhas no total)',
+        description: `O Box-Bundle Panini para a Copa do Mundo FIFA 2026™ contém um álbum de figurinhas (com 6 figurinhas) e uma caixa com 50 envelopes de 7 figurinhas cada = 356 figurinhas no total para o início perfeito da sua coleção.
+
+Como clássico entre os bundles, este set é ideal para mergulhar diretamente no mundo das figurinhas Panini. Iniciante ou colecionador experiente: com este bundle, você nunca erra!
+
+Conteúdo do Box-Bundle:
+• 1 Álbum softcover com 112 páginas e 6 figurinhas
+• 1 Caixa com 50 envelopes de 7 figurinhas cada (= 350 figurinhas)
+
+Suas vantagens no Box-Bundle:
+• Começo perfeito: O clássico entre os bundles – ideal para iniciar sua coleção
+• Pronto para colar: 356 figurinhas incluindo o álbum – abra e cole imediatamente
+• Simples e prático: Tudo em um set – pedido rápido e pronto para usar
+• Original Panini: Embalado com segurança e entregue diretamente pelo fabricante
+• Menos repetidas: Uma caixa oferece melhores chances de menos figurinhas duplicadas do que envelopes avulsos
+
+O que espera você na grande coleção de figurinhas da Copa do Mundo FIFA 2026™:
+• Coleção oficialmente licenciada com todas as 48 seleções classificadas
+• Jogadores e equipes: 18 jogadores por seleção, uma foto da equipe e o logotipo oficial da federação
+• 980 figurinhas diferentes para colecionar, trocar e colar
+• Verdadeiro clima de Copa: Perfeito para momentos de coleção em família e com amigos
+• Tradição Panini: Coleção de alta qualidade para fãs de todas as idades`,
       },
       'en': {
-        name: 'Box with 100 Packs',
-        shortDescription: 'Box with 100 packs of 7 stickers each',
-        description: 'The box with 100 packs is the perfect choice for those who want to advance quickly in their collection. Each pack contains 7 exclusive FIFA World Cup 2026 stickers. Total of 700 stickers.',
+        name: 'Box-Bundle – Official FIFA World Cup 2026™ Sticker Collection',
+        shortDescription: 'Softcover album + box with 50 packs (356 stickers total)',
+        description: `The Panini Box-Bundle for the FIFA World Cup 2026™ includes a sticker album (with 6 stickers) and a box with 50 packs of 7 stickers each = 356 stickers total for the perfect start to your collection.
+
+As the classic among bundles, this set is ideal for diving straight into the world of Panini sticker collecting. Whether you're a beginner or an experienced collector: with this bundle, you can't go wrong!
+
+What's in the Box-Bundle:
+• 1 Softcover album with 112 pages including 6 stickers
+• 1 Box with 50 packs of 7 stickers each (= 350 stickers)
+
+Your advantages with the Box-Bundle:
+• Perfect start: The classic bundle – ideal to kick off your collection
+• Ready to go: 356 stickers including the album – unpack and start sticking right away
+• Simple & convenient: Everything in one set – quick to order and ready to use
+• Original Panini: Safely packaged and delivered directly from the manufacturer
+• Fewer duplicates: A box offers better chances of fewer duplicate stickers than individual packs
+
+What awaits you in the big sticker collection for the FIFA World Cup 2026™:
+• Officially licensed collection featuring all 48 qualified national teams
+• Players & Teams overview: 18 players per team, a team photo and the official federation logo
+• 980 different stickers to collect, trade and stick
+• True World Cup feeling: Perfect for shared collecting moments with friends and family
+• Panini tradition: High-quality collection for fans of all ages`,
       },
       'es': {
-        name: 'Caja con 100 Sobres',
-        shortDescription: 'Caja con 100 sobres de 7 cromos cada uno',
-        description: 'La caja con 100 sobres es la elección perfecta para quienes quieren avanzar rápidamente en su colección. Cada sobre contiene 7 cromos exclusivos de la Copa del Mundo FIFA 2026. Total de 700 cromos.',
+        name: 'Box-Bundle – Colección Oficial de Cromos FIFA World Cup 2026™',
+        shortDescription: 'Álbum de tapa blanda + caja con 50 sobres (356 cromos en total)',
+        description: `El Box-Bundle de Panini para la Copa del Mundo FIFA 2026™ incluye un álbum de cromos (con 6 cromos) y una caja con 50 sobres de 7 cromos cada uno = 356 cromos en total para el comienzo perfecto de tu colección.
+
+Como el clásico entre los bundles, este set es ideal para sumergirte directamente en el mundo del coleccionismo de cromos Panini. ¡Principiante o coleccionista experimentado: con este bundle nunca te equivocas!
+
+Contenido del Box-Bundle:
+• 1 Álbum de tapa blanda con 112 páginas y 6 cromos
+• 1 Caja con 50 sobres de 7 cromos cada uno (= 350 cromos)
+
+Tus ventajas con el Box-Bundle:
+• Comienzo perfecto: El clásico entre los bundles – ideal para empezar tu colección
+• Listo para pegar: 356 cromos incluyendo el álbum – desempaca y empieza a pegar de inmediato
+• Sencillo y cómodo: Todo en un set – pedido rápido y listo para usar
+• Original Panini: Embalado con seguridad y entregado directamente por el fabricante
+• Menos repetidos: Una caja ofrece mejores probabilidades de menos cromos duplicados que los sobres sueltos
+
+Lo que te espera en la gran colección de cromos de la Copa del Mundo FIFA 2026™:
+• Colección con licencia oficial con los 48 equipos nacionales clasificados
+• Jugadores y equipos: 18 jugadores por equipo, una foto del equipo y el logotipo oficial de la federación
+• 980 cromos diferentes para coleccionar, intercambiar y pegar
+• Auténtico ambiente de Copa del Mundo: Perfecto para momentos de colección con amigos y familia
+• Tradición Panini: Colección de alta calidad para aficionados de todas las edades`,
       },
       'de': {
-        name: 'Box mit 100 Tüten',
-        shortDescription: 'Box mit 100 Tüten à 7 Sticker',
-        description: 'Die Box mit 100 Tüten ist die perfekte Wahl für alle, die schnell vorankommen möchten. Jede Tüte enthält 7 exklusive FIFA Fußball-Weltmeisterschaft 2026 Sticker. Insgesamt 700 Sticker.',
+        name: 'Offizielle FIFA World Cup 2026™ Stickerkollektion – Box-Bundle',
+        shortDescription: 'Softcoveralbum + Box mit 50 Tüten (insgesamt 356 Sticker)',
+        description: `Das Panini Box-Bundle zur FIFA Fußball-Weltmeisterschaft 2026™ enthält ein Sammelalbum (inklusive 6 Sticker) und eine Box mit 50 Tüten à 7 Stickern = insgesamt 356 Sticker für den perfekten Start in deine Sammlung.
+
+Als Klassiker unter den Bundles ist dieses Set ideal geeignet, um direkt in die Welt des Panini-Stickersammelns einzusteigen. Ob Einsteiger oder erfahrener Sammler: Mit diesem Bundle machst du nie etwas falsch!
+
+Im Box-Bundle enthalten:
+• 1 Softcoveralbum mit 112 Seiten inklusive 6 Stickern
+• 1 Box mit 50 Tüten à 7 Sticker (= 350 Sticker)
+
+Deine Vorteile im Box-Bundle:
+• Perfekter Einstieg: Der Klassiker unter den Bundles – ideal, um deine Sammlung zu starten
+• Sofort loslegen: 356 Sticker inklusive Album – direkt auspacken und einkleben
+• Einfach & bequem: Alles in einem Set – schnell bestellt und startklar
+• Original von Panini: Sicher verpackt und direkt vom Hersteller geliefert
+• Weniger Doppelungen: Eine Box bietet bessere Chancen auf weniger doppelte Sticker als einzelne Tüten
+
+Das erwartet dich in der großen Stickerkollektion zur FIFA WM 2026™:
+• Offiziell lizenzierte Kollektion mit allen 48 qualifizierten Nationalteams
+• Spieler & Teams im Überblick: Pro Mannschaft 18 Spieler, ein Teamfoto und das offizielle Verbandslogo
+• 980 verschiedene Sticker zum Sammeln, Tauschen und Einkleben
+• Echtes WM-Feeling: Perfekt für gemeinsame Sammelmomente mit Freunden und Familie
+• Panini-Tradition: Hochwertige Kollektion für Fans jeden Alters`,
       },
     },
   },

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'wouter';
+import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { useGetProduct, getGetProductQueryKey } from '@workspace/api-client-react';
 import { useCart } from '@/contexts/CartContext';
@@ -78,9 +79,9 @@ export default function ProductDetail() {
       <div className="container px-4 md:px-8 max-w-screen-xl mx-auto">
         {/* Breadcrumb */}
         <nav className="text-[13px] text-[#666] mb-6">
-          <span className="hover:underline cursor-pointer">{t('nav.home')}</span>
+          <Link href="/" className="hover:underline">{t('nav.home')}</Link>
           <span className="mx-2">›</span>
-          <span className="hover:underline cursor-pointer">{t('nav.catalog')}</span>
+          <Link href="/produtos" className="hover:underline">{t('nav.catalog')}</Link>
           <span className="mx-2">›</span>
           <span className="text-[#1a1a1a]">{translation.name}</span>
         </nav>

@@ -13,13 +13,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Banner — full width, no text overlay */}
-      <section className="w-full">
+      {/* Hero Banner — full width, fully visible */}
+      <section className="w-full bg-black">
         <img
           src={bannerImg}
           alt="FIFA World Cup 2026"
-          className="w-full h-auto block"
-          style={{ maxHeight: '500px', objectFit: 'cover', objectPosition: 'center' }}
+          className="w-full h-auto block mx-auto"
         />
       </section>
 

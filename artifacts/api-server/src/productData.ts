@@ -302,39 +302,108 @@ Was dich in der größten Fußball-Stickerkollektion des Jahres 2026 zur FIFA Fu
   },
   {
     id: 'pack-5',
-    slug: 'pacotes-avulsos-5',
+    slug: 'box-50-pacotes',
     images: [
-      '/assets/de-boxbundle-005_1780421261995.webp',
+      '/assets/de3-boxbundle-001_1780437582882.webp',
+      '/assets/de3-boxbundle-002_1780437582882.webp',
+      '/assets/de3-boxbundle-003_1780437582881.webp',
+      '/assets/de3-boxbundle-004_1780437582881.webp',
+      '/assets/de3-boxbundle-005_1780437582881.webp',
+      '/assets/de3-boxbundle-006_1780437582876.webp',
     ],
-    price: 1490,
+    price: 3200,
     originalPrice: null,
-    currency: 'brl',
+    currency: 'eur',
     priceId: '',
     badge: null,
-    featured: false,
+    featured: true,
     inStock: true,
-    stripeProductName: 'Pacote Avulso - 5 Unidades',
+    stripeProductName: 'Box mit 50 Tüten FIFA World Cup 2026',
     sortOrder: 4,
     translations: {
       'pt-BR': {
-        name: 'Pacote Avulso - 5 Unidades',
-        shortDescription: '5 pacotes com 7 figurinhas cada',
-        description: 'Cinco pacotes avulsos de figurinhas da Copa do Mundo FIFA 2026. Cada pacote contém 7 figurinhas, totalizando 35 figurinhas. Ideal para completar espaços específicos no álbum.',
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Caixa com 50 Envelopes',
+        shortDescription: '50 envelopes com 7 figurinhas cada (350 figurinhas no total)',
+        description: `Com cada caixa você recebe 350 figurinhas, distribuídas em 50 envelopes com 7 figurinhas cada.
+
+A caixa com 50 envelopes forma uma base sólida para construir seu álbum passo a passo ou para completar pontos específicos da coleção.
+
+Conteúdo da caixa:
+• 50 envelopes com 7 figurinhas cada (= 350 figurinhas no total)
+
+As vantagens da caixa com 50 envelopes:
+• Base sólida: 350 figurinhas para um crescimento real da sua coleção
+• Uso flexível: Ideal para começar ou para complementar a qualquer momento
+• Quantidade certa: Fácil de organizar e colar – perfeito para quem quer colecionar passo a passo
+
+O que espera você na coleção de figurinhas da Copa do Mundo FIFA 2026™:
+• A Copa do Mundo para colecionar: Todas as 48 seleções classificadas para a Copa 2026
+• Futebol para vivenciar: Cada uma das 980 figurinhas te aproxima das emoções do torneio
+• Stars de perto: Descubra os melhores jogadores de cada nação
+• Colecionar, colar e trocar com amigos e família`,
       },
       'en': {
-        name: 'Individual Packs - 5 Units',
-        shortDescription: '5 packs with 7 stickers each',
-        description: 'Five individual sticker packs for FIFA World Cup 2026. Each pack contains 7 stickers, totaling 35 stickers. Ideal for filling specific spots in the album.',
+        name: 'Official FIFA World Cup 2026™ Sticker Collection – Box with 50 Packs',
+        shortDescription: '50 packs with 7 stickers each (350 stickers total)',
+        description: `With every box you get 350 stickers, spread across 50 packs with 7 stickers each.
+
+The box with 50 packs forms a solid foundation for building your album piece by piece or filling in specific gaps.
+
+What's in the box:
+• 50 packs with 7 stickers each (= 350 stickers total)
+
+The advantages of the box with 50 packs:
+• Solid base: 350 stickers for a noticeable boost to your collection
+• Flexible use: Perfect as a starting point or to top up your collection along the way
+• Just the right amount: Easy to sort and stick – perfect for those who like to collect step by step
+
+What awaits you in the FIFA World Cup 2026™ sticker collection:
+• The World Cup to collect: All 48 teams qualified for the 2026 World Cup
+• Football to experience: Each of the 980 stickers brings you closer to the tournament action
+• Stars up close: Discover the best players from every nation
+• Collect, stick and trade with friends and family`,
       },
       'es': {
-        name: 'Sobres Sueltos - 5 Unidades',
-        shortDescription: '5 sobres con 7 cromos cada uno',
-        description: 'Cinco sobres sueltos de cromos de la Copa del Mundo FIFA 2026. Cada sobre contiene 7 cromos, un total de 35 cromos. Ideal para completar espacios específicos del álbum.',
+        name: 'Colección Oficial FIFA World Cup 2026™ – Caja con 50 Sobres',
+        shortDescription: '50 sobres con 7 cromos cada uno (350 cromos en total)',
+        description: `Con cada caja recibes 350 cromos, distribuidos en 50 sobres de 7 cromos cada uno.
+
+La caja con 50 sobres forma una base sólida para construir tu álbum poco a poco o para completar partes específicas de tu colección.
+
+Contenido de la caja:
+• 50 sobres con 7 cromos cada uno (= 350 cromos en total)
+
+Las ventajas de la caja con 50 sobres:
+• Base sólida: 350 cromos para un crecimiento real de tu colección
+• Uso flexible: Ideal para empezar o para complementar tu colección en cualquier momento
+• Cantidad adecuada: Fácil de ordenar y pegar – perfecto para quienes quieren coleccionar paso a paso
+
+Lo que te espera en la colección de cromos de la Copa del Mundo FIFA 2026™:
+• El Mundial para coleccionar: Los 48 equipos clasificados para la Copa 2026
+• Fútbol para vivir: Cada uno de los 980 cromos te acerca a la emoción del torneo
+• Estrellas de cerca: Descubre a los mejores jugadores de cada nación
+• Coleccionar, pegar e intercambiar con amigos y familia`,
       },
       'de': {
-        name: 'Einzeltüten - 5 Stück',
-        shortDescription: '5 Tüten mit je 7 Stickern',
-        description: 'Fünf einzelne Stickerpackungen für die FIFA Fußball-Weltmeisterschaft 2026. Jede Tüte enthält 7 Sticker, insgesamt 35 Sticker. Ideal zum Füllen bestimmter Albumseiten.',
+        name: 'Offizielle FIFA World Cup 2026™ Stickerkollektion – Box mit 50 Tüten',
+        shortDescription: '50 Tüten mit je 7 Stickern (350 Sticker insgesamt)',
+        description: `Mit jeder Box erhältst du 350 Sticker, verteilt auf 50 Tüten mit je 7 Stickern.
+
+Die Box mit 50 Tüten bildet eine solide Grundlage, um dein Album Stück für Stück aufzubauen oder gezielt zu ergänzen.
+
+In der Box enthalten:
+• 50 Tüten mit je 7 Stickern (= 350 Sticker insgesamt)
+
+Die Vorteile der Box mit 50 Tüten:
+• Solide Basis: 350 Sticker für einen spürbaren Ausbau deiner Sammlung
+• Flexibel einsetzbar: Ideal zum Start oder als Ergänzung zwischendurch
+• Angenehme Menge: Gut handhabbar beim Sortieren & Einkleben und somit perfekt für alle, die Schritt für Schritt sammeln möchten
+
+Das erwartet dich in der FIFA World Cup 2026™ Stickerkollektion:
+• Die Weltmeisterschaft zum Sammeln: Alle 48 für die WM 2026 qualifizierten Teams
+• Fußball zum Erleben: Jeder der insgesamt 980 Sticker bringt dich näher ans Turniergeschehen
+• Stars hautnah: Entdecke die besten Spieler jeder Nation
+• Sammeln, Kleben und Tauschen mit Freunden und Familie`,
       },
     },
   },

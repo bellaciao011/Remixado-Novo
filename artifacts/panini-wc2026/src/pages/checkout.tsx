@@ -1,49 +1,124 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart } from '@/contexts/CartContext';
-import { useCreateCheckoutSession } from '@workspace/api-client-react';
+import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ShoppingCart, ShieldCheck, Lock } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Lock } from 'lucide-react';
+
+function PaymentForm({ amountTotal }: { amountTotal: number }) {
+  const { t } = useTranslation();
+  const stripe = useStripe();
+  const elements = useElements();
+  const [, navigate] = useLocation();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setIsProcessing(true);
+    setErrorMessage(null);
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      redirect: 'if_required',
+      confirmParams: {
+        return_url: `${window.location.origin}/pedido/confirmado`,
+      },
+    });
+
+    if (error) {
+      setErrorMessage(error.message || t('general.error'));
+      setIsProcessing(false);
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      navigate(`/pedido/confirmado?payment_intent=${paymentIntent.id}`);
+    } else {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <Card className="shadow-sm">
+        <CardHeader className="border-b">
+          <CardTitle className="text-xl font-bold">{t('checkout.paymentDetails')}</CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <PaymentElement />
+        </CardContent>
+      </Card>
+
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Lock className="h-4 w-4" />
+        <span>{t('checkout.securePayment')}</span>
+      </div>
+
+      {errorMessage && (
+        <p className="text-destructive font-medium text-sm">{errorMessage}</p>
+      )}
+
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full h-14 text-lg font-bold shadow-xl"
+        disabled={!stripe || !elements || isProcessing}
+      >
+        {isProcessing
+          ? t('general.loading')
+          : `${t('checkout.proceedToPayment')} — ${formatPrice(amountTotal)}`}
+      </Button>
+    </form>
+  );
+}
 
 export default function CheckoutPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { items, totalPrice } = useCart();
-  const createCheckout = useCreateCheckoutSession();
-  const [error, setError] = useState<string | null>(null);
+  const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [amountTotal, setAmountTotal] = useState<number>(0);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
-  };
+  const { data: configData } = useGetCheckoutConfig();
 
-  const handleProceedToPayment = () => {
-    setError(null);
-    createCheckout.mutate(
-      {
-        data: {
-          items: items.map(item => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            name: item.name,
-          })),
-          successUrl: `${window.location.origin}/pedido/confirmado?session_id={CHECKOUT_SESSION_ID}`,
-          cancelUrl: `${window.location.origin}/checkout`,
-          locale: i18n.language,
-        }
-      },
-      {
-        onSuccess: (data) => {
-          if (data.url) {
-            window.location.href = data.url;
-          }
+  const createPaymentIntent = useCreatePaymentIntent();
+
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+
+  useEffect(() => {
+    if (configData?.publishableKey) {
+      setStripePromise(loadStripe(configData.publishableKey));
+    }
+  }, [configData?.publishableKey]);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      createPaymentIntent.mutate(
+        {
+          data: {
+            items: items.map(item => ({
+              productId: item.productId,
+              quantity: item.quantity,
+            })),
+          },
         },
-        onError: (err: any) => {
-          setError(err?.message || t('general.error'));
+        {
+          onSuccess: (data) => {
+            setClientSecret(data.clientSecret);
+            setAmountTotal(data.amountTotal);
+          },
         }
-      }
-    );
-  };
+      );
+    }
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -73,6 +148,7 @@ export default function CheckoutPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6">
+          {/* Order Summary */}
           <Card className="shadow-sm">
             <CardHeader className="border-b">
               <CardTitle className="text-xl font-bold">{t('checkout.orderDetails')}</CardTitle>
@@ -96,7 +172,6 @@ export default function CheckoutPage() {
                   </div>
                 ))}
               </div>
-
               <div className="mt-6 pt-4 border-t">
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold uppercase">{t('labels.total')}</span>
@@ -106,24 +181,17 @@ export default function CheckoutPage() {
             </CardContent>
           </Card>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Lock className="h-4 w-4" />
-            <span>{t('checkout.securePayment')}</span>
-          </div>
-
-          {error && (
-            <p className="text-destructive font-medium text-sm">{error}</p>
+          {/* Stripe Elements Payment Form */}
+          {stripePromise && clientSecret ? (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <PaymentForm amountTotal={amountTotal} />
+            </Elements>
+          ) : (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <span className="ml-3 text-muted-foreground">{t('general.loading')}</span>
+            </div>
           )}
-
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg font-bold shadow-xl"
-            onClick={handleProceedToPayment}
-            disabled={createCheckout.isPending}
-          >
-            <ShieldCheck className="mr-2 h-5 w-5" />
-            {createCheckout.isPending ? t('general.loading') : t('checkout.proceedToPayment')}
-          </Button>
         </div>
       </div>
     </div>

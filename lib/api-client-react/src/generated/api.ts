@@ -20,11 +20,14 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CheckoutConfig,
   CheckoutSession,
   CheckoutSessionInput,
   CheckoutVerification,
   ErrorResponse,
   HealthStatus,
+  PaymentIntentInput,
+  PaymentIntentResult,
   Product,
   VerifyCheckoutSessionParams,
   WebhookAck,
@@ -497,6 +500,154 @@ export function useVerifyCheckoutSession<TData = Awaited<ReturnType<typeof verif
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getVerifyCheckoutSessionQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreatePaymentIntentUrl = () => {
+
+
+
+
+  return `/api/checkout/payment-intent`
+}
+
+/**
+ * @summary Create Stripe PaymentIntent for Elements
+ */
+export const createPaymentIntent = async (paymentIntentInput: PaymentIntentInput, options?: RequestInit): Promise<PaymentIntentResult> => {
+
+  return customFetch<PaymentIntentResult>(getCreatePaymentIntentUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      paymentIntentInput,)
+  }
+);}
+
+
+
+
+export const getCreatePaymentIntentMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPaymentIntent>>, TError,{data: BodyType<PaymentIntentInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPaymentIntent>>, TError,{data: BodyType<PaymentIntentInput>}, TContext> => {
+
+const mutationKey = ['createPaymentIntent'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPaymentIntent>>, {data: BodyType<PaymentIntentInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPaymentIntent(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePaymentIntentMutationResult = NonNullable<Awaited<ReturnType<typeof createPaymentIntent>>>
+    export type CreatePaymentIntentMutationBody = BodyType<PaymentIntentInput>
+    export type CreatePaymentIntentMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Create Stripe PaymentIntent for Elements
+ */
+export const useCreatePaymentIntent = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPaymentIntent>>, TError,{data: BodyType<PaymentIntentInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createPaymentIntent>>,
+        TError,
+        {data: BodyType<PaymentIntentInput>},
+        TContext
+      > => {
+      return useMutation(getCreatePaymentIntentMutationOptions(options));
+    }
+
+export const getGetCheckoutConfigUrl = () => {
+
+
+
+
+  return `/api/checkout/config`
+}
+
+/**
+ * @summary Get Stripe publishable key
+ */
+export const getCheckoutConfig = async ( options?: RequestInit): Promise<CheckoutConfig> => {
+
+  return customFetch<CheckoutConfig>(getGetCheckoutConfigUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCheckoutConfigQueryKey = () => {
+    return [
+    `/api/checkout/config`
+    ] as const;
+    }
+
+
+export const getGetCheckoutConfigQueryOptions = <TData = Awaited<ReturnType<typeof getCheckoutConfig>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCheckoutConfig>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCheckoutConfigQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCheckoutConfig>>> = ({ signal }) => getCheckoutConfig({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCheckoutConfig>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCheckoutConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getCheckoutConfig>>>
+export type GetCheckoutConfigQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get Stripe publishable key
+ */
+
+export function useGetCheckoutConfig<TData = Awaited<ReturnType<typeof getCheckoutConfig>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCheckoutConfig>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCheckoutConfigQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

@@ -61,7 +61,8 @@
     "verifyError": "Error al verificar el pedido.",
     "verifyErrorDetail": "No se pudo confirmar el pago de esta sesión.",
     "securePayment": "Pago seguro procesado por Stripe",
-    "proceedToPayment": "Proceder al Pago"
+    "proceedToPayment": "Completar Pago",
+    "paymentDetails": "Datos de Pago"
   },
   "general": {
     "loading": "Cargando...",

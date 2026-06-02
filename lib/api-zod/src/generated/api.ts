@@ -186,6 +186,36 @@ export const VerifyCheckoutSessionResponse = zod.object({
 
 
 /**
+ * @summary Create Stripe PaymentIntent for Elements
+ */
+
+
+
+export const CreatePaymentIntentBody = zod.object({
+  "items": zod.array(zod.object({
+  "productId": zod.string(),
+  "quantity": zod.number().min(1),
+  "name": zod.string().optional().describe('Display name (optional, overrides default)')
+}).describe('Line item for checkout — price is resolved server-side from productId'))
+})
+
+export const CreatePaymentIntentResponse = zod.object({
+  "clientSecret": zod.string(),
+  "paymentIntentId": zod.string(),
+  "amountTotal": zod.number(),
+  "currency": zod.string()
+})
+
+
+/**
+ * @summary Get Stripe publishable key
+ */
+export const GetCheckoutConfigResponse = zod.object({
+  "publishableKey": zod.string()
+})
+
+
+/**
  * Receives Stripe webhook events for payment lifecycle processing
  * @summary Stripe webhook endpoint
  */

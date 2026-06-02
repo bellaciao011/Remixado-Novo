@@ -87,6 +87,21 @@ export interface CheckoutVerification {
   items: CheckoutVerificationItemsItem[];
 }
 
+export interface PaymentIntentInput {
+  items: CheckoutLineItem[];
+}
+
+export interface PaymentIntentResult {
+  clientSecret: string;
+  paymentIntentId: string;
+  amountTotal: number;
+  currency: string;
+}
+
+export interface CheckoutConfig {
+  publishableKey: string;
+}
+
 /**
  * Raw Stripe webhook event payload
  */

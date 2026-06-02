@@ -76,6 +76,52 @@ router.post('/checkout/session', async (req, res) => {
   }
 });
 
+router.post('/checkout/payment-intent', async (req, res) => {
+  try {
+    const { items } = req.body;
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Items are required' });
+    }
+
+    const stripe = await getUncachableStripeClient();
+
+    let amountTotal = 0;
+    for (const item of items as { productId: string; quantity: number }[]) {
+      if (!item.productId || !item.quantity || item.quantity < 1) {
+        return res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+      }
+
+      const product = PRODUCTS.find(p => p.id === item.productId);
+      if (!product) {
+        return res.status(400).json({ error: `Product not found: ${item.productId}` });
+      }
+
+      if (!product.inStock) {
+        return res.status(400).json({ error: `Product out of stock: ${item.productId}` });
+      }
+
+      amountTotal += product.price * item.quantity;
+    }
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amountTotal,
+      currency: 'brl',
+      automatic_payment_methods: { enabled: true },
+    });
+
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      amountTotal: amountTotal / 100,
+      currency: 'brl',
+    });
+  } catch (error: any) {
+    console.error('PaymentIntent error:', error);
+    res.status(400).json({ error: error.message || 'Failed to create payment intent' });
+  }
+});
+
 router.get('/checkout/verify', async (req, res) => {
   try {
     const { session_id } = req.query;

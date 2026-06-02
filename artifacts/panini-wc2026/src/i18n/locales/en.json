@@ -61,7 +61,8 @@
     "verifyError": "Error verifying order.",
     "verifyErrorDetail": "Could not confirm payment for this session.",
     "securePayment": "Secure payment processed by Stripe",
-    "proceedToPayment": "Proceed to Payment"
+    "proceedToPayment": "Complete Payment",
+    "paymentDetails": "Payment Details"
   },
   "general": {
     "loading": "Loading...",

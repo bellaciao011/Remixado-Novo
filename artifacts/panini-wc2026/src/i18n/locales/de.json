@@ -61,7 +61,8 @@
     "verifyError": "Fehler bei der Bestellüberprüfung.",
     "verifyErrorDetail": "Die Zahlung für diese Sitzung konnte nicht bestätigt werden.",
     "securePayment": "Sichere Zahlung über Stripe",
-    "proceedToPayment": "Zur Zahlung"
+    "proceedToPayment": "Zahlung abschließen",
+    "paymentDetails": "Zahlungsdetails"
   },
   "general": {
     "loading": "Wird geladen...",

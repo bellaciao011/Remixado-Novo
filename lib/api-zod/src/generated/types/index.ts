@@ -7,6 +7,7 @@
  */
 
 export * from './cartItem';
+export * from './checkoutConfig';
 export * from './checkoutLineItem';
 export * from './checkoutSession';
 export * from './checkoutSessionInput';
@@ -14,6 +15,8 @@ export * from './checkoutVerification';
 export * from './checkoutVerificationItemsItem';
 export * from './errorResponse';
 export * from './healthStatus';
+export * from './paymentIntentInput';
+export * from './paymentIntentResult';
 export * from './product';
 export * from './productTranslation';
 export * from './productTranslations';

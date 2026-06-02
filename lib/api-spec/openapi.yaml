@@ -136,6 +136,44 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /checkout/payment-intent:
+    post:
+      operationId: createPaymentIntent
+      tags: [checkout]
+      summary: Create Stripe PaymentIntent for Elements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentIntentInput"
+      responses:
+        "200":
+          description: PaymentIntent created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentIntentResult"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /checkout/config:
+    get:
+      operationId: getCheckoutConfig
+      tags: [checkout]
+      summary: Get Stripe publishable key
+      responses:
+        "200":
+          description: Stripe config
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutConfig"
+
   /checkout/webhook:
     post:
       operationId: handleCheckoutWebhook
@@ -340,6 +378,41 @@ components:
         - amountTotal
         - currency
         - items
+
+    PaymentIntentInput:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CheckoutLineItem"
+      required:
+        - items
+
+    PaymentIntentResult:
+      type: object
+      properties:
+        clientSecret:
+          type: string
+        paymentIntentId:
+          type: string
+        amountTotal:
+          type: number
+        currency:
+          type: string
+      required:
+        - clientSecret
+        - paymentIntentId
+        - amountTotal
+        - currency
+
+    CheckoutConfig:
+      type: object
+      properties:
+        publishableKey:
+          type: string
+      required:
+        - publishableKey
 
     WebhookPayload:
       type: object

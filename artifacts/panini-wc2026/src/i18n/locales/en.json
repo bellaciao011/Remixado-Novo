@@ -73,6 +73,7 @@
   },
   "product": {
     "trustBadge": "Official FIFA World Cup 2026™ collection.",
-    "descriptionLabel": "DESCRIPTION"
+    "descriptionLabel": "DESCRIPTION",
+    "relatedProducts": "RELATED PRODUCTS"
   }
 }

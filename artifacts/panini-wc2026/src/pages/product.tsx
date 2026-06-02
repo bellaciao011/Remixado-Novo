@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useParams } from 'wouter';
 import { Link } from 'wouter';
 import { useTranslation } from 'react-i18next';
-import { useGetProduct, getGetProductQueryKey } from '@workspace/api-client-react';
+import { useGetProduct, getGetProductQueryKey, useListProducts } from '@workspace/api-client-react';
 import { useCart } from '@/contexts/CartContext';
+import { ProductCard } from '@/components/ProductCard';
 import { ShoppingCart, Minus, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -21,6 +22,7 @@ export default function ProductDetail() {
     },
   });
 
+  const { data: allProducts } = useListProducts();
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
 
@@ -46,6 +48,10 @@ export default function ProductDetail() {
       </div>
     );
   }
+
+  const relatedProducts = allProducts
+    ? allProducts.filter(p => p.id !== product?.id).slice(0, 4)
+    : [];
 
   const locale = i18n.language as keyof typeof product.translations;
   const translation = product.translations[locale] || product.translations['pt-BR'];
@@ -191,6 +197,22 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* Related Products */}
+      {relatedProducts.length > 0 && (
+        <div className="border-t border-[#e0e0e0] mt-12 pt-10 pb-16">
+          <div className="container px-4 md:px-8 max-w-screen-xl mx-auto">
+            <h2 className="text-[16px] font-bold text-[#1a1a1a] uppercase tracking-wider mb-6">
+              {t('product.relatedProducts')}
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+              {relatedProducts.map(p => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

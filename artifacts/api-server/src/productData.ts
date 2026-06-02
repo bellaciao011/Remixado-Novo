@@ -641,47 +641,79 @@ Das bietet dir die Stickerkollektion zur WM 2026:
   },
   {
     id: 'complete-collection',
-    slug: 'colecao-completa',
+    slug: 'box-50-pocket-classic-tin',
     images: [
-      '/assets/de-boxbundle-001_1780421261995.webp',
-      '/assets/de-boxbundle-002_1780421261995.webp',
-      '/assets/de-boxbundle-003_1780421261995.webp',
-      '/assets/de-boxbundle-004_1780421261995.webp',
-      '/assets/de-boxbundle-005_1780421261995.webp',
-      '/assets/de-boxbundle-006_1780421261995.webp',
-      '/assets/de-boxbundle-007_1780421261995.webp',
-      '/assets/de-boxbundle-008_1780421261994.webp',
-      '/assets/de-boxbundle-009_1780421261993.webp',
+      '/assets/de6-boxbundle-001_1780438501225.webp',
+      '/assets/de6-boxbundle-002_1780438501217.webp',
+      '/assets/de6-boxbundle-003_1780438501217.webp',
+      '/assets/de6-boxbundle-004_1780438501216.webp',
+      '/assets/de6-boxbundle-005_1780438501216.webp',
     ],
-    price: 32990,
-    originalPrice: 42970,
-    currency: 'brl',
+    price: 6800,
+    originalPrice: null,
+    currency: 'eur',
     priceId: '',
     badge: 'limitedEdition',
     featured: true,
     inStock: true,
-    stripeProductName: 'Coleção Completa FIFA World Cup 2026',
+    stripeProductName: 'Box 50 Packets + Pocket Tin + Classic Tin FIFA World Cup 2026',
     sortOrder: 7,
     translations: {
       'pt-BR': {
-        name: 'Coleção Completa',
-        shortDescription: 'Álbum + Box 100 Pacotes + Bundle Estrelas',
-        description: 'O pacote definitivo para o colecionador completo: álbum oficial, caixa com 100 pacotes e o bundle especial estrelas. Tudo o que você precisa para uma coleção excepcional da Copa do Mundo FIFA 2026.',
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Caixa 50 Envelopes + Pocket Tin + Classic Tin',
+        shortDescription: 'Caixa com 50 envelopes + 1 Pocket Tin (8 envelopes) + 1 Classic Tin (16 envelopes)',
+        description: `A coleção oficial de figurinhas Panini FIFA World Cup 2026™ chegou!
+
+Este bundle exclusivo inclui:
+• 1 Caixa com 50 envelopes
+• 1 Pocket Tin aleatória com 8 envelopes
+• 1 Classic Tin aleatória com 16 envelopes
+
+Cada envelope contém 7 figurinhas.
+
+As Pocket Tins e Classic Tins são enviadas em designs aleatórios – uma surpresa a mais para os fãs da coleção!`,
       },
       'en': {
-        name: 'Complete Collection',
-        shortDescription: 'Album + Box 100 Packs + Stars Bundle',
-        description: 'The ultimate package for the complete collector: official album, box with 100 packs and the special stars bundle. Everything you need for an exceptional FIFA World Cup 2026 collection.',
+        name: 'Official FIFA World Cup 2026™ Sticker Collection – Box of 50 Packets + Pocket Tin + Classic Tin',
+        shortDescription: 'Box of 50 packets + 1 Pocket Tin (8 packets) + 1 Classic Tin (16 packets)',
+        description: `The Panini FIFA World Cup 2026™ official sticker collection is here!
+
+This exclusive bundle includes:
+• 1 Box of 50 packets
+• 1 Random Pocket Tin with 8 packets
+• 1 Random Classic Tin with 16 packets
+
+Each packet contains 7 stickers.
+
+The Pocket Tins and Classic Tins are sent in random designs – an extra surprise for fans of the collection!`,
       },
       'es': {
-        name: 'Colección Completa',
-        shortDescription: 'Álbum + Caja 100 Sobres + Bundle Estrellas',
-        description: 'El paquete definitivo para el coleccionista completo: álbum oficial, caja con 100 sobres y el bundle especial estrellas. Todo lo que necesitas para una colección excepcional de la Copa del Mundo FIFA 2026.',
+        name: 'Colección Oficial FIFA World Cup 2026™ – Caja de 50 Sobres + Pocket Tin + Classic Tin',
+        shortDescription: 'Caja con 50 sobres + 1 Pocket Tin (8 sobres) + 1 Classic Tin (16 sobres)',
+        description: `¡La colección oficial de cromos Panini FIFA World Cup 2026™ ya está aquí!
+
+Este bundle exclusivo incluye:
+• 1 Caja con 50 sobres
+• 1 Pocket Tin aleatoria con 8 sobres
+• 1 Classic Tin aleatoria con 16 sobres
+
+Cada sobre contiene 7 cromos.
+
+¡Las Pocket Tins y Classic Tins se envían en diseños aleatorios – una sorpresa extra para los fans de la colección!`,
       },
       'de': {
-        name: 'Komplette Sammlung',
-        shortDescription: 'Album + Box 100 Tüten + Stars Bundle',
-        description: 'Das ultimative Paket für den vollständigen Sammler: offizielles Album, Box mit 100 Tüten und das Stars Special Bundle. Alles, was du für eine außergewöhnliche FIFA Fußball-Weltmeisterschaft 2026 Sammlung brauchst.',
+        name: 'Offizielle FIFA World Cup 2026™ Stickerkollektion – Box mit 50 Tüten + Pocket Tin + Classic Tin',
+        shortDescription: 'Box mit 50 Tüten + 1 Pocket Tin (8 Tüten) + 1 Classic Tin (16 Tüten)',
+        description: `Die offizielle Panini FIFA World Cup 2026™ Stickerkollektion ist da!
+
+Dieses exklusive Bundle enthält:
+• 1 Box mit 50 Tüten
+• 1 zufällige Pocket Tin mit 8 Tüten
+• 1 zufällige Classic Tin mit 16 Tüten
+
+Jede Tüte enthält 7 Sticker.
+
+Die Pocket Tins und Classic Tins werden in zufälligen Designs versendet – eine zusätzliche Überraschung für alle Fans der Kollektion!`,
       },
     },
   },

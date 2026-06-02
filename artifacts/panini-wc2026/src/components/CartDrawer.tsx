@@ -4,7 +4,7 @@ import { useCart } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 import { useCreateCheckoutSession } from '@workspace/api-client-react';
 
 export function CartDrawer() {
@@ -118,6 +118,3 @@ export function CartDrawer() {
     </Sheet>
   );
 }
-
-// Quick hack to fix missing import
-import { ShoppingCart } from 'lucide-react';

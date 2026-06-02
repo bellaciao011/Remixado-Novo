@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "path";
 import router from "./routes";
 import { WebhookHandlers } from "./webhookHandlers";
 import { logger } from "./lib/logger";
@@ -57,6 +58,9 @@ app.post(
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve product images from attached_assets at /assets
+app.use('/assets', express.static(path.resolve(import.meta.dirname, '..', '..', '..', 'attached_assets')));
 
 app.use("/api", router);
 

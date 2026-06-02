@@ -1,0 +1,4 @@
+- [Stripe setup quirks](stripe-setup.md) — runMigrations must run before getStripeSync; findOrCreateManagedWebhook needs enabled_events:['*']; run migrations manually if DB schema is empty
+- [Static assets routing](static-assets.md) — product images in attached_assets/ must be served via express.static at /assets AND the path must be declared in artifact.toml for the Replit proxy to route correctly
+- [React dedupe + i18next](react-dedupe.md) — adding react-i18next and i18next to Vite resolve.dedupe prevents multiple-React errors when local node_modules shadow workspace root
+- [Prices in centavos](prices-centavos.md) — productData.ts stores prices in centavos (integer), frontend divides by 100, checkout multiplies by 100 for Stripe — all must be consistent

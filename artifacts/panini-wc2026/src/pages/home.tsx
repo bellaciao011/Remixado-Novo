@@ -4,6 +4,7 @@ import { Link } from 'wouter';
 import { useGetFeaturedProducts } from '@workspace/api-client-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Trophy, ShieldCheck, Star } from 'lucide-react';
 import bannerImg from '@assets/banner-worldcup-de_1780421326604.webp';
 
@@ -116,6 +117,3 @@ export default function Home() {
     </div>
   );
 }
-
-// Need Badge
-import { Badge } from '@/components/ui/badge';

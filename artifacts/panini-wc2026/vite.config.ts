@@ -51,7 +51,7 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "src"),
       "@assets": path.resolve(import.meta.dirname, "..", "..", "attached_assets"),
     },
-    dedupe: ["react", "react-dom"],
+    dedupe: ["react", "react-dom", "react-i18next", "i18next"],
   },
   root: path.resolve(import.meta.dirname),
   build: {
@@ -64,7 +64,7 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
     fs: {
-      strict: true,
+      strict: false,
     },
   },
   preview: {

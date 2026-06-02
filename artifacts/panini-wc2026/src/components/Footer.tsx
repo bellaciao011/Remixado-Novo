@@ -11,8 +11,8 @@ export function Footer() {
         <p className="text-center text-muted-foreground font-medium max-w-lg">
           {t('general.brandTrust')}
         </p>
-        <div className="text-sm text-muted-foreground mt-8">
-          © 2026 Panini S.p.A. FIFA, FIFA's Official Licensed Product Logos, and the Emblems, Mascots, Posters and Trophies of the FIFA World Cup™ tournaments are copyrights and/or trademarks of FIFA.
+        <div className="text-sm text-muted-foreground mt-8 text-center max-w-2xl">
+          {t('general.legalNotice')}
         </div>
       </div>
     </footer>

@@ -3,7 +3,9 @@
     "home": "Startseite",
     "catalog": "Produkte",
     "cart": "Warenkorb",
-    "checkout": "Zur Kasse"
+    "checkout": "Zur Kasse",
+    "language": "Sprache auswählen",
+    "menu": "Menü"
   },
   "buttons": {
     "addToCart": "In den Warenkorb",
@@ -64,7 +66,8 @@
   "general": {
     "loading": "Wird geladen...",
     "error": "Ein Fehler ist aufgetreten.",
-    "brandTrust": "Holen Sie sich jetzt die offiziellen FIFA World Cup 2026™ Sticker und vervollständigen Sie Ihre Sammlung."
+    "brandTrust": "Holen Sie sich jetzt die offiziellen FIFA World Cup 2026™ Sticker und vervollständigen Sie Ihre Sammlung.",
+    "legalNotice": "© 2026 Panini S.p.A. FIFA, die offiziellen lizenzierten Produktlogos der FIFA sowie die Embleme, Maskottchen, Poster und Trophäen der FIFA World Cup™-Turniere sind Urheberrechte und/oder Marken der FIFA."
   },
   "product": {
     "trustBadge": "Offizielle FIFA Fußball-Weltmeisterschaft 2026™ Kollektion."

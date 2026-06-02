@@ -3,7 +3,9 @@
     "home": "Home",
     "catalog": "Products",
     "cart": "Cart",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "language": "Select language",
+    "menu": "Menu"
   },
   "buttons": {
     "addToCart": "Add to Cart",
@@ -64,7 +66,8 @@
   "general": {
     "loading": "Loading...",
     "error": "An error occurred.",
-    "brandTrust": "Get the official FIFA World Cup 2026™ stickers now and complete your collection."
+    "brandTrust": "Get the official FIFA World Cup 2026™ stickers now and complete your collection.",
+    "legalNotice": "© 2026 Panini S.p.A. FIFA, FIFA's Official Licensed Product Logos, and the Emblems, Mascots, Posters and Trophies of the FIFA World Cup™ tournaments are copyrights and/or trademarks of FIFA."
   },
   "product": {
     "trustBadge": "Official FIFA World Cup 2026™ collection."

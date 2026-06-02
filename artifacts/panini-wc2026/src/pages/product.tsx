@@ -81,7 +81,7 @@ export default function ProductDetail() {
               {product.badge && (
                 <div className="absolute top-6 left-6 z-10">
                   <Badge className="bg-secondary text-secondary-foreground font-black px-4 py-2 text-sm shadow-lg tracking-wider">
-                    {product.badge}
+                    {t(`labels.${product.badge}`)}
                   </Badge>
                 </div>
               )}

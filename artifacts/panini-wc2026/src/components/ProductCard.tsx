@@ -50,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.badge && (
           <div className="absolute top-3 left-3 z-10">
             <Badge className="bg-secondary text-secondary-foreground font-bold px-3 py-1 text-xs shadow-md">
-              {product.badge}
+              {t(`labels.${product.badge}`)}
             </Badge>
           </div>
         )}

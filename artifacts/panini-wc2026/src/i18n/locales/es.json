@@ -3,7 +3,9 @@
     "home": "Inicio",
     "catalog": "Productos",
     "cart": "Carrito",
-    "checkout": "Finalizar Compra"
+    "checkout": "Finalizar Compra",
+    "language": "Seleccionar idioma",
+    "menu": "Menú"
   },
   "buttons": {
     "addToCart": "Añadir al Carrito",
@@ -64,7 +66,8 @@
   "general": {
     "loading": "Cargando...",
     "error": "Ha ocurrido un error.",
-    "brandTrust": "Consigue ya los cromos oficiales de la Copa Mundial de la FIFA 2026™ y completa tu colección."
+    "brandTrust": "Consigue ya los cromos oficiales de la Copa Mundial de la FIFA 2026™ y completa tu colección.",
+    "legalNotice": "© 2026 Panini S.p.A. FIFA, los logotipos de productos con licencia oficial de FIFA, y los emblemas, mascotas, carteles y trofeos de los torneos de la Copa Mundial FIFA™ son derechos de autor y/o marcas registradas de FIFA."
   },
   "product": {
     "trustBadge": "Colección oficial de la Copa Mundial de la FIFA 2026™."

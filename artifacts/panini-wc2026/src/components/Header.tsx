@@ -48,7 +48,7 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="w-14 px-2 text-lg font-bold flex gap-1">
                 <span>{currentLang.flag}</span>
-                <span className="sr-only">Toggle language</span>
+                <span className="sr-only">{t('nav.language')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -77,12 +77,12 @@ export function Header() {
                 {totalItems}
               </span>
             )}
-            <span className="sr-only">Cart</span>
+            <span className="sr-only">{t('nav.cart')}</span>
           </Button>
 
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-6 w-6" />
-            <span className="sr-only">Menu</span>
+            <span className="sr-only">{t('nav.menu')}</span>
           </Button>
         </div>
       </div>

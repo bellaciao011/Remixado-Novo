@@ -520,42 +520,122 @@ Das erwartet dich in der Stickerkollektion zur FIFA Fußball-Weltmeisterschaft 2
   },
   {
     id: 'bundle-stars',
-    slug: 'bundle-especial-estrelas',
+    slug: 'hardcover-big-box-bundle',
     images: [
-      '/assets/de-boxbundle-006_1780421261995.webp',
-      '/assets/de-boxbundle-007_1780421261995.webp',
-      '/assets/de-boxbundle-008_1780421261994.webp',
-      '/assets/de-boxbundle-009_1780421261993.webp',
+      '/assets/de5-boxbundle-001_1780437996281.webp',
+      '/assets/de5-boxbundle-002_1780437996280.webp',
+      '/assets/de5-boxbundle-003_1780437996280.webp',
+      '/assets/de5-boxbundle-004_1780437996280.webp',
+      '/assets/de5-boxbundle-005_1780437996280.webp',
+      '/assets/de5-boxbundle-006_1780437996279.webp',
+      '/assets/de5-boxbundle-007_1780437996279.webp',
+      '/assets/de5-boxbundle-008_1780437996269.webp',
     ],
-    price: 8990,
-    originalPrice: 11990,
-    currency: 'brl',
+    price: 7900,
+    originalPrice: null,
+    currency: 'eur',
     priceId: '',
     badge: 'exclusive',
     featured: true,
     inStock: true,
-    stripeProductName: 'Bundle Especial Estrelas',
+    stripeProductName: 'Hardcover Big Box-Bundle FIFA World Cup 2026',
     sortOrder: 6,
     translations: {
       'pt-BR': {
-        name: 'Bundle Especial Estrelas',
-        shortDescription: 'Pack temático com figurinhas dos maiores craques',
-        description: 'Edição especial com figurinhas exclusivas dos maiores craques da Copa do Mundo FIFA 2026. Figurinhas com acabamento premium e design exclusivo para os fãs mais exigentes.',
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Hardcover Big Box-Bundle',
+        shortDescription: '1 Álbum Hardcover + 1 Caixa com 100 Envelopes (700 figurinhas)',
+        description: `Cada Hardcover Big Box-Bundle da Copa do Mundo FIFA 2026™ contém 1 Álbum Hardcover e 700 figurinhas.
+
+O Hardcover Big Box-Bundle é ideal para quem quer começar a colecionar com tudo e apresentar sua coleção em um álbum premium de capa dura.
+
+Conteúdo do Hardcover Big Box-Bundle:
+• 1 Álbum Hardcover com 112 páginas
+• 1 Caixa com 100 envelopes de 7 figurinhas cada (= 700 figurinhas)
+
+Suas vantagens com o Treasure-Bundle:
+• Comece agora: Set atraente com álbum Hardcover premium e caixa de 100 envelopes – tudo disponível em um só clique
+• Apresentação de qualidade: O álbum Hardcover garante um visual sofisticado e torna sua coleção um verdadeiro destaque
+• Diversão de colecionar: Com mais de 700 figurinhas, você já completa boa parte do álbum de uma só vez
+• Original do fabricante: Embalado com segurança e enviado diretamente pela Panini
+
+O que a coleção de figurinhas da Copa do Mundo 2026 oferece:
+• Oficialmente licenciado: Inclui todas as 48 seleções classificadas para a Copa do Mundo FIFA 2026™
+• 980 figurinhas para colecionar: Caça todas as figurinhas da coleção e complete seu álbum
+• Tudo sobre a Copa em um lugar: Descubra todos os participantes do torneio nos EUA, México e Canadá
+• Times & Estrelas: Para cada seleção há 18 figurinhas de jogadores, uma foto do time e o escudo oficial
+• Atmosfera de Copa em casa: Use seu álbum como guia antes e durante o torneio`,
       },
       'en': {
-        name: 'Stars Special Bundle',
-        shortDescription: 'Themed pack with stickers of the greatest stars',
-        description: 'Special edition with exclusive stickers of the greatest FIFA World Cup 2026 stars. Premium finish stickers and exclusive design for the most demanding fans.',
+        name: 'Official FIFA World Cup 2026™ Sticker Collection – Hardcover Big Box-Bundle',
+        shortDescription: '1 Hardcover Album + 1 Box with 100 Packs (700 stickers)',
+        description: `Each Hardcover Big Box-Bundle for the FIFA World Cup 2026™ contains 1 Hardcover Album and 700 stickers.
+
+The Hardcover Big Box-Bundle is perfect for you if you want to dive into collecting in a big way and present your collection in a premium hardcover album.
+
+What's in the Hardcover Big Box-Bundle:
+• 1 Hardcover Album with 112 pages
+• 1 Box with 100 packs of 7 stickers each (= 700 stickers)
+
+Your advantages with the Treasure-Bundle:
+• Jump right in: Attractive set with a premium Hardcover Album and 100-pack box – all conveniently available with one click
+• Premium presentation: The Hardcover Album gives your collection a high-quality look and makes it a real eye-catcher
+• Extensive collecting fun: With over 700 stickers, there's a good chance you'll complete a large part of your album in one go
+• Direct from the manufacturer: Safely packaged and shipped directly by Panini
+
+What the FIFA World Cup 2026 sticker collection offers:
+• Officially licensed: Features all 48 qualified national teams of the FIFA World Cup 2026™
+• 980 stickers to collect: Hunt down every sticker in the collection and complete your album
+• Full World Cup overview: Discover all tournament participants from the USA, Mexico and Canada
+• Teams & Stars: Each team features 18 player stickers, a team photo and the official association badge
+• World Cup atmosphere at home: Use your album as a reference guide before and during the tournament`,
       },
       'es': {
-        name: 'Bundle Especial Estrellas',
-        shortDescription: 'Pack temático con cromos de los mejores cracks',
-        description: 'Edición especial con cromos exclusivos de los mejores cracks de la Copa del Mundo FIFA 2026. Cromos con acabado premium y diseño exclusivo para los aficionados más exigentes.',
+        name: 'Colección Oficial FIFA World Cup 2026™ – Hardcover Big Box-Bundle',
+        shortDescription: '1 Álbum Tapa Dura + 1 Caja con 100 Sobres (700 cromos)',
+        description: `Cada Hardcover Big Box-Bundle de la Copa del Mundo FIFA 2026™ contiene 1 Álbum de Tapa Dura y 700 cromos.
+
+El Hardcover Big Box-Bundle es perfecto si quieres empezar a coleccionar a lo grande y presentar tu colección en un álbum premium de tapa dura.
+
+Contenido del Hardcover Big Box-Bundle:
+• 1 Álbum Tapa Dura con 112 páginas
+• 1 Caja con 100 sobres de 7 cromos cada uno (= 700 cromos)
+
+Tus ventajas con el Treasure-Bundle:
+• Empieza ya: Atractivo set con álbum Hardcover premium y caja de 100 sobres – todo disponible con un solo clic
+• Presentación premium: El álbum Hardcover da a tu colección un aspecto de calidad y la convierte en un auténtico centro de atención
+• Diversión coleccionista: Con más de 700 cromos, es muy probable que completes gran parte del álbum de una sola vez
+• Directo del fabricante: Empaquetado de forma segura y enviado directamente por Panini
+
+Lo que ofrece la colección de cromos de la Copa del Mundo 2026:
+• Con licencia oficial: Incluye los 48 equipos nacionales clasificados para la Copa del Mundo FIFA 2026™
+• 980 cromos para coleccionar: Ve a por todos los cromos de la colección y completa tu álbum
+• Todo sobre el Mundial en un vistazo: Descubre todos los participantes del torneo en EE.UU., México y Canadá
+• Equipos y Estrellas: Cada selección tiene 18 cromos de jugadores, una foto del equipo y el escudo oficial
+• Ambiente mundialista en casa: Usa tu álbum como guía antes y durante el torneo`,
       },
       'de': {
-        name: 'Stars Special Bundle',
-        shortDescription: 'Themen-Pack mit Stickern der größten Stars',
-        description: 'Sonderausgabe mit exklusiven Stickern der größten Stars der FIFA Fußball-Weltmeisterschaft 2026. Premium-Veredelung und exklusives Design für die anspruchsvollsten Fans.',
+        name: 'Offizielle FIFA World Cup 2026™ Stickerkollektion – Hardcover Big Box-Bundle',
+        shortDescription: '1 Hardcover-Album + 1 Box mit 100 Tüten (700 Sticker)',
+        description: `Jedes Hardcover Big Box-Bundle zur FIFA Fußball-Weltmeisterschaft 2026™ enthält 1 Hardcover-Album und 700 Sticker.
+
+Das Hardcover Big Box-Bundle ist genau das Richtige für dich, wenn du mit einem großen Schwung Sticker in deine Sammlung starten und diese im hochwertigen Hardcover präsentieren willst.
+
+Im Hardcover Big Box-Bundle enthalten:
+• 1 Hardcover-Album mit 112 Seiten
+• 1 Box mit 100 Tüten à 7 Sticker (= 700 Sticker)
+
+Deine Vorteile beim Treasure-Bundle:
+• Direkt loslegen: Attraktives Set aus wertigem Hardcover Album und 100er Box – alles bequem mit nur einem Klick bestellbar
+• Hochwertige Präsentation: Das Hardcover Album sorgt für einen hochwertigen Look und macht deine Sammlung zu einem echten Hingucker
+• Umfangreicher Sammelspaß: Mit über 700 Stickern erwartet dich ein große Sammelabenteuer und mit etwas Glück hast du damit schon einen Großteil der Sticker für die Vervollständigung des Albums
+• Original vom Hersteller: Sicher verpackt und direkt von Panini versendet
+
+Das bietet dir die Stickerkollektion zur WM 2026:
+• Offiziell lizenziert: Enthält alle 48 qualifizierten Nationalteams der FIFA Fußball-Weltmeisterschaft 2026™
+• 980 Sticker zum Sammeln: Gehe auf die Jagd nach allen Stickern der Kollektion und vervollständige dein Album
+• Alles zur WM im Überblick: Entdecke alle Teilnehmer des Turniers in den USA, Mexiko und Kanada
+• Teams & Stars: Für jede Mannschaft gibt es 18 Spieler-Sticker, ein Teamfoto sowie das offizielle Verbandswappen
+• WM-Atmosphäre für zuhause: Nutze dein Album als Nachschlagewerk vor und während des Turniers`,
       },
     },
   },

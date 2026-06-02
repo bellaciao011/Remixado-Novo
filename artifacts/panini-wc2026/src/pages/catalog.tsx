@@ -9,7 +9,7 @@ export default function Catalog() {
 
   return (
     <div className="min-h-screen bg-background py-12 md:py-20">
-      <div className="container px-4 md:px-8">
+      <div className="container px-4 md:px-8 max-w-screen-xl mx-auto">
         <div className="mb-12 border-b pb-8">
           <h1 className="text-4xl md:text-5xl font-black text-primary uppercase tracking-tight mb-4">
             {t('nav.catalog')}

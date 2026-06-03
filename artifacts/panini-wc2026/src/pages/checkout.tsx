@@ -193,14 +193,7 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Card className="shadow-sm">
-        <CardHeader className="border-b">
-          <CardTitle className="text-xl font-bold">{t('checkout.paymentDetails')}</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <PaymentElement options={{ terms: { card: 'never' } }} />
-        </CardContent>
-      </Card>
+      <PaymentElement options={{ terms: { card: 'never' } }} />
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
@@ -726,30 +719,27 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Toggle button */}
+                {/* Add/Added button */}
                 <div className="px-5 pb-5">
-                  <button
-                    type="button"
-                    onClick={handleToggleOrderBump}
-                    disabled={isUpdatingBump}
-                    className={`w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2${!orderBumpSelected && !isUpdatingBump ? ' btn-pulse' : ''}`}
-                    style={
-                      orderBumpSelected
-                        ? { background: '#f0f0f0', color: '#666', border: '1.5px solid #ccc' }
-                        : { background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }
-                    }
-                  >
-                    {isUpdatingBump ? (
-                      t('general.loading')
-                    ) : orderBumpSelected ? (
-                      <>
-                        <Check className="h-4 w-4 text-green-600" />
-                        {t('orderBump.removeButton')}
-                      </>
-                    ) : (
-                      t('orderBump.addButton')
-                    )}
-                  </button>
+                  {orderBumpSelected ? (
+                    <div
+                      className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2"
+                      style={{ background: '#22c55e', color: '#fff', border: '1.5px solid #22c55e' }}
+                    >
+                      <Check className="h-4 w-4" />
+                      {t('orderBump.addedButton')}
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleToggleOrderBump}
+                      disabled={isUpdatingBump}
+                      className="btn-pulse w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      style={{ background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }}
+                    >
+                      {isUpdatingBump ? t('general.loading') : t('orderBump.addButton')}
+                    </button>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -757,27 +747,39 @@ export default function CheckoutPage() {
 
           {/* Stripe Elements — only shown after shipping is validated */}
           {step === 'payment' && stripePromise && clientSecret && (
-            <Elements stripe={stripePromise} options={{
-                clientSecret,
-                appearance: {
-                  theme: 'flat',
-                  variables: { borderRadius: '6px', fontSizeBase: '14px' },
-                  rules: {
-                    '.Block': { border: 'none', boxShadow: 'none', backgroundColor: 'transparent', padding: '0' },
-                    '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', backgroundColor: '#fff', padding: '10px 12px' },
-                    '.Input:focus': { border: '1px solid hsl(var(--ring))', boxShadow: '0 0 0 2px hsl(var(--ring) / 0.2)' },
-                    '.Label': { fontWeight: '600', fontSize: '13px' },
-                  },
-                },
-              }}>
-              <PaymentForm
-                amountTotal={amountTotal}
-                shipping={shipping}
-                items={items}
-                orderBumpSelected={orderBumpSelected}
-                paymentIntentId={paymentIntentId}
-              />
-            </Elements>
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl font-bold">{t('checkout.paymentDetails')}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <Elements
+                  key={i18n.language}
+                  stripe={stripePromise}
+                  options={{
+                    clientSecret,
+                    locale: i18n.language as any,
+                    appearance: {
+                      theme: 'flat',
+                      variables: { borderRadius: '6px', fontSizeBase: '14px' },
+                      rules: {
+                        '.Block': { border: 'none', boxShadow: 'none', backgroundColor: 'transparent', padding: '0' },
+                        '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', backgroundColor: '#fff', padding: '10px 12px' },
+                        '.Input:focus': { border: '1px solid hsl(var(--ring))', boxShadow: '0 0 0 2px hsl(var(--ring) / 0.2)' },
+                        '.Label': { fontWeight: '600', fontSize: '13px' },
+                      },
+                    },
+                  }}
+                >
+                  <PaymentForm
+                    amountTotal={amountTotal}
+                    shipping={shipping}
+                    items={items}
+                    orderBumpSelected={orderBumpSelected}
+                    paymentIntentId={paymentIntentId}
+                  />
+                </Elements>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>

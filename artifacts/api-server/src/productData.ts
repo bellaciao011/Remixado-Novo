@@ -76,7 +76,7 @@ export const PRODUCTS: ProductData[] = [
     id: 'box-100-packs',
     slug: 'box-bundle',
     images: [
-      '/assets/de2-boxbundle-001_1780429019754.webp',
+      '/assets/50packs_1780519717152.webp',
       '/assets/de2-boxbundle-002_1780429019753.webp',
       '/assets/de2-boxbundle-003_1780429019753.webp',
       '/assets/de2-boxbundle-004_1780429019745.webp',

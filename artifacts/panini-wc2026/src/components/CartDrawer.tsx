@@ -5,7 +5,7 @@ import { useCart, CartItem } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
-import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft } from 'lucide-react';
 
 const formatPrice = (price: number, currency = 'eur') => {
   const cur = currency.toUpperCase();
@@ -144,6 +144,13 @@ export function CartDrawer() {
               >
                 {t('buttons.checkout')}
               </Button>
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="w-full flex items-center justify-center gap-2 mt-3 py-2 text-[13px] font-semibold text-[#555] hover:text-[#1a1a1a] transition-colors underline underline-offset-4"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                {t('buttons.continueShopping')}
+              </button>
             </div>
           </>
         )}

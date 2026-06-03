@@ -640,6 +640,100 @@ Das bietet dir die Stickerkollektion zur WM 2026:
     },
   },
   {
+    id: 'adrenalyn-omni-set',
+    slug: 'adrenalyn-xl-omni-set',
+    images: [
+      '/assets/de10-boxbundle-001_1780458366583.webp',
+      '/assets/de10-boxbundle-002_1780458366583.webp',
+      '/assets/de10-boxbundle-003_1780458366583.webp',
+      '/assets/de10-boxbundle-004_1780458366582.webp',
+      '/assets/de10-boxbundle-005_1780458366582.webp',
+      '/assets/de10-boxbundle-006_1780458366582.webp',
+      '/assets/de10-boxbundle-007_1780458366581.webp',
+      '/assets/de10-boxbundle-008_1780458366581.webp',
+      '/assets/de10-boxbundle-009_1780458366571.webp',
+    ],
+    price: 20700,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: 'limitedEdition',
+    featured: true,
+    inStock: true,
+    stripeProductName: 'FIFA World Cup 2026 Adrenalyn XL Omni-Set Panini',
+    sortOrder: 11,
+    translations: {
+      'pt-BR': {
+        name: 'FIFA Copa do Mundo 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Coleção completa numerada (1/2026 a 2026/2026) – 630 cards + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Mergulhe na experiência definitiva da FIFA Copa do Mundo™ com o conjunto oficial Panini FIFA Copa do Mundo 2026™ Adrenalyn XL™ Omni Set.
+
+Pela primeira vez, a Panini apresenta uma Complete Collection exclusiva em uma Deluxe Box – para verdadeiros colecionadores e fãs do futebol.
+Cada caixa é numerada individualmente – de 1/2026 a 2026/2026.
+
+Conteúdo:
+• Todos os 630 cards oficiais, incluindo os 9 exclusivos Golden Ballers
+• O único set com as 3 exclusivas Momentum Cards: Bellingham, Dembélé e Pulisic
+• Pasta Deluxe de colecionador em qualidade premium – para proteger e apresentar sua coleção com exclusividade
+• Código para o jogo online, para desbloquear os cards no jogo digital oficial
+• Checklist completa para acompanhar cada card da coleção
+
+O fascínio completo da FIFA Copa do Mundo™ Adrenalyn XL™ – exclusivamente online`,
+      },
+      'en': {
+        name: 'FIFA World Cup 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Individually numbered complete collection (1/2026 to 2026/2026) – 630 cards + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Dive into the ultimate FIFA World Cup™ experience with the official Panini FIFA World Cup 2026™ Adrenalyn XL™ Omni Set.
+
+For the very first time, Panini presents an exclusive Complete Collection in a Deluxe Box – for true collectors and football fans.
+Each box is individually numbered – from 1/2026 to 2026/2026.
+
+What's inside:
+• All 630 official cards, including the nine unique Golden Ballers
+• The only set featuring all three exclusive Momentum Cards: Bellingham, Dembélé and Pulisic
+• Deluxe Collector's Binder in premium quality – to protect and exclusively showcase your collection
+• Online game code to unlock the cards in the official digital game
+• Complete checklist to track every card in the collection
+
+The full fascination of the FIFA World Cup™ Adrenalyn XL™ – exclusively online`,
+      },
+      'es': {
+        name: 'FIFA Copa del Mundo 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Colección completa numerada individualmente (1/2026 a 2026/2026) – 630 cartas + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Sumérgete en la experiencia definitiva de la Copa del Mundo FIFA™ con el set oficial Panini FIFA Copa del Mundo 2026™ Adrenalyn XL™ Omni Set.
+
+Por primera vez, Panini presenta una Complete Collection exclusiva en una Deluxe Box – para verdaderos coleccionistas y aficionados al fútbol.
+Cada caja está numerada individualmente – del 1/2026 al 2026/2026.
+
+Contenido:
+• Las 630 cartas oficiales, incluidos los 9 exclusivos Golden Ballers
+• El único set con las 3 exclusivas Momentum Cards: Bellingham, Dembélé y Pulisic
+• Carpeta Deluxe de coleccionista en calidad premium – para proteger y mostrar tu colección de forma exclusiva
+• Código para el juego online, para desbloquear las cartas en el juego digital oficial
+• Checklist completa para seguir cada carta de la colección
+
+La fascinación completa de la Copa del Mundo FIFA™ Adrenalyn XL™ – exclusivamente online`,
+      },
+      'de': {
+        name: 'FIFA Fußball-Weltmeisterschaft 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Individuell nummerierte Complete Collection (1/2026 bis 2026/2026) – 630 Karten + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Tauche ein in das ultimative FIFA Fußball-Weltmeisterschaft™ Erlebnis mit dem offiziellen Panini FIFA Fußball-Weltmeisterschaft 2026™ Adrenalyn XL™ Omni Set.
+
+Zum ersten Mal überhaupt präsentiert Panini eine exklusive Complete Collection in einer Deluxe-Box – für echte Sammler und Fußballfans.
+Jede Box ist einzeln nummeriert – von 1/2026 bis 2026/2026.
+
+Enthalten sind:
+• Alle 630 offiziellen Karten, inklusive der neun einzigartigen Golden Ballers
+• Das einzige Set mit den drei exklusiven Momentum-Cards: Bellingham, Dembélé und Pulisic
+• Deluxe Sammelordner in Premium-Qualität – zum Schutz und zur exklusiven Präsentation der Kollektion
+• Online-Game-Code, um die Cards im offiziellen digitalen Game freizuschalten
+• Vollständige Checklist, um jede Card der Kollektion nachzuverfolgen
+
+Die volle Faszination der FIFA Fußball-Weltmeisterschaft™ Adrenalyn XL™ – exklusiv online`,
+      },
+    },
+  },
+  {
     id: 'treasure-box-united',
     slug: 'treasure-box-united-edition',
     images: [

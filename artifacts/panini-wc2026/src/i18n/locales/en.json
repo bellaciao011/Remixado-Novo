@@ -63,7 +63,20 @@
     "verifyErrorDetail": "Could not confirm payment for this session.",
     "securePayment": "Secure payment processed by Stripe",
     "proceedToPayment": "Complete Payment",
-    "paymentDetails": "Payment Details"
+    "paymentDetails": "Payment Details",
+    "shippingAddress": "Shipping Address",
+    "emailAddress": "Email Address",
+    "emailNote": "ATTENTION: Enter a valid and correct email address, all information relating to the order and shipping will be sent to that address.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "streetAddress": "Street Address",
+    "country": "Country",
+    "county": "County",
+    "city": "City",
+    "postCode": "Post Code",
+    "phoneNumber": "Phone Number",
+    "phoneNote": "For delivery questions.",
+    "shippingRequired": "Please fill in all required shipping address fields."
   },
   "general": {
     "loading": "Loading...",

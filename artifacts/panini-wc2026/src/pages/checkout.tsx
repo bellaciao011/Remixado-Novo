@@ -9,7 +9,55 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, ShoppingCart, Lock } from 'lucide-react';
 
-function PaymentForm({ amountTotal }: { amountTotal: number }) {
+interface ShippingData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  streetAddress: string;
+  country: string;
+  county: string;
+  city: string;
+  postCode: string;
+  phoneNumber: string;
+}
+
+const COUNTRIES = [
+  { code: 'AT', name: 'Austria' },
+  { code: 'BE', name: 'Belgium' },
+  { code: 'BR', name: 'Brazil' },
+  { code: 'CA', name: 'Canada' },
+  { code: 'HR', name: 'Croatia' },
+  { code: 'CY', name: 'Cyprus' },
+  { code: 'CZ', name: 'Czech Republic' },
+  { code: 'DK', name: 'Denmark' },
+  { code: 'EE', name: 'Estonia' },
+  { code: 'FI', name: 'Finland' },
+  { code: 'FR', name: 'France' },
+  { code: 'DE', name: 'Germany' },
+  { code: 'GR', name: 'Greece' },
+  { code: 'HU', name: 'Hungary' },
+  { code: 'IE', name: 'Ireland' },
+  { code: 'IT', name: 'Italy' },
+  { code: 'LV', name: 'Latvia' },
+  { code: 'LT', name: 'Lithuania' },
+  { code: 'LU', name: 'Luxembourg' },
+  { code: 'MT', name: 'Malta' },
+  { code: 'MX', name: 'Mexico' },
+  { code: 'NL', name: 'Netherlands' },
+  { code: 'NO', name: 'Norway' },
+  { code: 'PL', name: 'Poland' },
+  { code: 'PT', name: 'Portugal' },
+  { code: 'RO', name: 'Romania' },
+  { code: 'SK', name: 'Slovakia' },
+  { code: 'SI', name: 'Slovenia' },
+  { code: 'ES', name: 'Spain' },
+  { code: 'SE', name: 'Sweden' },
+  { code: 'CH', name: 'Switzerland' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'US', name: 'United States' },
+];
+
+function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping: ShippingData }) {
   const { t } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
@@ -17,12 +65,22 @@ function PaymentForm({ amountTotal }: { amountTotal: number }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+  const formatPrice = (val: number) =>
+    new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
+
+    const required: (keyof ShippingData)[] = [
+      'email', 'firstName', 'lastName', 'streetAddress', 'country', 'city', 'postCode', 'phoneNumber',
+    ];
+    for (const field of required) {
+      if (!shipping[field]?.trim()) {
+        setErrorMessage(t('checkout.shippingRequired'));
+        return;
+      }
+    }
 
     setIsProcessing(true);
     setErrorMessage(null);
@@ -32,6 +90,18 @@ function PaymentForm({ amountTotal }: { amountTotal: number }) {
       redirect: 'if_required',
       confirmParams: {
         return_url: `${window.location.origin}/pedido/confirmado`,
+        receipt_email: shipping.email,
+        shipping: {
+          name: `${shipping.firstName} ${shipping.lastName}`,
+          phone: shipping.phoneNumber,
+          address: {
+            line1: shipping.streetAddress,
+            city: shipping.city,
+            state: shipping.county || undefined,
+            postal_code: shipping.postCode,
+            country: shipping.country,
+          },
+        },
       },
     });
 
@@ -73,7 +143,7 @@ function PaymentForm({ amountTotal }: { amountTotal: number }) {
       >
         {isProcessing
           ? t('general.loading')
-          : `${t('checkout.proceedToPayment')} — ${formatPrice(amountTotal)}`}
+          : `${t('checkout.proceedToPayment')} — ${formatPrice(amountTotal / 100)}`}
       </Button>
     </form>
   );
@@ -85,13 +155,27 @@ export default function CheckoutPage() {
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [amountTotal, setAmountTotal] = useState<number>(0);
+  const [shipping, setShipping] = useState<ShippingData>({
+    email: '',
+    firstName: '',
+    lastName: '',
+    streetAddress: '',
+    country: 'DE',
+    county: '',
+    city: '',
+    postCode: '',
+    phoneNumber: '',
+  });
 
   const { data: configData } = useGetCheckoutConfig();
-
   const createPaymentIntent = useCreatePaymentIntent();
 
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+  const formatPrice = (val: number) =>
+    new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+
+  const handleShipping = (field: keyof ShippingData) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+      setShipping(prev => ({ ...prev, [field]: e.target.value }));
 
   useEffect(() => {
     if (configData?.publishableKey) {
@@ -132,9 +216,14 @@ export default function CheckoutPage() {
     );
   }
 
+  const inputClass =
+    'w-full border border-input rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring';
+  const labelClass = 'block text-sm font-semibold mb-1';
+  const requiredMark = <span className="text-destructive ml-0.5">*</span>;
+
   return (
     <div className="min-h-screen bg-background py-12 md:py-20">
-      <div className="container max-w-3xl px-4">
+      <div className="container max-w-3xl px-4 mx-auto">
         <div className="mb-8">
           <Button variant="ghost" asChild className="mb-4 -ml-2 text-muted-foreground">
             <Link href="/produtos">
@@ -181,10 +270,126 @@ export default function CheckoutPage() {
             </CardContent>
           </Card>
 
+          {/* Shipping Address */}
+          <Card className="shadow-sm">
+            <CardHeader className="border-b">
+              <CardTitle className="text-xl font-bold uppercase tracking-wide">
+                {t('checkout.shippingAddress')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-5">
+              {/* Email */}
+              <div>
+                <label className={labelClass}>
+                  {t('checkout.emailAddress')}{requiredMark}
+                </label>
+                <input
+                  type="email"
+                  className={inputClass}
+                  value={shipping.email}
+                  onChange={handleShipping('email')}
+                />
+                <p className="text-xs text-muted-foreground mt-1">{t('checkout.emailNote')}</p>
+              </div>
+
+              {/* First + Last Name */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>{t('checkout.firstName')}{requiredMark}</label>
+                  <input
+                    type="text"
+                    className={inputClass}
+                    value={shipping.firstName}
+                    onChange={handleShipping('firstName')}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>{t('checkout.lastName')}{requiredMark}</label>
+                  <input
+                    type="text"
+                    className={inputClass}
+                    value={shipping.lastName}
+                    onChange={handleShipping('lastName')}
+                  />
+                </div>
+              </div>
+
+              {/* Street Address */}
+              <div>
+                <label className={labelClass}>{t('checkout.streetAddress')}{requiredMark}</label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={shipping.streetAddress}
+                  onChange={handleShipping('streetAddress')}
+                />
+              </div>
+
+              {/* Country */}
+              <div>
+                <label className={labelClass}>{t('checkout.country')}{requiredMark}</label>
+                <select
+                  className={inputClass}
+                  value={shipping.country}
+                  onChange={handleShipping('country')}
+                >
+                  {COUNTRIES.map(c => (
+                    <option key={c.code} value={c.code}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* County (optional) */}
+              <div>
+                <label className={labelClass}>{t('checkout.county')}</label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={shipping.county}
+                  onChange={handleShipping('county')}
+                />
+              </div>
+
+              {/* City + Post Code */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>{t('checkout.city')}{requiredMark}</label>
+                  <input
+                    type="text"
+                    className={inputClass}
+                    value={shipping.city}
+                    onChange={handleShipping('city')}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>{t('checkout.postCode')}{requiredMark}</label>
+                  <input
+                    type="text"
+                    className={inputClass}
+                    value={shipping.postCode}
+                    onChange={handleShipping('postCode')}
+                  />
+                </div>
+              </div>
+
+              {/* Phone Number */}
+              <div>
+                <label className={labelClass}>{t('checkout.phoneNumber')}{requiredMark}</label>
+                <input
+                  type="tel"
+                  className={inputClass}
+                  value={shipping.phoneNumber}
+                  onChange={handleShipping('phoneNumber')}
+                />
+                <p className="text-xs text-muted-foreground mt-1">{t('checkout.phoneNote')}</p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Stripe Elements Payment Form */}
           {stripePromise && clientSecret ? (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <PaymentForm amountTotal={amountTotal} />
+              <PaymentForm amountTotal={amountTotal} shipping={shipping} />
             </Elements>
           ) : (
             <div className="flex items-center justify-center py-12">

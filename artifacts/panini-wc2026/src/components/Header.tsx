@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { ShoppingCart, Menu } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCart } from '../contexts/CartContext';
 import { Button } from './ui/button';
 import {
@@ -22,21 +23,29 @@ const languages = [
 export function Header() {
   const { t, i18n } = useTranslation();
   const { totalItems, setIsCartOpen } = useCart();
+  const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
 
   const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
+
+  const handleHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    queryClient.invalidateQueries();
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-8">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center space-x-2">
+          <a href="/" onClick={handleHomeClick} className="flex items-center space-x-2 cursor-pointer">
             <img src={logo} alt="Panini Logo" className="h-10 md:h-12 w-auto object-contain" />
-          </Link>
-          
+          </a>
+
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="/" className="transition-colors hover:text-primary text-foreground/80">
+            <a href="/" onClick={handleHomeClick} className="transition-colors hover:text-primary text-foreground/80 cursor-pointer">
               {t('nav.home')}
-            </Link>
+            </a>
             <Link href="/produtos" className="transition-colors hover:text-primary text-foreground/80">
               {t('nav.catalog')}
             </Link>
@@ -53,7 +62,7 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {languages.map((lang) => (
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   key={lang.code}
                   onClick={() => i18n.changeLanguage(lang.code)}
                   className="cursor-pointer flex items-center gap-2 font-medium"
@@ -65,9 +74,9 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="relative"
             onClick={() => setIsCartOpen(true)}
           >

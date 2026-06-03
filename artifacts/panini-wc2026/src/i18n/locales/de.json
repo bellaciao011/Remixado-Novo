@@ -63,7 +63,20 @@
     "verifyErrorDetail": "Die Zahlung für diese Sitzung konnte nicht bestätigt werden.",
     "securePayment": "Sichere Zahlung über Stripe",
     "proceedToPayment": "Zahlung abschließen",
-    "paymentDetails": "Zahlungsdetails"
+    "paymentDetails": "Zahlungsdetails",
+    "shippingAddress": "Lieferadresse",
+    "emailAddress": "E-Mail-Adresse",
+    "emailNote": "ACHTUNG: Geben Sie eine gültige und korrekte E-Mail-Adresse ein. Alle Informationen zur Bestellung und Lieferung werden an diese Adresse gesendet.",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "streetAddress": "Straße und Hausnummer",
+    "country": "Land",
+    "county": "Bundesland / Region",
+    "city": "Stadt",
+    "postCode": "Postleitzahl",
+    "phoneNumber": "Telefonnummer",
+    "phoneNote": "Für Lieferfragen.",
+    "shippingRequired": "Bitte füllen Sie alle Pflichtfelder der Lieferadresse aus."
   },
   "general": {
     "loading": "Wird geladen...",

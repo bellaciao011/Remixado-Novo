@@ -63,7 +63,20 @@
     "verifyErrorDetail": "Não foi possível confirmar o pagamento desta sessão.",
     "securePayment": "Pagamento seguro processado pelo Stripe",
     "proceedToPayment": "Finalizar Pagamento",
-    "paymentDetails": "Dados de Pagamento"
+    "paymentDetails": "Dados de Pagamento",
+    "shippingAddress": "Endereço de Entrega",
+    "emailAddress": "E-mail",
+    "emailNote": "ATENÇÃO: Insira um endereço de e-mail válido e correto. Todas as informações sobre o pedido e a entrega serão enviadas para esse endereço.",
+    "firstName": "Nome",
+    "lastName": "Sobrenome",
+    "streetAddress": "Endereço",
+    "country": "País",
+    "county": "Estado / Região",
+    "city": "Cidade",
+    "postCode": "CEP / Código Postal",
+    "phoneNumber": "Número de Telefone",
+    "phoneNote": "Para questões de entrega.",
+    "shippingRequired": "Por favor, preencha todos os campos obrigatórios do endereço de entrega."
   },
   "general": {
     "loading": "Carregando...",

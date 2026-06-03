@@ -63,7 +63,20 @@
     "verifyErrorDetail": "No se pudo confirmar el pago de esta sesión.",
     "securePayment": "Pago seguro procesado por Stripe",
     "proceedToPayment": "Completar Pago",
-    "paymentDetails": "Datos de Pago"
+    "paymentDetails": "Datos de Pago",
+    "shippingAddress": "Dirección de Envío",
+    "emailAddress": "Correo Electrónico",
+    "emailNote": "ATENCIÓN: Ingrese una dirección de correo electrónico válida y correcta. Toda la información relacionada con el pedido y el envío se enviará a esa dirección.",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "streetAddress": "Dirección",
+    "country": "País",
+    "county": "Provincia / Región",
+    "city": "Ciudad",
+    "postCode": "Código Postal",
+    "phoneNumber": "Número de Teléfono",
+    "phoneNote": "Para consultas de entrega.",
+    "shippingRequired": "Por favor, complete todos los campos obligatorios de la dirección de envío."
   },
   "general": {
     "loading": "Cargando...",

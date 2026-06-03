@@ -650,7 +650,7 @@ Das bietet dir die Stickerkollektion zur WM 2026:
     id: 'big-collectors-bundle',
     slug: 'big-collectors-bundle',
     images: [
-      '/assets/de11-boxbundle-001_1780458779150.webp',
+      '/assets/143packs_1780520198863.webp',
       '/assets/de11-boxbundle-002_1780458779149.webp',
       '/assets/de11-boxbundle-003_1780458779149.webp',
       '/assets/de11-boxbundle-004_1780458779149.webp',

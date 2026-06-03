@@ -131,6 +131,28 @@ export default function OrderConfirmation() {
     if (data?.status === 'complete' && !clearedRef.current) {
       clearCart();
       clearedRef.current = true;
+
+      // UTMify purchase event — fires once when order is confirmed
+      try {
+        const orderValue = data.amountTotal ?? 0;
+        // @ts-ignore — UTMify pixel global
+        if (typeof window._pixel !== 'undefined' && typeof window._pixel.fire === 'function') {
+          // @ts-ignore
+          window._pixel.fire('Purchase', { value: orderValue, currency: 'EUR' });
+        }
+        // Fallback: data-layer style for UTMify advanced tracking
+        // @ts-ignore
+        window.dataLayer = window.dataLayer || [];
+        // @ts-ignore
+        window.dataLayer.push({
+          event: 'purchase',
+          ecommerce: {
+            transaction_id: data.id ?? '',
+            value: orderValue,
+            currency: 'EUR',
+          },
+        });
+      } catch { /* ignore tracking errors */ }
     }
   }, [data?.status, clearCart]);
 

@@ -16,6 +16,8 @@ const resources = {
 type SupportedLang = 'pt-BR' | 'en' | 'es' | 'de';
 const SUPPORTED: SupportedLang[] = ['pt-BR', 'en', 'es', 'de'];
 
+const STORAGE_KEY = '_panini_lng';
+
 /**
  * Resolves a raw BCP-47 tag to a supported language using:
  *  1. Exact match (case-insensitive, pt-BR == pt-br)
@@ -57,21 +59,24 @@ const COUNTRY_LANG: Record<string, SupportedLang> = {
   PA: 'es', PR: 'es', GQ: 'es',
 };
 
+/** Read saved language from localStorage (user preference persists across sessions). */
+function loadSaved(): SupportedLang | null {
+  try {
+    const v = localStorage.getItem(STORAGE_KEY);
+    return v && SUPPORTED.includes(v as SupportedLang) ? (v as SupportedLang) : null;
+  } catch { return null; }
+}
+
+/** Persist language choice so the selector remembers it on next visit. */
+function saveLang(lang: string): void {
+  try { localStorage.setItem(STORAGE_KEY, lang); } catch { /* blocked */ }
+}
+
 /**
  * Async IP-based detection via ipapi.co.
- * Uses session storage to avoid repeated network calls on navigation.
- * Returns null on any failure so callers can fall through to 'en'.
+ * Falls back gracefully; returns null on any failure.
  */
-const SESSION_KEY = '_panini_lng';
-
 async function detectByIP(): Promise<SupportedLang | null> {
-  try {
-    const cached = sessionStorage.getItem(SESSION_KEY);
-    if (cached && SUPPORTED.includes(cached as SupportedLang)) {
-      return cached as SupportedLang;
-    }
-  } catch { /* sessionStorage blocked (private mode, etc.) */ }
-
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
@@ -92,23 +97,28 @@ async function detectByIP(): Promise<SupportedLang | null> {
       lang = COUNTRY_LANG[data.country_code] ?? null;
     }
 
-    if (lang) {
-      try { sessionStorage.setItem(SESSION_KEY, lang); } catch { /* ignore */ }
-    }
     return lang;
   } catch {
     return null;
   }
 }
 
-// ─── Synchronous browser detection (no delay to first render) ───────────────
+// ─── Language resolution order ────────────────────────────────────────────────
+// 1. Saved user preference (localStorage) — always wins
+// 2. Browser navigator.languages (synchronous, no network)
+// 3. IP geolocation (async, only when browser detection was inconclusive)
+// 4. English as universal fallback
 
 const browserLangs: readonly string[] =
   typeof navigator !== 'undefined'
     ? (navigator.languages?.length ? [...navigator.languages] : [navigator.language ?? 'en'])
     : ['en'];
 
-const { lang: initialLang, confident } = pickLanguage(browserLangs);
+const saved = loadSaved();
+const { lang: browserLang, confident } = pickLanguage(browserLangs);
+
+// Saved preference takes priority; otherwise use browser-detected language
+const initialLang: SupportedLang = saved ?? browserLang;
 
 i18n
   .use(initReactI18next)
@@ -119,10 +129,15 @@ i18n
     interpolation: { escapeValue: false }
   });
 
-// ─── Async IP-based refinement ───────────────────────────────────────────────
-// Only fires when the browser provided no recognisable language tag,
-// so a user in Japan with browser set to 'ja' still gets the right language.
-if (!confident) {
+// Persist every language change (manual selector or programmatic)
+i18n.on('languageChanged', (lng: string) => {
+  saveLang(lng);
+});
+
+// ─── Async IP refinement ──────────────────────────────────────────────────────
+// Only fires when there is no saved preference AND the browser provided no
+// recognisable language (e.g. user in Japan with browser set to 'ja').
+if (!saved && !confident) {
   detectByIP().then(lang => {
     if (lang && lang !== i18n.language) {
       i18n.changeLanguage(lang);

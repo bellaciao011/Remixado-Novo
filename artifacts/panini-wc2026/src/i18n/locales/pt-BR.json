@@ -112,9 +112,12 @@
     "removeButton": "Remover da Oferta"
   },
   "upsell": {
-    "sectionTitle": "Ofertas Exclusivas Só Para Você",
-    "sectionSubtitle": "Adicione ao seu pedido com 1 clique — oferta válida apenas agora",
-    "badge": "-50% EXCLUSIVO",
+    "sectionTitle": "50% a Mais de Desconto — Só Aqui e Agora",
+    "sectionSubtitle": "",
+    "badge": "OFERTA EXCLUSIVA · EXPIRA AO SAIR DESTA PÁGINA",
+    "priceOriginal": "Preço original",
+    "priceSite": "Preço no site",
+    "priceExclusive": "Exclusivo aqui",
     "buyButton": "Comprar Agora",
     "buyAgainButton": "Comprar Mais Uma",
     "buyingButton": "Processando...",

@@ -269,108 +269,107 @@ export default function OrderConfirmation() {
 
       {/* ── One-Click Upsell — positioned first, right after confirmation ── */}
       {showUpsell && upsellProducts.length > 0 && (
-        <div style={{ background: 'linear-gradient(135deg,#0a1628 0%,#1a2e50 100%)' }} className="py-10 px-4">
+        <div style={{ background: 'linear-gradient(135deg,#0a1628 0%,#1a2e50 100%)' }} className="py-8 px-4">
           <div className="max-w-3xl mx-auto">
 
             {/* Section header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3"
                 style={{ background: '#FFD600', color: '#1a1a1a' }}
               >
-                <Zap className="h-3.5 w-3.5" />
+                <Zap className="h-3 w-3" />
                 {t('upsell.badge')}
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight leading-tight">
+              <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight leading-tight">
                 {t('upsell.sectionTitle')}
               </h2>
-              <p className="text-sm mt-2" style={{ color: '#FFD600' }}>
-                {t('upsell.sectionSubtitle')}
-              </p>
             </div>
 
-            {/* Product grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Product grid — 3 columns */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {upsellProducts.map(product => {
                 const state = upsellStates[product.id] || 'idle';
                 const purchasedNow = state === 'success';
                 const alreadyOwned = ownedProductIds.has(product.id);
                 const loading = state === 'loading';
                 const errored = state === 'error';
+                const msrp = product.originalPrice ? product.originalPrice / 100 : null;
+                const sitePrice = product.price / 100;
                 const upsellPrice = product.price * 0.5 / 100;
-                const originalPrice = product.price / 100;
+                const discountVsMsrp = msrp ? Math.round((1 - upsellPrice / msrp) * 100) : 50;
                 const name = getProductName(product);
 
                 return (
                   <div
                     key={product.id}
-                    className="rounded-2xl overflow-hidden shadow-xl flex flex-col"
+                    className="rounded-xl overflow-hidden shadow-lg flex flex-col"
                     style={{
                       background: '#fff',
-                      border: purchasedNow ? '2.5px solid #22c55e' : alreadyOwned ? '2.5px solid #3b82f6' : '2.5px solid transparent',
+                      border: purchasedNow ? '2px solid #22c55e' : alreadyOwned ? '2px solid #3b82f6' : '2px solid rgba(255,214,0,0.4)',
                     }}
                   >
                     {/* Image */}
-                    <div className="relative bg-white" style={{ height: '200px' }}>
+                    <div className="relative bg-gray-50" style={{ height: '130px' }}>
                       {product.images[0] && (
                         <img
                           src={product.images[0]}
                           alt={name}
-                          className="w-full h-full object-contain p-3"
+                          className="w-full h-full object-contain p-2"
                         />
                       )}
-
                       {/* Discount badge */}
                       <span
-                        className="absolute top-3 left-3 text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow"
-                        style={{ background: '#e00', color: '#fff' }}
+                        className="absolute top-1.5 left-1.5 text-[9px] font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow"
+                        style={{ background: '#cc0000', color: '#fff' }}
                       >
-                        -50% EXCLUSIVO
+                        -{discountVsMsrp}%
                       </span>
-
-                      {/* "Already in order" badge */}
-                      {alreadyOwned && !purchasedNow && (
-                        <span
-                          className="absolute top-3 right-3 text-[10px] font-black uppercase tracking-wide px-2 py-1 rounded-full flex items-center gap-1"
-                          style={{ background: '#3b82f6', color: '#fff' }}
-                        >
-                          <CheckCircle2 className="h-3 w-3" />
-                          {t('upsell.alreadyOwned')}
+                      {/* Status badge */}
+                      {purchasedNow && (
+                        <span className="absolute top-1.5 right-1.5 text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-0.5" style={{ background: '#22c55e', color: '#fff' }}>
+                          <CheckCircle2 className="h-2.5 w-2.5" />{t('upsell.boughtButton')}
                         </span>
                       )}
-
-                      {/* "Just purchased" badge */}
-                      {purchasedNow && (
-                        <span
-                          className="absolute top-3 right-3 text-[10px] font-black uppercase tracking-wide px-2 py-1 rounded-full flex items-center gap-1"
-                          style={{ background: '#22c55e', color: '#fff' }}
-                        >
-                          <CheckCircle2 className="h-3 w-3" />
-                          {t('upsell.boughtButton')}
+                      {alreadyOwned && !purchasedNow && (
+                        <span className="absolute top-1.5 right-1.5 text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-0.5" style={{ background: '#3b82f6', color: '#fff' }}>
+                          <CheckCircle2 className="h-2.5 w-2.5" />{t('upsell.alreadyOwned')}
                         </span>
                       )}
                     </div>
 
                     {/* Content */}
-                    <div className="p-4 flex flex-col flex-1">
-                      <p className="font-bold text-sm leading-snug mb-3 flex-1">{name}</p>
+                    <div className="p-2.5 flex flex-col flex-1">
+                      <p className="font-bold text-[11px] leading-snug mb-2 line-clamp-2">{name}</p>
 
-                      <div className="flex items-baseline gap-2 mb-4">
-                        <span className="text-sm text-muted-foreground line-through">
-                          {formatPrice(originalPrice)}
-                        </span>
-                        <span className="text-2xl font-black text-primary">
-                          {formatPrice(upsellPrice)}
-                        </span>
+                      {/* Three-tier pricing */}
+                      <div className="space-y-0.5 mb-2.5">
+                        {msrp && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] text-gray-400 uppercase tracking-wide">{t('upsell.priceOriginal')}</span>
+                            <span className="text-[10px] text-gray-400 line-through">{formatPrice(msrp)}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-gray-400 uppercase tracking-wide">{t('upsell.priceSite')}</span>
+                          <span className="text-[10px] text-gray-500 line-through">{formatPrice(sitePrice)}</span>
+                        </div>
+                        <div
+                          className="flex items-center justify-between px-2 py-1 rounded-md mt-1"
+                          style={{ background: '#fff9e6', border: '1px solid #FFD600' }}
+                        >
+                          <span className="text-[9px] font-black uppercase tracking-wide" style={{ color: '#b45309' }}>{t('upsell.priceExclusive')}</span>
+                          <span className="text-sm font-black" style={{ color: '#b45309' }}>{formatPrice(upsellPrice)}</span>
+                        </div>
                       </div>
 
-                      {/* CTA button — always clickable unless just bought now or loading */}
+                      {/* CTA */}
                       {purchasedNow ? (
                         <div
-                          className="w-full h-11 rounded-xl font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2"
+                          className="w-full h-8 rounded-lg font-bold text-[11px] uppercase tracking-wider flex items-center justify-center gap-1"
                           style={{ background: '#22c55e', color: '#fff' }}
                         >
-                          <CheckCircle2 className="h-4 w-4" />
+                          <CheckCircle2 className="h-3 w-3" />
                           {t('upsell.boughtButton')}
                         </div>
                       ) : (
@@ -378,26 +377,20 @@ export default function OrderConfirmation() {
                           type="button"
                           onClick={() => !loading && handleUpsellPurchase(product)}
                           disabled={loading}
-                          className="w-full h-11 rounded-xl font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          className="w-full h-8 rounded-lg font-bold text-[11px] uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-1"
                           style={
                             loading
-                              ? { background: '#f5f5f5', color: '#999', border: '1.5px solid #e5e7eb' }
+                              ? { background: '#f5f5f5', color: '#999' }
                               : errored
-                              ? { background: '#fee2e2', color: '#dc2626', border: '1.5px solid #fca5a5' }
-                              : alreadyOwned
-                              ? { background: '#FFD600', color: '#1a1a1a' }
+                              ? { background: '#fee2e2', color: '#dc2626' }
                               : { background: '#FFD600', color: '#1a1a1a' }
                           }
                         >
-                          {loading ? (
-                            t('upsell.buyingButton')
-                          ) : errored ? (
-                            t('upsell.errorMessage')
-                          ) : alreadyOwned ? (
-                            <><RefreshCw className="h-4 w-4" />{t('upsell.buyAgainButton')}</>
-                          ) : (
-                            <><ShoppingBag className="h-4 w-4" />{t('upsell.buyButton')}</>
-                          )}
+                          {loading ? t('upsell.buyingButton')
+                            : errored ? t('upsell.errorMessage')
+                            : alreadyOwned ? <><RefreshCw className="h-3 w-3" />{t('upsell.buyAgainButton')}</>
+                            : <><ShoppingBag className="h-3 w-3" />{t('upsell.buyButton')}</>
+                          }
                         </button>
                       )}
                     </div>

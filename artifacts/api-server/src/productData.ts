@@ -25,6 +25,10 @@ export interface ProductData {
   };
 }
 
+export const ORDER_BUMP_PRICE = 2500;
+export const ORDER_BUMP_ORIGINAL_PRICE = 5000;
+export const ORDER_BUMP_ID = 'order-bump-50packs';
+
 export const PRODUCTS: ProductData[] = [
   {
     id: 'box-100-packs',

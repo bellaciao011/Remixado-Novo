@@ -101,5 +101,13 @@
     "trustBadge": "Offizielle FIFA Fußball-Weltmeisterschaft 2026™ Kollektion.",
     "descriptionLabel": "BESCHREIBUNG",
     "relatedProducts": "ÄHNLICHE PRODUKTE"
+  },
+  "orderBump": {
+    "exclusiveOffer": "Exklusives Angebot für Sie",
+    "badge": "-50% EXKLUSIV",
+    "title": "Box mit 50 Tüten – 350 offizielle Sticker",
+    "shortDesc": "50 Tüten × 7 Sticker = 350 offizielle FIFA World Cup 2026™ Sticker. Jetzt 50% günstiger sichern.",
+    "addButton": "Zur Bestellung hinzufügen – nur €25",
+    "removeButton": "Aus Angebot entfernen"
   }
 }

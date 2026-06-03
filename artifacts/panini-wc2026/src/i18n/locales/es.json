@@ -101,5 +101,13 @@
     "trustBadge": "Colección oficial de la Copa Mundial de la FIFA 2026™.",
     "descriptionLabel": "DESCRIPCIÓN",
     "relatedProducts": "PRODUCTOS RELACIONADOS"
+  },
+  "orderBump": {
+    "exclusiveOffer": "Oferta Exclusiva Para Ti",
+    "badge": "-50% EXCLUSIVO",
+    "title": "Caja con 50 Sobres – 350 Cromos Oficiales",
+    "shortDesc": "50 sobres × 7 cromos = 350 cromos oficiales Copa Mundial FIFA 2026™. Consíguelo ahora con 50% de descuento.",
+    "addButton": "Añadir al Pedido – solo €25",
+    "removeButton": "Quitar de la Oferta"
   }
 }

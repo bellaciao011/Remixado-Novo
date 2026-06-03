@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
-import { PRODUCTS } from '../productData';
+import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID } from '../productData';
 
 const router = Router();
 
@@ -127,6 +127,48 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
   } catch (error: any) {
     console.error('PaymentIntent error:', error);
     res.status(400).json({ error: error.message || 'Failed to create payment intent' });
+  }
+});
+
+router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { addOrderBump, baseItems } = req.body as {
+      addOrderBump: boolean;
+      baseItems: { productId: string; quantity: number }[];
+    };
+
+    if (!baseItems || !Array.isArray(baseItems) || baseItems.length === 0) {
+      res.status(400).json({ error: 'baseItems are required' });
+      return;
+    }
+
+    let amountTotal = 0;
+
+    for (const item of baseItems) {
+      if (!item.productId || !item.quantity || item.quantity < 1) {
+        res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
+        return;
+      }
+      const product = PRODUCTS.find(p => p.id === item.productId);
+      if (!product) {
+        res.status(400).json({ error: `Product not found: ${item.productId}` });
+        return;
+      }
+      amountTotal += product.price * item.quantity;
+    }
+
+    if (addOrderBump) {
+      amountTotal += ORDER_BUMP_PRICE;
+    }
+
+    const stripe = await getUncachableStripeClient();
+    await stripe.paymentIntents.update(id, { amount: amountTotal });
+
+    res.json({ amountTotal: amountTotal / 100, currency: 'eur' });
+  } catch (error: any) {
+    console.error('Update PaymentIntent error:', error);
+    res.status(400).json({ error: error.message || 'Failed to update payment intent' });
   }
 });
 

@@ -101,5 +101,13 @@
     "trustBadge": "Coleção oficial da Copa do Mundo FIFA 2026™.",
     "descriptionLabel": "DESCRIÇÃO",
     "relatedProducts": "PRODUTOS RELACIONADOS"
+  },
+  "orderBump": {
+    "exclusiveOffer": "Oferta Exclusiva para Você",
+    "badge": "-50% EXCLUSIVO",
+    "title": "Caixa com 50 Envelopes – 350 Figurinhas Oficiais",
+    "shortDesc": "50 envelopes × 7 figurinhas = 350 figurinhas oficiais FIFA World Cup 2026™. Aproveite agora com 50% de desconto.",
+    "addButton": "Adicionar ao Pedido – apenas €25",
+    "removeButton": "Remover da Oferta"
   }
 }

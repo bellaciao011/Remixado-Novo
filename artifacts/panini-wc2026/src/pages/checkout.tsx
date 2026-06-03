@@ -7,7 +7,14 @@ import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ShoppingCart, Lock, AlertCircle, Check, Pencil } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Lock, AlertCircle, Check, Pencil, Tag } from 'lucide-react';
+
+const ORDER_BUMP = {
+  id: 'order-bump-50packs',
+  price: 2500,
+  originalPrice: 5000,
+  image: '/assets/figurinhas_1780497538703.webp',
+};
 
 const getItemName = (item: CartItem, lang: string): string => {
   if (item.translations) {
@@ -86,12 +93,11 @@ interface PaymentFormProps {
   amountTotal: number;
   shipping: ShippingData;
   items: CartItem[];
-  invalidFields: Set<ShippingField>;
-  onShippingInvalid: (fields: Set<ShippingField>) => void;
-  shippingCardRef: React.RefObject<HTMLDivElement>;
+  orderBumpSelected: boolean;
+  paymentIntentId: string;
 }
 
-function PaymentForm({ shipping, items }: PaymentFormProps) {
+function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: PaymentFormProps) {
   const { t } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
@@ -117,6 +123,10 @@ function PaymentForm({ shipping, items }: PaymentFormProps) {
         image: item.image,
       }))));
       sessionStorage.setItem('panini_order_shipping', JSON.stringify(shipping));
+      sessionStorage.setItem('panini_order_bump', JSON.stringify(orderBumpSelected));
+      if (paymentIntentId) {
+        sessionStorage.setItem('panini_payment_intent_id', paymentIntentId);
+      }
     } catch {}
 
     const { error, paymentIntent } = await stripe.confirmPayment({
@@ -195,9 +205,12 @@ export default function CheckoutPage() {
   const { items, totalPrice } = useCart();
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string>('');
   const [amountTotal, setAmountTotal] = useState<number>(0);
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [isProceedingToPayment, setIsProceedingToPayment] = useState(false);
+  const [orderBumpSelected, setOrderBumpSelected] = useState(false);
+  const [isUpdatingBump, setIsUpdatingBump] = useState(false);
   const [shipping, setShipping] = useState<ShippingData>({
     email: '',
     firstName: '',
@@ -258,6 +271,7 @@ export default function CheckoutPage() {
         onSuccess: (data) => {
           setClientSecret(data.clientSecret);
           setAmountTotal(data.amountTotal);
+          setPaymentIntentId(data.paymentIntentId || '');
           setStep('payment');
           setIsProceedingToPayment(false);
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -267,6 +281,29 @@ export default function CheckoutPage() {
         },
       }
     );
+  };
+
+  const handleToggleOrderBump = async () => {
+    if (!paymentIntentId || isUpdatingBump) return;
+    const nextSelected = !orderBumpSelected;
+    setIsUpdatingBump(true);
+    try {
+      const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || '';
+      const res = await fetch(`${apiBase}/api/checkout/payment-intent/${paymentIntentId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          addOrderBump: nextSelected,
+          baseItems: items.map(item => ({ productId: item.productId, quantity: item.quantity })),
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAmountTotal(data.amountTotal);
+        setOrderBumpSelected(nextSelected);
+      }
+    } catch {}
+    setIsUpdatingBump(false);
   };
 
   if (items.length === 0) {
@@ -298,6 +335,8 @@ export default function CheckoutPage() {
 
   const requiredMark = <span className="text-destructive ml-0.5">*</span>;
   const countryName = COUNTRIES.find(c => c.code === shipping.country)?.name || shipping.country;
+
+  const effectiveTotal = step === 'payment' ? amountTotal : totalPrice;
 
   return (
     <div className="min-h-screen bg-background py-12 md:py-20">
@@ -360,12 +399,32 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 ))}
+
+                {/* Order bump line in summary when selected */}
+                {step === 'payment' && orderBumpSelected && (
+                  <div className="flex items-center gap-4 py-3 border-b last:border-0">
+                    <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                      <img src={ORDER_BUMP.image} alt={t('orderBump.title')} className="h-full w-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold">{t('orderBump.title')}</p>
+                      <p className="text-sm text-muted-foreground">{t('checkout.quantity')}: 1</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[12px] text-[#999] line-through leading-none">
+                        {formatPrice(ORDER_BUMP.originalPrice / 100)}
+                      </p>
+                      <p className="font-bold text-primary">{formatPrice(ORDER_BUMP.price / 100)}</p>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="mt-6 pt-4 border-t space-y-2">
                 {(() => {
                   const totalOriginal = items.reduce((sum, item) =>
-                    sum + ((item.originalPrice ?? item.price) * item.quantity), 0);
-                  const savings = totalOriginal - totalPrice;
+                    sum + ((item.originalPrice ?? item.price) * item.quantity), 0)
+                    + (step === 'payment' && orderBumpSelected ? ORDER_BUMP.originalPrice / 100 : 0);
+                  const savings = totalOriginal - effectiveTotal;
                   const hasDiscount = savings > 0.001;
                   return (
                     <>
@@ -384,7 +443,7 @@ export default function CheckoutPage() {
                       <div className="flex justify-between items-center pt-2 border-t">
                         <span className="text-xl font-bold uppercase">{t('labels.total')}</span>
                         <div className="text-right">
-                          <span className="text-2xl font-black text-primary">{formatPrice(totalPrice)}</span>
+                          <span className="text-2xl font-black text-primary">{formatPrice(effectiveTotal)}</span>
                           {hasDiscount && (
                             <span className="block text-[11px] font-bold text-[#e00] uppercase tracking-wide">
                               {Math.round(savings / totalOriginal * 100)}% {t('checkout.offLabel')}
@@ -399,8 +458,8 @@ export default function CheckoutPage() {
             </CardContent>
           </Card>
 
-          {/* Shipping Address */}
-          <Card className="shadow-sm" ref={shippingCardRef as React.RefObject<HTMLDivElement>}>
+          {/* Shipping Address — accordion collapse */}
+          <Card className="shadow-sm overflow-hidden" ref={shippingCardRef as React.RefObject<HTMLDivElement>}>
             <CardHeader className="border-b flex flex-row items-center justify-between">
               <CardTitle className="text-xl font-bold">
                 {t('checkout.shippingAddress')}
@@ -415,11 +474,18 @@ export default function CheckoutPage() {
                 </button>
               )}
             </CardHeader>
-            <CardContent className="p-6">
 
-              {/* In payment step, show read-only summary */}
-              {step === 'payment' ? (
-                <div className="text-sm text-foreground space-y-1">
+            {/* Collapsed summary */}
+            <div
+              style={{
+                maxHeight: step === 'payment' ? '120px' : '0px',
+                opacity: step === 'payment' ? 1 : 0,
+                overflow: 'hidden',
+                transition: 'max-height 320ms ease, opacity 280ms ease',
+              }}
+            >
+              <CardContent className="px-6 py-4">
+                <div className="text-sm text-foreground space-y-0.5">
                   <p className="font-semibold">{shipping.firstName} {shipping.lastName}</p>
                   <p className="text-muted-foreground">{shipping.email}</p>
                   <p className="text-muted-foreground">{shipping.streetAddress}</p>
@@ -428,7 +494,19 @@ export default function CheckoutPage() {
                   </p>
                   <p className="text-muted-foreground">{countryName}</p>
                 </div>
-              ) : (
+              </CardContent>
+            </div>
+
+            {/* Full form */}
+            <div
+              style={{
+                maxHeight: step === 'shipping' ? '1200px' : '0px',
+                opacity: step === 'shipping' ? 1 : 0,
+                overflow: 'hidden',
+                transition: 'max-height 350ms ease, opacity 300ms ease',
+              }}
+            >
+              <CardContent className="p-6">
                 <div className="space-y-5">
                   {/* Validation alert */}
                   {invalidFields.size > 0 && (
@@ -559,9 +637,91 @@ export default function CheckoutPage() {
                     {isProceedingToPayment ? t('general.loading') : t('checkout.continueToPayment')}
                   </button>
                 </div>
-              )}
-            </CardContent>
+              </CardContent>
+            </div>
           </Card>
+
+          {/* Order Bump card — shown only after shipping step */}
+          {step === 'payment' && (
+            <Card
+              className="shadow-sm overflow-hidden border-2"
+              style={{
+                borderColor: orderBumpSelected ? '#FFD600' : '#e5e7eb',
+                background: orderBumpSelected ? 'rgba(255,214,0,0.04)' : undefined,
+                transition: 'border-color 250ms ease, background 250ms ease',
+              }}
+            >
+              <CardContent className="p-0">
+                {/* Header banner */}
+                <div className="flex items-center gap-2 px-5 py-3 border-b" style={{ background: '#FFD600' }}>
+                  <Tag className="h-4 w-4 text-[#1a1a1a]" />
+                  <span className="text-sm font-black uppercase tracking-widest text-[#1a1a1a]">
+                    {t('orderBump.exclusiveOffer')}
+                  </span>
+                </div>
+
+                <div className="flex gap-4 p-5">
+                  {/* Image */}
+                  <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-muted">
+                    <img
+                      src={ORDER_BUMP.image}
+                      alt={t('orderBump.title')}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    {/* Badge */}
+                    <span
+                      className="inline-block text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded mb-1"
+                      style={{ background: '#e00', color: '#fff' }}
+                    >
+                      {t('orderBump.badge')}
+                    </span>
+                    <p className="font-bold text-sm leading-snug mb-1">{t('orderBump.title')}</p>
+                    <p className="text-xs text-muted-foreground leading-snug mb-2">{t('orderBump.shortDesc')}</p>
+
+                    {/* Pricing */}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm text-[#999] line-through">
+                        {formatPrice(ORDER_BUMP.originalPrice / 100)}
+                      </span>
+                      <span className="text-xl font-black text-primary">
+                        {formatPrice(ORDER_BUMP.price / 100)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Toggle button */}
+                <div className="px-5 pb-5">
+                  <button
+                    type="button"
+                    onClick={handleToggleOrderBump}
+                    disabled={isUpdatingBump}
+                    className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    style={
+                      orderBumpSelected
+                        ? { background: '#f0f0f0', color: '#666', border: '1.5px solid #ccc' }
+                        : { background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }
+                    }
+                  >
+                    {isUpdatingBump ? (
+                      t('general.loading')
+                    ) : orderBumpSelected ? (
+                      <>
+                        <Check className="h-4 w-4 text-green-600" />
+                        {t('orderBump.removeButton')}
+                      </>
+                    ) : (
+                      t('orderBump.addButton')
+                    )}
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Stripe Elements — only shown after shipping is validated */}
           {step === 'payment' && stripePromise && clientSecret && (
@@ -570,9 +730,8 @@ export default function CheckoutPage() {
                 amountTotal={amountTotal}
                 shipping={shipping}
                 items={items}
-                invalidFields={invalidFields}
-                onShippingInvalid={setInvalidFields}
-                shippingCardRef={shippingCardRef as React.RefObject<HTMLDivElement>}
+                orderBumpSelected={orderBumpSelected}
+                paymentIntentId={paymentIntentId}
               />
             </Elements>
           )}

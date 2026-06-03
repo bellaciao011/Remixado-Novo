@@ -7,7 +7,7 @@ import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ShoppingCart, Lock, AlertCircle, Check, Pencil, Tag } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, AlertCircle, Check, Pencil, Tag } from 'lucide-react';
 
 const ORDER_BUMP = {
   id: 'order-bump-50packs',
@@ -198,14 +198,9 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
           <CardTitle className="text-xl font-bold">{t('checkout.paymentDetails')}</CardTitle>
         </CardHeader>
         <CardContent className="p-6">
-          <PaymentElement />
+          <PaymentElement options={{ terms: { card: 'never' } }} />
         </CardContent>
       </Card>
-
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Lock className="h-4 w-4" />
-        <span>{t('checkout.securePayment')}</span>
-      </div>
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
@@ -236,6 +231,10 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
 export default function CheckoutPage() {
   const { t, i18n } = useTranslation();
   const { items, totalPrice } = useCart();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [paymentIntentId, setPaymentIntentId] = useState<string>('');
@@ -511,13 +510,13 @@ export default function CheckoutPage() {
             {/* Collapsed summary */}
             <div
               style={{
-                maxHeight: step === 'payment' ? '120px' : '0px',
+                maxHeight: step === 'payment' ? '200px' : '0px',
                 opacity: step === 'payment' ? 1 : 0,
                 overflow: 'hidden',
                 transition: 'max-height 320ms ease, opacity 280ms ease',
               }}
             >
-              <CardContent className="px-6 py-4">
+              <CardContent className="px-6 py-5">
                 <div className="text-sm text-foreground space-y-0.5">
                   <p className="font-semibold">{shipping.firstName} {shipping.lastName}</p>
                   <p className="text-muted-foreground">{shipping.email}</p>
@@ -733,7 +732,7 @@ export default function CheckoutPage() {
                     type="button"
                     onClick={handleToggleOrderBump}
                     disabled={isUpdatingBump}
-                    className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className={`w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2${!orderBumpSelected && !isUpdatingBump ? ' btn-pulse' : ''}`}
                     style={
                       orderBumpSelected
                         ? { background: '#f0f0f0', color: '#666', border: '1.5px solid #ccc' }
@@ -758,7 +757,19 @@ export default function CheckoutPage() {
 
           {/* Stripe Elements — only shown after shipping is validated */}
           {step === 'payment' && stripePromise && clientSecret && (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <Elements stripe={stripePromise} options={{
+                clientSecret,
+                appearance: {
+                  theme: 'flat',
+                  variables: { borderRadius: '6px', fontSizeBase: '14px' },
+                  rules: {
+                    '.Block': { border: 'none', boxShadow: 'none', backgroundColor: 'transparent', padding: '0' },
+                    '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', backgroundColor: '#fff', padding: '10px 12px' },
+                    '.Input:focus': { border: '1px solid hsl(var(--ring))', boxShadow: '0 0 0 2px hsl(var(--ring) / 0.2)' },
+                    '.Label': { fontWeight: '600', fontSize: '13px' },
+                  },
+                },
+              }}>
               <PaymentForm
                 amountTotal={amountTotal}
                 shipping={shipping}

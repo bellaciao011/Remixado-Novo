@@ -13,7 +13,7 @@ import type { Product } from '@workspace/api-client-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, User, MapPin, CreditCard, Package, Truck, Zap, ShoppingBag } from 'lucide-react';
+import { CheckCircle2, User, MapPin, CreditCard, Package, Truck, Zap } from 'lucide-react';
 
 const CARD_BRAND_LABELS: Record<string, string> = {
   visa: 'Visa',
@@ -243,10 +243,7 @@ export default function OrderConfirmation() {
   const savings = totalOriginal - totalPaid;
   const hasSavings = savings > 0.001 && storedItems.length > 0;
 
-  const purchasedUpsellIds = new Set(upsellPurchases.map(u => u.productId));
-  const upsellProducts = (allProducts || []).filter(p =>
-    p.inStock && !ownedProductIds.has(p.id) && !purchasedUpsellIds.has(p.id)
-  );
+  const upsellProducts = (allProducts || []).filter(p => p.inStock);
 
   const showUpsell = !!(upsellCustomerId && upsellPaymentMethodId);
   const cumulativeTotal = totalPaid + upsellPurchases.reduce((sum, u) => sum + u.price, 0);
@@ -330,7 +327,7 @@ export default function OrderConfirmation() {
             </CardContent>
           </Card>
 
-          {/* Order Summary */}
+          {/* Consolidated Order Summary — updates as upsells are purchased */}
           <Card className="shadow-sm border-primary/10">
             <CardHeader className="border-b bg-muted/20 py-4">
               <CardTitle className="flex items-center gap-2 text-lg font-bold">
@@ -339,38 +336,55 @@ export default function OrderConfirmation() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-5">
-              {displayItems.length > 0 ? (
-                <div className="space-y-3 mb-5">
-                  {displayItems.map((item, idx) => {
-                    const name = 'translations' in item ? getItemName(item as typeof storedItems[0]) : (item as any).name;
-                    const itemPrice = 'price' in item ? (item as typeof storedItems[0]).price : (item as any).amount;
-                    const qty = item.quantity;
-                    const origPrice = 'originalPrice' in item ? (item as typeof storedItems[0]).originalPrice : undefined;
-                    const img = 'image' in item ? (item as typeof storedItems[0]).image : undefined;
-                    return (
-                      <div key={idx} className="flex items-center gap-4 py-3 border-b last:border-0">
-                        {img && (
-                          <div className="h-14 w-14 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                            <img src={img} alt={name} className="h-full w-full object-cover" />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm leading-snug">{name}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{t('checkout.quantity')}: {qty}</p>
+              <div className="space-y-3 mb-5">
+                {/* Original order items */}
+                {displayItems.map((item, idx) => {
+                  const name = 'translations' in item ? getItemName(item as typeof storedItems[0]) : (item as any).name;
+                  const itemPrice = 'price' in item ? (item as typeof storedItems[0]).price : (item as any).amount;
+                  const qty = item.quantity;
+                  const origPrice = 'originalPrice' in item ? (item as typeof storedItems[0]).originalPrice : undefined;
+                  const img = 'image' in item ? (item as typeof storedItems[0]).image : undefined;
+                  return (
+                    <div key={idx} className="flex items-center gap-4 py-3 border-b">
+                      {img && (
+                        <div className="h-14 w-14 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                          <img src={img} alt={name} className="h-full w-full object-cover" />
                         </div>
-                        <div className="text-right flex-shrink-0">
-                          {origPrice && origPrice > itemPrice && (
-                            <p className="text-[11px] text-muted-foreground line-through leading-none">
-                              {formatPrice(origPrice * qty)}
-                            </p>
-                          )}
-                          <p className="font-bold text-primary text-sm">{formatPrice(itemPrice * qty)}</p>
-                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm leading-snug">{name}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{t('checkout.quantity')}: {qty}</p>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : null}
+                      <div className="text-right flex-shrink-0">
+                        {origPrice && origPrice > itemPrice && (
+                          <p className="text-[11px] text-muted-foreground line-through leading-none">
+                            {formatPrice(origPrice * qty)}
+                          </p>
+                        )}
+                        <p className="font-bold text-primary text-sm">{formatPrice(itemPrice * qty)}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Upsell items added after confirmation */}
+                {upsellPurchases.map((u, idx) => (
+                  <div key={`upsell-${idx}`} className="flex items-center gap-4 py-3 border-b last:border-0">
+                    {u.image && (
+                      <div className="h-14 w-14 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                        <img src={u.image} alt={u.name} className="h-full w-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm leading-snug">{u.name}</p>
+                      <p className="text-xs font-semibold" style={{ color: '#16a34a' }}>-50%</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="font-bold text-primary text-sm">{formatPrice(u.price)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
               <div className="space-y-2 pt-2">
                 {hasSavings && (
@@ -388,9 +402,14 @@ export default function OrderConfirmation() {
                 <div className="flex justify-between items-center py-3 px-4 bg-primary/5 rounded-xl border border-primary/10 mt-2">
                   <span className="text-lg font-bold uppercase">{t('labels.total')}</span>
                   <span className="text-2xl font-black text-primary">
-                    {formatPrice(storedItems.length > 0 ? totalPaid : data.amountTotal)}
+                    {formatPrice(upsellPurchases.length > 0 ? cumulativeTotal : (storedItems.length > 0 ? totalPaid : data.amountTotal))}
                   </span>
                 </div>
+                {upsellPurchases.length > 0 && (
+                  <p className="text-xs text-center text-muted-foreground pt-1">
+                    {t('upsell.cumulativeTotal')}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -433,7 +452,9 @@ export default function OrderConfirmation() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {upsellProducts.map(product => {
                   const state = upsellStates[product.id] || 'idle';
-                  const purchased = state === 'success';
+                  const purchasedNow = state === 'success';
+                  const alreadyOwned = ownedProductIds.has(product.id);
+                  const isOwned = purchasedNow || alreadyOwned;
                   const loading = state === 'loading';
                   const errored = state === 'error';
                   const upsellPrice = product.price * 0.5 / 100;
@@ -445,8 +466,8 @@ export default function OrderConfirmation() {
                       key={product.id}
                       className="rounded-xl border overflow-hidden shadow-sm transition-colors"
                       style={{
-                        borderColor: purchased ? '#22c55e' : '#e5e7eb',
-                        background: purchased ? 'rgba(34,197,94,0.04)' : undefined,
+                        borderColor: isOwned ? '#22c55e' : '#e5e7eb',
+                        background: isOwned ? 'rgba(34,197,94,0.04)' : undefined,
                       }}
                     >
                       {product.images[0] && (
@@ -480,11 +501,11 @@ export default function OrderConfirmation() {
 
                         <button
                           type="button"
-                          onClick={() => !purchased && !loading && handleUpsellPurchase(product)}
-                          disabled={purchased || loading}
+                          onClick={() => !isOwned && !loading && handleUpsellPurchase(product)}
+                          disabled={isOwned || loading}
                           className="w-full h-11 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:cursor-not-allowed flex items-center justify-center gap-2"
                           style={
-                            purchased
+                            isOwned
                               ? { background: '#22c55e', color: '#fff', border: '1.5px solid #22c55e' }
                               : loading
                               ? { background: '#f5f5f5', color: '#999', border: '1.5px solid #e5e7eb' }
@@ -493,8 +514,8 @@ export default function OrderConfirmation() {
                               : { background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }
                           }
                         >
-                          {purchased ? (
-                            <><CheckCircle2 className="h-4 w-4" />{t('upsell.boughtButton')}</>
+                          {isOwned ? (
+                            <><CheckCircle2 className="h-4 w-4" />{alreadyOwned && !purchasedNow ? t('upsell.alreadyOwned') : t('upsell.boughtButton')}</>
                           ) : loading ? (
                             t('upsell.buyingButton')
                           ) : errored ? (
@@ -509,42 +530,6 @@ export default function OrderConfirmation() {
                 })}
               </div>
 
-              {/* Cumulative purchase summary */}
-              {upsellPurchases.length > 0 && (
-                <Card className="mt-6 shadow-sm" style={{ borderColor: '#22c55e' }}>
-                  <CardHeader className="border-b py-4" style={{ background: 'rgba(34,197,94,0.06)' }}>
-                    <CardTitle className="flex items-center gap-2 text-lg font-bold" style={{ color: '#15803d' }}>
-                      <ShoppingBag className="h-5 w-5" />
-                      {t('upsell.additionalPurchases')}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-5">
-                    <div className="space-y-3 mb-4">
-                      {upsellPurchases.map((u, idx) => (
-                        <div key={idx} className="flex items-center gap-4 py-2 border-b last:border-0">
-                          {u.image && (
-                            <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                              <img src={u.image} alt={u.name} className="h-full w-full object-cover" />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-sm leading-snug">{u.name}</p>
-                            <p className="text-xs font-semibold" style={{ color: '#16a34a' }}>-50%</p>
-                          </div>
-                          <p className="font-bold text-primary text-sm flex-shrink-0">
-                            {formatPrice(u.price)}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex justify-between items-center py-3 px-4 bg-primary/5 rounded-xl border border-primary/10">
-                      <span className="text-base font-bold uppercase">{t('upsell.cumulativeTotal')}</span>
-                      <span className="text-xl font-black text-primary">{formatPrice(cumulativeTotal)}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
             </div>
           )}
 

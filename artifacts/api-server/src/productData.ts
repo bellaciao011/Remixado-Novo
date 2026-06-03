@@ -276,7 +276,7 @@ Was dich in der größten Fußball-Stickerkollektion des Jahres 2026 zur FIFA Fu
     originalPrice: null,
     currency: 'eur',
     priceId: '',
-    badge: null,
+    badge: 'bestSeller',
     featured: true,
     inStock: true,
     stripeProductName: 'Box mit 50 Tüten FIFA World Cup 2026',

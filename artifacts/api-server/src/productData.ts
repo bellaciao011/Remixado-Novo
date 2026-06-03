@@ -529,7 +529,7 @@ Das erwartet dich in der Stickerkollektion zur FIFA Fußball-Weltmeisterschaft 2
     id: 'bundle-stars',
     slug: 'hardcover-big-box-bundle',
     images: [
-      '/assets/de5-boxbundle-001_1780437996281.webp',
+      '/assets/100packscd_1780519925164.webp',
       '/assets/de5-boxbundle-002_1780437996280.webp',
       '/assets/de5-boxbundle-003_1780437996280.webp',
       '/assets/de5-boxbundle-004_1780437996280.webp',

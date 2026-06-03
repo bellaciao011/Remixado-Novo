@@ -1102,6 +1102,95 @@ Die Pocket Tins und Classic Tins werden in zufälligen Designs versendet – ein
     },
   },
   {
+    id: 'super-premium-box-60',
+    slug: 'super-premium-box-60',
+    images: [
+      '/assets/de13-boxbundle-001_1780460546576.webp',
+      '/assets/de13-boxbundle-002_1780460546575.webp',
+      '/assets/de13-boxbundle-003_1780460546575.webp',
+      '/assets/de13-boxbundle-004_1780460546571.webp',
+    ],
+    price: 7400,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: 'exclusivo',
+    featured: false,
+    inStock: true,
+    stripeProductName: 'Coleção Oficial FIFA World Cup 2026™ – Box Super Premium com 60 Envelopes',
+    sortOrder: 14,
+    translations: {
+      'pt-BR': {
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Box Super Premium com 60 Envelopes',
+        shortDescription: 'Álbum Capa Dura Ouro + 60 envelopes com 420 figurinhas oficiais',
+        description: `Este Exclusivo Box Super Premium inclui 1 Álbum Capa Dura Ouro, 60 envelopes com 420 figurinhas oficiais que podem ajudar você a completar seu álbum com jogadores, escudos das seleções e momentos inesquecíveis do torneio. Abrir cada envelope é como reviver a emoção da Copa do Mundo e compartilhar sua paixão pelo futebol com a família e os amigos.
+
+FIFA World Cup 2026™ – Livro Ilustrado Oficial
+As emoções do maior espetáculo esportivo do mundo eternizadas no maior álbum de figurinhas de todos os tempos! Uma coleção completa, com todas as seleções classificadas, cromos especiais e todos os detalhes para você acompanhar de pertinho a disputa pela taça da FIFA World Cup 2026™!
+
+O álbum tem 980 cromos, sendo 68 deles especiais, e contempla as 48 seleções que participam do Mundial de 2026, que acontece entre junho e julho no México, nos Estados Unidos e no Canadá.
+
+Conteúdo do Box Super Premium:
+• 1 Álbum Capa Dura Ouro – FIFA World Cup 2026™ Livro Ilustrado Oficial
+• 60 envelopes com 7 figurinhas cada (420 figurinhas no total)
+• 980 cromos no álbum, sendo 68 especiais
+• 48 seleções participantes do Mundial 2026
+• Perfeito para começar sua coleção ou adicionar peças exclusivas`,
+      },
+      'en': {
+        name: 'Official FIFA World Cup 2026™ Collection – Super Premium Box with 60 Packets',
+        shortDescription: 'Gold Hardcover Album + 60 packets with 420 official stickers',
+        description: `This Exclusive Super Premium Box includes 1 Gold Hardcover Album, 60 packets containing 420 official stickers to help you complete your album with players, national team badges and unforgettable moments from the tournament. Opening each packet is like reliving the excitement of the World Cup and sharing your passion for football with family and friends.
+
+FIFA World Cup 2026™ – Official Illustrated Book
+The emotions of the world's greatest sporting spectacle immortalized in the greatest sticker album of all time! A complete collection featuring all qualified national teams, special stickers and every detail to follow the battle for the FIFA World Cup 2026™ trophy!
+
+The album features 980 stickers, 68 of them special, covering all 48 national teams participating in the 2026 World Cup, held between June and July in Mexico, the United States and Canada.
+
+Super Premium Box contents:
+• 1 Gold Hardcover Album – FIFA World Cup 2026™ Official Illustrated Book
+• 60 packets with 7 stickers each (420 stickers total)
+• 980 stickers in the album, 68 of them special
+• 48 participating national teams at the 2026 World Cup
+• Perfect to start your collection or add exclusive pieces`,
+      },
+      'es': {
+        name: 'Colección Oficial FIFA World Cup 2026™ – Caja Super Premium con 60 Sobres',
+        shortDescription: 'Álbum Tapa Dura Oro + 60 sobres con 420 stickers oficiales',
+        description: `Esta exclusiva Caja Super Premium incluye 1 Álbum Tapa Dura Oro, 60 sobres con 420 stickers oficiales que te ayudarán a completar tu álbum con jugadores, escudos de selecciones y momentos inolvidables del torneo. Abrir cada sobre es como revivir la emoción del Mundial y compartir tu pasión por el fútbol con la familia y los amigos.
+
+FIFA World Cup 2026™ – Libro Ilustrado Oficial
+¡Las emociones del mayor espectáculo deportivo del mundo inmortalizadas en el mayor álbum de stickers de todos los tiempos! Una colección completa con todas las selecciones clasificadas, cromos especiales y todos los detalles para seguir de cerca la lucha por el trofeo de la FIFA World Cup 2026™.
+
+El álbum cuenta con 980 cromos, 68 de ellos especiales, e incluye las 48 selecciones participantes del Mundial 2026, que se celebra entre junio y julio en México, Estados Unidos y Canadá.
+
+Contenido de la Caja Super Premium:
+• 1 Álbum Tapa Dura Oro – FIFA World Cup 2026™ Libro Ilustrado Oficial
+• 60 sobres con 7 stickers cada uno (420 stickers en total)
+• 980 cromos en el álbum, 68 de ellos especiales
+• 48 selecciones participantes del Mundial 2026
+• Perfecto para comenzar tu colección o añadir piezas exclusivas`,
+      },
+      'de': {
+        name: 'Offizielle FIFA Fußball-WM 2026™ Kollektion – Super Premium Box mit 60 Tüten',
+        shortDescription: 'Gold-Hardcover-Album + 60 Tüten mit 420 offiziellen Stickern',
+        description: `Diese exklusive Super Premium Box enthält 1 Gold-Hardcover-Album, 60 Tüten mit 420 offiziellen Stickern, die dir helfen, dein Album mit Spielern, Nationalmannschaftswappen und unvergesslichen Turniermomenten zu vervollständigen. Jede Tüte zu öffnen ist wie die WM-Begeisterung neu zu erleben und deine Leidenschaft für Fußball mit Familie und Freunden zu teilen.
+
+FIFA Fußball-WM 2026™ – Offizielles Illustriertes Buch
+Die Emotionen des größten sportlichen Spektakels der Welt, verewigt im größten Stickeralbum aller Zeiten! Eine vollständige Kollektion mit allen qualifizierten Nationalmannschaften, Spezialstickern und allen Details, um den Kampf um den FIFA Fußball-WM 2026™-Pokal hautnah mitzuverfolgen!
+
+Das Album enthält 980 Sticker, davon 68 Spezialsticker, und deckt alle 48 Nationalmannschaften ab, die an der WM 2026 teilnehmen – zwischen Juni und Juli in Mexiko, den USA und Kanada.
+
+Inhalt der Super Premium Box:
+• 1 Gold-Hardcover-Album – FIFA Fußball-WM 2026™ Offizielles Illustriertes Buch
+• 60 Tüten mit je 7 Stickern (420 Sticker insgesamt)
+• 980 Sticker im Album, davon 68 Spezialsticker
+• 48 teilnehmende Nationalmannschaften bei der WM 2026
+• Perfekt, um deine Sammlung zu starten oder exklusive Stücke hinzuzufügen`,
+      },
+    },
+  },
+  {
     id: 'stadium-collection-box',
     slug: 'stadium-collection-box',
     images: [

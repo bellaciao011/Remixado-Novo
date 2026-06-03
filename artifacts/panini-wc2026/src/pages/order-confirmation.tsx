@@ -45,6 +45,23 @@ export default function OrderConfirmation() {
 
   const [upsellStates, setUpsellStates] = useState<Record<string, UpsellState>>({});
   const [upsellPurchases, setUpsellPurchases] = useState<UpsellPurchase[]>([]);
+  const [countdown, setCountdown] = useState(5 * 60);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) { clearInterval(timer); return 0; }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatCountdown = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
 
   const { data: sessionData, isLoading: sessionLoading, isError: sessionError } = useVerifyCheckoutSession(
     { session_id: sessionId || '' },
@@ -275,11 +292,12 @@ export default function OrderConfirmation() {
             {/* Section header */}
             <div className="text-center mb-6">
               <div
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-3"
                 style={{ background: '#FFD600', color: '#1a1a1a' }}
               >
-                <Zap className="h-3 w-3" />
-                {t('upsell.badge')}
+                <span className="font-mono text-sm font-black tabular-nums">{formatCountdown(countdown)}</span>
+                <span>·</span>
+                <span>{t('upsell.badge')}</span>
               </div>
               <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight leading-tight">
                 {t('upsell.sectionTitle')}
@@ -518,31 +536,37 @@ export default function OrderConfirmation() {
               ))}
             </div>
 
-            <div className="space-y-2 pt-2">
-              {hasSavings && (
-                <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{t('checkout.originalTotal')}</span>
-                  <span className="line-through">{formatPrice(totalOriginal)}</span>
+            {hasSavings && (
+              <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                <div className="flex justify-between items-center px-4 py-2.5 bg-gray-50">
+                  <span className="text-sm text-muted-foreground">{t('checkout.originalTotal')}</span>
+                  <span className="text-sm text-muted-foreground line-through">{formatPrice(totalOriginal)}</span>
                 </div>
-              )}
-              {hasSavings && (
-                <div className="flex justify-between text-sm text-[#e00] font-semibold">
-                  <span>{t('checkout.youSave')}</span>
-                  <span>- {formatPrice(savings)}</span>
+                <div className="flex justify-between items-center px-4 py-2.5 bg-green-50 border-t border-green-100">
+                  <span className="text-sm font-bold text-green-700">{t('checkout.youSave')}</span>
+                  <span className="text-base font-black text-green-700">- {formatPrice(savings)}</span>
                 </div>
-              )}
-              <div className="flex justify-between items-center py-3 px-4 bg-primary/5 rounded-xl border border-primary/10 mt-2">
+                <div className="flex justify-between items-center px-4 py-3.5 bg-primary" style={{ background: 'hsl(var(--primary))' }}>
+                  <span className="text-base font-black text-primary-foreground uppercase tracking-wide">{t('labels.total')}</span>
+                  <span className="text-2xl font-black text-primary-foreground">
+                    {formatPrice(upsellPurchases.length > 0 ? cumulativeTotal : totalPaid)}
+                  </span>
+                </div>
+              </div>
+            )}
+            {!hasSavings && (
+              <div className="mt-4 flex justify-between items-center px-4 py-3.5 rounded-xl bg-primary/5 border border-primary/10">
                 <span className="text-lg font-bold uppercase">{t('labels.total')}</span>
                 <span className="text-2xl font-black text-primary">
                   {formatPrice(upsellPurchases.length > 0 ? cumulativeTotal : (storedItems.length > 0 ? totalPaid : data.amountTotal))}
                 </span>
               </div>
-              {upsellPurchases.length > 0 && (
-                <p className="text-xs text-center text-muted-foreground pt-1">
-                  {t('upsell.cumulativeTotal')}
-                </p>
-              )}
-            </div>
+            )}
+            {upsellPurchases.length > 0 && (
+              <p className="text-xs text-center text-muted-foreground pt-2">
+                {t('upsell.cumulativeTotal')}
+              </p>
+            )}
           </CardContent>
         </Card>
 
@@ -565,11 +589,6 @@ export default function OrderConfirmation() {
           </CardContent>
         </Card>
 
-        <div className="pt-4 text-center">
-          <Button asChild variant="outline" size="lg">
-            <Link href="/produtos">{t('buttons.backToStore')}</Link>
-          </Button>
-        </div>
 
       </div>
     </div>

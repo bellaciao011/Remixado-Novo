@@ -112,14 +112,14 @@
     "removeButton": "Remover da Oferta"
   },
   "upsell": {
-    "sectionTitle": "50% a Mais de Desconto — Só Aqui e Agora",
+    "sectionTitle": "GARANTA AGORA: PREÇOS EXCLUSIVOS QUE NÃO SE REPETEM",
     "sectionSubtitle": "",
     "badge": "OFERTA EXCLUSIVA · EXPIRA AO SAIR DESTA PÁGINA",
     "priceOriginal": "Preço original",
     "priceSite": "Preço no site",
     "priceExclusive": "Exclusivo aqui",
     "buyButton": "Comprar Agora",
-    "buyAgainButton": "Comprar Mais Uma",
+    "buyAgainButton": "Comprar Novamente",
     "buyingButton": "Processando...",
     "boughtButton": "Adquirido!",
     "errorMessage": "Erro — Tentar novamente",

@@ -112,14 +112,14 @@
     "removeButton": "Remove from Order"
   },
   "upsell": {
-    "sectionTitle": "50% Extra Off — Only Here and Now",
+    "sectionTitle": "ACT NOW: EXCLUSIVE PRICES THAT WON'T COME BACK",
     "sectionSubtitle": "",
     "badge": "EXCLUSIVE OFFER · EXPIRES WHEN YOU LEAVE THIS PAGE",
     "priceOriginal": "Original price",
     "priceSite": "Site price",
     "priceExclusive": "Exclusive here",
     "buyButton": "Buy Now",
-    "buyAgainButton": "Buy One More",
+    "buyAgainButton": "Buy Again",
     "buyingButton": "Processing...",
     "boughtButton": "Purchased!",
     "errorMessage": "Error — Try again",

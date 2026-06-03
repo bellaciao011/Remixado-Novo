@@ -112,14 +112,14 @@
     "removeButton": "Aus Angebot entfernen"
   },
   "upsell": {
-    "sectionTitle": "50% Mehr Rabatt — Nur Hier und Jetzt",
+    "sectionTitle": "JETZT SICHERN: EINMALIGE PREISE, DIE SICH NICHT WIEDERHOLEN",
     "sectionSubtitle": "",
     "badge": "EXKLUSIVES ANGEBOT · LÄUFT AB, WENN SIE DIE SEITE VERLASSEN",
     "priceOriginal": "Originalpreis",
     "priceSite": "Preis auf der Website",
     "priceExclusive": "Exklusiv hier",
     "buyButton": "Jetzt kaufen",
-    "buyAgainButton": "Noch eine kaufen",
+    "buyAgainButton": "Erneut kaufen",
     "buyingButton": "Wird verarbeitet...",
     "boughtButton": "Gekauft!",
     "errorMessage": "Fehler — Erneut versuchen",

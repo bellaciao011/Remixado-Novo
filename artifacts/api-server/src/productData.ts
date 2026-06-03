@@ -640,6 +640,68 @@ Das bietet dir die Stickerkollektion zur WM 2026:
     },
   },
   {
+    id: 'treasure-box-united',
+    slug: 'treasure-box-united-edition',
+    images: [
+      '/assets/de9-boxbundle-001_1780458133952.webp',
+    ],
+    price: 13000,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: 'limitedEdition',
+    featured: true,
+    inStock: true,
+    stripeProductName: 'FIFA World Cup 2026 Treasure Box United Edition Panini',
+    sortOrder: 10,
+    translations: {
+      'pt-BR': {
+        name: 'FIFA World Cup 2026™ – Treasure Box United Edition Panini',
+        shortDescription: 'Edição limitada numerada (1/5000 a 5000/5000) – Álbum Hardcover exclusivo + 100 envelopes + 16 pôsteres',
+        description: `Treasure Box United Edition: criada para colecionadores que procuram algo verdadeiramente especial.
+Cada caixa é numerada individualmente, de 1/5000 a 5000/5000.
+
+Nesta caixa limitada:
+• 1 Álbum Hardcover exclusivo, elegante e resistente, disponível apenas nesta caixa — um lugar de honra para a sua coleção, não vendido separadamente
+• 100 envelopes de figurinhas, com um total de 700 figurinhas — 100 vezes o som único do rasgar, 100 vezes a chance de encontrar as suas estrelas e 100 vezes a expectativa da próxima troca
+• 16 pôsteres exclusivos das cidades-sede — leve a atmosfera de todos os palcos do mundial diretamente para as suas paredes. Esses pôsteres artísticos das cidades-sede da Copa do Mundo 2026 são peças únicas, disponíveis exclusivamente nesta Treasure Box`,
+      },
+      'en': {
+        name: 'FIFA World Cup 2026™ Sticker Collection – Treasure Box United Edition Panini',
+        shortDescription: 'Individually numbered limited edition (1/5000 to 5000/5000) – Exclusive Hardcover Album + 100 packets + 16 posters',
+        description: `Treasure Box United Edition: created for collectors who are looking for something truly special.
+Each box is individually numbered, from 1/5000 to 5000/5000.
+
+Inside this limited box:
+• 1 Exclusive Hardcover Album — elegant, sturdy and available only in this box. A place of honour for your collection, not available for individual purchase
+• 100 sticker packets, totalling 700 stickers — 100 times the unique sound of tearing, 100 times the chance of finding your stars, and 100 times the anticipation of the next swap
+• 16 Exclusive host city posters — bring the atmosphere of every World Cup venue straight to your walls. These artistic posters of the 2026 World Cup host cities are one-of-a-kind pieces, available exclusively in this Treasure Box`,
+      },
+      'es': {
+        name: 'FIFA World Cup 2026™ Sticker Collection – Treasure Box United Edition Panini',
+        shortDescription: 'Edición limitada numerada individualmente (1/5000 a 5000/5000) – Álbum Hardcover exclusivo + 100 sobres + 16 pósteres',
+        description: `Treasure Box United Edition: creada para los coleccionistas que buscan algo verdaderamente especial.
+Cada caja está numerada individualmente, del 1/5000 al 5000/5000.
+
+Dentro de esta caja limitada:
+• 1 Álbum Hardcover exclusivo — elegante, resistente y disponible únicamente en esta caja. Un lugar de honor para tu colección, no disponible para compra individual
+• 100 sobres de cromos, con un total de 700 cromos — 100 veces el sonido único del rasgado, 100 veces la posibilidad de encontrar tus estrellas y 100 veces la emoción del próximo intercambio
+• 16 pósteres exclusivos de las ciudades anfitrionas — lleva la atmósfera de todos los escenarios del Mundial directamente a tus paredes. Estos pósteres artísticos de las ciudades sede de la Copa del Mundo 2026 son piezas únicas, disponibles exclusivamente en esta Treasure Box`,
+      },
+      'de': {
+        name: 'FIFA World Cup 2026™ Stickerkollektion – Treasure Box United Edition Panini',
+        shortDescription: 'Individuell nummerierte Limitierung (1/5000 bis 5000/5000) – Exklusives Hardcover-Album + 100 Tüten + 16 Poster',
+        description: `Treasure Box United Edition: erschaffen für Sammler, die etwas wirklich Besonderes suchen.
+Jede Box ist individuell nummeriert, von 1/5000 bis 5000/5000.
+
+In dieser limitierten Box:
+• 1 Exklusives Hardcover-Album — elegant, robust und nur in dieser Box erhältlich. Ein Ehrenplatz für deine Sammlung, nicht einzeln käuflich
+• 100 Stickertüten mit insgesamt 700 Stickern — 100-mal das einzigartige Geräusch des Aufreißens, 100-mal die Chance, deine Stars zu finden, und 100-mal die Vorfreude auf den nächsten Tausch
+• 16 Exklusive Poster der Austragungsstädte — bringe die Atmosphäre aller WM-Stadien direkt an deine Wände. Diese künstlerischen Poster der Austragungsstädte der WM 2026 sind einzigartige Stücke, ausschließlich in dieser Treasure Box erhältlich`,
+      },
+    },
+  },
+  {
     id: 'treasure-box',
     slug: 'treasure-box-panini',
     images: [

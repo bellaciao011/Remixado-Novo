@@ -640,6 +640,70 @@ Das bietet dir die Stickerkollektion zur WM 2026:
     },
   },
   {
+    id: 'treasure-box',
+    slug: 'treasure-box-panini',
+    images: [
+      '/assets/de8-boxbundle-001_1780457763795.webp',
+      '/assets/de8-boxbundle-002_1780457763794.webp',
+      '/assets/de8-boxbundle-003_1780457763792.webp',
+    ],
+    price: 2400,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: null,
+    featured: false,
+    inStock: true,
+    stripeProductName: 'FIFA World Cup 2026 Treasure Box Panini',
+    sortOrder: 9,
+    translations: {
+      'pt-BR': {
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Treasure Box Panini',
+        shortDescription: '24 envelopes de 7 figurinhas + Álbum Hardcover oficial',
+        description: `Descubra a Coleção Oficial de Figurinhas Panini FIFA World Cup 2026™, dedicada à Copa do Mundo FIFA 2026™: o primeiro torneio com 48 seleções, realizado na América do Norte. Uma viagem pelas estrelas do futebol e pelos novos talentos em uma das coleções mais completas de sempre.
+
+O álbum tem 112 páginas com 980 figurinhas no total, incluindo 68 figurinhas especiais em material premium.
+
+Esta Treasure Box contém:
+• 24 envelopes com 7 figurinhas cada
+• 1 Álbum com capa dura`,
+      },
+      'en': {
+        name: 'FIFA World Cup 2026™ Official Sticker Collection – Treasure Box Panini',
+        shortDescription: '24 packets of 7 stickers + Official Hardcover Album',
+        description: `Discover the FIFA World Cup 2026™ Official Sticker Collection by Panini, dedicated to the FIFA World Cup 2026™: the first tournament with 48 teams, hosted in North America. A journey through football's biggest stars and rising talents in one of the most complete collections ever.
+
+The album features 112 pages with 980 stickers in total, including 68 special stickers on premium material.
+
+This Treasure Box contains:
+• 24 packets of 7 stickers each
+• 1 Hardcover album`,
+      },
+      'es': {
+        name: 'Colección Oficial FIFA World Cup 2026™ – Treasure Box Panini',
+        shortDescription: '24 sobres de 7 cromos + Álbum oficial de Tapa Dura',
+        description: `Descubre la Colección Oficial de Cromos Panini FIFA World Cup 2026™, dedicada a la Copa del Mundo FIFA 2026™: el primer torneo con 48 equipos, celebrado en América del Norte. Un viaje entre las estrellas del fútbol y los nuevos talentos en una de las colecciones más completas de la historia.
+
+El álbum tiene 112 páginas con 980 cromos en total, incluidos 68 cromos especiales en material premium.
+
+Esta Treasure Box contiene:
+• 24 sobres de 7 cromos cada uno
+• 1 Álbum de tapa dura`,
+      },
+      'de': {
+        name: 'FIFA World Cup 2026™ Offizielle Stickerkollektion – Treasure Box Panini',
+        shortDescription: '24 Tüten mit je 7 Stickern + Offizielles Hardcover-Album',
+        description: `Entdecke die offizielle Panini FIFA World Cup 2026™ Stickerkollektion, gewidmet der FIFA Fußball-Weltmeisterschaft 2026™: das erste Turnier mit 48 Mannschaften, ausgetragen in Nordamerika. Eine Reise durch die Stars des Fußballs und die aufstrebenden Talente – in einer der vollständigsten Kollektionen aller Zeiten.
+
+Das Album umfasst 112 Seiten mit insgesamt 980 Stickern, darunter 68 Sonder-Sticker auf Premium-Material.
+
+Diese Treasure Box enthält:
+• 24 Tüten mit je 7 Stickern
+• 1 Hardcover-Album`,
+      },
+    },
+  },
+  {
     id: 'bundle-3boxes-hardcover',
     slug: '3-caixas-50-album-hardcover',
     images: [

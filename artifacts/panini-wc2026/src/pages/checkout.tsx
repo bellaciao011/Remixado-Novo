@@ -305,6 +305,7 @@ export default function CheckoutPage() {
           setClientSecret(data.clientSecret);
           setAmountTotal(data.amountTotal);
           setPaymentIntentId(data.paymentIntentId || '');
+          setOrderBumpSelected(false);
           setStep('payment');
           setIsProceedingToPayment(false);
           window.scrollTo({ top: 0, behavior: 'smooth' });

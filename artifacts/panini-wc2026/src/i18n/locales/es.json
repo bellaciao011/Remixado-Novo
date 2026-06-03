@@ -113,12 +113,14 @@
   },
   "upsell": {
     "sectionTitle": "Ofertas Exclusivas Solo Para Ti",
+    "sectionSubtitle": "Agrega a tu pedido con 1 clic — oferta válida solo ahora",
     "badge": "-50% EXCLUSIVO",
     "buyButton": "Comprar Ahora",
+    "buyAgainButton": "Comprar Otra",
     "buyingButton": "Procesando...",
     "boughtButton": "¡Adquirido!",
     "errorMessage": "Error — Intentar de nuevo",
-    "alreadyOwned": "Ya adquirido",
+    "alreadyOwned": "Ya en el pedido",
     "additionalPurchases": "Compras Adicionales",
     "cumulativeTotal": "Total Acumulado"
   }

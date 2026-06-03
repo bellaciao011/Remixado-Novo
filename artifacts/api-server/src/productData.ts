@@ -1194,6 +1194,7 @@ Inhalt der Super Premium Box:
     id: 'kit-estadio-numerado',
     slug: 'kit-estadio-numerado',
     images: [
+      '/assets/stadium001_1780461377293.jpg',
       '/assets/de14-boxbundle-001_1780461214828.webp',
       '/assets/de14-boxbundle-002_1780461095017.webp',
       '/assets/de14-boxbundle-003_1780461095017.webp',

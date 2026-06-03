@@ -27,7 +27,6 @@ interface ShippingData {
   county: string;
   city: string;
   postCode: string;
-  phoneNumber: string;
 }
 
 const COUNTRIES = [
@@ -82,7 +81,7 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
     if (!stripe || !elements) return;
 
     const required: (keyof ShippingData)[] = [
-      'email', 'firstName', 'lastName', 'streetAddress', 'country', 'city', 'postCode', 'phoneNumber',
+      'email', 'firstName', 'lastName', 'streetAddress', 'country', 'city', 'postCode',
     ];
     for (const field of required) {
       if (!shipping[field]?.trim()) {
@@ -102,7 +101,6 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
         receipt_email: shipping.email,
         shipping: {
           name: `${shipping.firstName} ${shipping.lastName}`,
-          phone: shipping.phoneNumber,
           address: {
             line1: shipping.streetAddress,
             city: shipping.city,
@@ -173,7 +171,6 @@ export default function CheckoutPage() {
     county: '',
     city: '',
     postCode: '',
-    phoneNumber: '',
   });
 
   const { data: configData } = useGetCheckoutConfig();
@@ -282,7 +279,7 @@ export default function CheckoutPage() {
           {/* Shipping Address */}
           <Card className="shadow-sm">
             <CardHeader className="border-b">
-              <CardTitle className="text-xl font-bold uppercase tracking-wide">
+              <CardTitle className="text-xl font-bold">
                 {t('checkout.shippingAddress')}
               </CardTitle>
             </CardHeader>
@@ -381,17 +378,6 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Phone Number */}
-              <div>
-                <label className={labelClass}>{t('checkout.phoneNumber')}{requiredMark}</label>
-                <input
-                  type="tel"
-                  className={inputClass}
-                  value={shipping.phoneNumber}
-                  onChange={handleShipping('phoneNumber')}
-                />
-                <p className="text-xs text-muted-foreground mt-1">{t('checkout.phoneNote')}</p>
-              </div>
             </CardContent>
           </Card>
 

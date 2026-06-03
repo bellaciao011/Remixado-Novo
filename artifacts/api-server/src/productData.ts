@@ -27,45 +27,6 @@ export interface ProductData {
 
 export const PRODUCTS: ProductData[] = [
   {
-    id: 'starter-pack',
-    slug: 'starter-pack',
-    images: [
-      '/assets/de-boxbundle-002_1780421261995.webp',
-      '/assets/de-boxbundle-003_1780421261995.webp',
-    ],
-    price: 1990,
-    originalPrice: null,
-    currency: 'brl',
-    priceId: '',
-    badge: null,
-    featured: true,
-    inStock: true,
-    stripeProductName: 'Starter Pack - Álbum Oficial',
-    sortOrder: 1,
-    translations: {
-      'pt-BR': {
-        name: 'Starter Pack - Álbum Oficial',
-        shortDescription: 'Álbum oficial da Copa do Mundo FIFA 2026',
-        description: 'Comece sua coleção com o álbum oficial da Copa do Mundo FIFA 2026. Produto licenciado pela FIFA com design premium e espaços para todas as figurinhas da competição.',
-      },
-      'en': {
-        name: 'Starter Pack - Official Album',
-        shortDescription: 'Official FIFA World Cup 2026 album',
-        description: 'Start your collection with the official FIFA World Cup 2026 album. FIFA-licensed product with premium design and spaces for all competition stickers.',
-      },
-      'es': {
-        name: 'Starter Pack - Álbum Oficial',
-        shortDescription: 'Álbum oficial de la Copa del Mundo FIFA 2026',
-        description: 'Comienza tu colección con el álbum oficial de la Copa del Mundo FIFA 2026. Producto con licencia FIFA con diseño premium y espacios para todos los stickers de la competición.',
-      },
-      'de': {
-        name: 'Starter Pack - Offizielles Album',
-        shortDescription: 'Offizielles FIFA Fußball-Weltmeisterschaft 2026 Album',
-        description: 'Beginne deine Sammlung mit dem offiziellen FIFA Fußball-Weltmeisterschaft 2026 Album. FIFA-lizenziertes Produkt mit Premium-Design und Platz für alle Sticker des Turniers.',
-      },
-    },
-  },
-  {
     id: 'box-100-packs',
     slug: 'box-bundle',
     images: [

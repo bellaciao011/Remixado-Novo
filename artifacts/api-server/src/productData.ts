@@ -1191,6 +1191,100 @@ Inhalt der Super Premium Box:
     },
   },
   {
+    id: 'kit-estadio-numerado',
+    slug: 'kit-estadio-numerado',
+    images: [
+      '/assets/de14-boxbundle-001_1780461214828.webp',
+      '/assets/de14-boxbundle-002_1780461095017.webp',
+      '/assets/de14-boxbundle-003_1780461095017.webp',
+      '/assets/de14-boxbundle-004_1780461095017.webp',
+      '/assets/de14-boxbundle-005_1780461095014.webp',
+    ],
+    price: 17900,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: 'limitedEdition',
+    featured: true,
+    inStock: true,
+    stripeProductName: 'Coleção Oficial FIFA World Cup 2026™ – Kit Exclusivo Estádio Numerado 150 Envelopes',
+    sortOrder: 15,
+    translations: {
+      'pt-BR': {
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Kit Exclusivo Estádio Numerado Com 150 Envelopes',
+        shortDescription: 'Álbum Capa Dura Ouro Numerado + 150 envelopes + Voucher 50 Figurinhas',
+        description: `Kit Exclusivo na Livraria Leitura — Para os apaixonados por coleção, o Super Kit Especial Estádio PANINI FIFA World Cup 2026 é uma edição especial pensada para transformar a experiência de colecionar em algo ainda mais memorável.
+
+Este kit exclusivo e em quantidade limitada contém 1 Álbum Capa Dura Ouro Numerado e 150 envelopes, com um total de 1.050 figurinhas oficiais, reunindo jogadores, escudos das seleções e momentos marcantes do torneio.
+
+Como diferencial, o kit ainda acompanha um voucher exclusivo de Missing Stickers, com direito a 50 figurinhas à sua escolha no site da Panini, ideal para ajudar na reta final da coleção.
+
+Perfeito para quem deseja começar sua coleção com um item de destaque ou garantir uma edição especial para o seu acervo.
+
+Conteúdo do Kit Exclusivo Estádio:
+• 1 Álbum Capa Dura Ouro Numerado – FIFA World Cup 2026™
+• 150 envelopes com 7 figurinhas cada (1.050 figurinhas no total)
+• 1 Voucher exclusivo de Missing Stickers (50 figurinhas à escolha)
+• Edição limitada e numerada
+• Produto oficial licenciado pela FIFA`,
+      },
+      'en': {
+        name: 'Official FIFA World Cup 2026™ Collection – Numbered Stadium Exclusive Kit with 150 Packets',
+        shortDescription: 'Numbered Gold Hardcover Album + 150 packets + 50-sticker Missing Stickers Voucher',
+        description: `Exclusive Kit — For passionate collectors, the PANINI FIFA World Cup 2026 Super Special Stadium Kit is a special edition designed to make the collecting experience even more memorable.
+
+This exclusive, limited-quantity kit contains 1 Numbered Gold Hardcover Album and 150 packets, with a total of 1,050 official stickers featuring players, national team badges and memorable tournament moments.
+
+As a special bonus, the kit also includes an exclusive Missing Stickers voucher, entitling you to 50 stickers of your choice on the Panini website — perfect for the final stretch of completing your collection.
+
+Perfect for those who want to start their collection with a standout item or secure a special edition for their collection.
+
+Exclusive Stadium Kit contents:
+• 1 Numbered Gold Hardcover Album – FIFA World Cup 2026™
+• 150 packets with 7 stickers each (1,050 stickers total)
+• 1 Exclusive Missing Stickers Voucher (50 stickers of your choice)
+• Limited and numbered edition
+• Official FIFA-licensed product`,
+      },
+      'es': {
+        name: 'Colección Oficial FIFA World Cup 2026™ – Kit Exclusivo Estadio Numerado con 150 Sobres',
+        shortDescription: 'Álbum Tapa Dura Oro Numerado + 150 sobres + Voucher 50 stickers',
+        description: `Kit Exclusivo — Para los apasionados por las colecciones, el Super Kit Especial Estadio PANINI FIFA World Cup 2026 es una edición especial diseñada para hacer la experiencia de coleccionar aún más memorable.
+
+Este kit exclusivo y en cantidad limitada contiene 1 Álbum Tapa Dura Oro Numerado y 150 sobres, con un total de 1.050 stickers oficiales, reuniendo jugadores, escudos de selecciones y momentos destacados del torneo.
+
+Como valor añadido, el kit incluye también un voucher exclusivo de Missing Stickers, con derecho a 50 stickers a elegir en el sitio de Panini, ideal para ayudar en la recta final de la colección.
+
+Perfecto para quienes desean comenzar su colección con un artículo destacado o asegurarse una edición especial para su acervo.
+
+Contenido del Kit Exclusivo Estadio:
+• 1 Álbum Tapa Dura Oro Numerado – FIFA World Cup 2026™
+• 150 sobres con 7 stickers cada uno (1.050 stickers en total)
+• 1 Voucher exclusivo de Missing Stickers (50 stickers a elegir)
+• Edición limitada y numerada
+• Producto oficial con licencia FIFA`,
+      },
+      'de': {
+        name: 'Offizielle FIFA Fußball-WM 2026™ Kollektion – Nummeriertes Exklusives Stadion-Kit mit 150 Tüten',
+        shortDescription: 'Nummeriertes Gold-Hardcover-Album + 150 Tüten + Missing-Sticker-Voucher für 50 Sticker',
+        description: `Exklusives Kit — Für leidenschaftliche Sammler ist das PANINI FIFA Fußball-WM 2026 Super Special Stadion-Kit eine Sonderedition, die das Sammelerlebnis noch unvergesslicher machen soll.
+
+Dieses exklusive, in limitierter Stückzahl erhältliche Kit enthält 1 nummeriertes Gold-Hardcover-Album und 150 Tüten mit insgesamt 1.050 offiziellen Stickern – mit Spielern, Nationalmannschaftswappen und unvergesslichen Turniermomenten.
+
+Als besonderes Highlight enthält das Kit außerdem einen exklusiven Missing-Sticker-Voucher für 50 Sticker nach Wahl auf der Panini-Website – ideal für die Schlussphase der Sammlung.
+
+Perfekt für alle, die ihre Sammlung mit einem besonderen Artikel starten oder eine Sonderedition für ihre Sammlung sichern möchten.
+
+Inhalt des Exklusiven Stadion-Kits:
+• 1 Nummeriertes Gold-Hardcover-Album – FIFA Fußball-WM 2026™
+• 150 Tüten mit je 7 Stickern (1.050 Sticker insgesamt)
+• 1 Exklusiver Missing-Sticker-Voucher (50 Sticker nach Wahl)
+• Limitierte und nummerierte Auflage
+• Offiziell von der FIFA lizenziertes Produkt`,
+      },
+    },
+  },
+  {
     id: 'stadium-collection-box',
     slug: 'stadium-collection-box',
     images: [

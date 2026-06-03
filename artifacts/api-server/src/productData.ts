@@ -202,7 +202,7 @@ Das erwartet dich in der großen Stickerkollektion zur FIFA WM 2026™:
     id: 'bundle-album-box',
     slug: 'bundle-album-box',
     images: [
-      '/assets/de-boxbundle-001_1780428541012.webp',
+      '/assets/100packs_1780519884607.webp',
       '/assets/de-boxbundle-002_1780428541012.webp',
       '/assets/de-boxbundle-003_1780428541011.webp',
       '/assets/de-boxbundle-004_1780428541011.webp',

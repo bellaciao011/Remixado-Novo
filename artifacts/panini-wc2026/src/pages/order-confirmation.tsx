@@ -269,17 +269,18 @@ export default function OrderConfirmation() {
     <div className="min-h-[70vh] bg-background pb-16">
 
       {/* ── Confirmed header ── */}
-      <div className="bg-white border-b py-10 px-4 text-center">
-        <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-5">
-          <CheckCircle2 className="h-10 w-10 text-green-600" />
+      <div className="bg-white border-b py-6 md:py-10 px-4 text-center">
+        <div className="mx-auto w-14 h-14 md:w-20 md:h-20 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-5">
+          <CheckCircle2 className="h-7 w-7 md:h-10 md:w-10 text-green-600" />
         </div>
-        <h1 className="text-3xl md:text-4xl font-black text-primary uppercase tracking-tight mb-3">
+        <h1 className="text-2xl md:text-4xl font-black text-primary uppercase tracking-tight mb-2 md:mb-3">
           {t('checkout.confirmed')}
         </h1>
-        <p className="text-lg text-muted-foreground">{t('checkout.thankYou')}</p>
+        <p className="text-sm md:text-lg text-muted-foreground leading-snug">{t('checkout.thankYou')}</p>
         {customerEmail && (
-          <p className="text-sm text-foreground font-medium mt-2">
-            {t('checkout.receiptSent')} <span className="font-bold">{customerEmail}</span>
+          <p className="text-xs md:text-sm text-muted-foreground mt-1.5 md:mt-2">
+            {t('checkout.receiptSent')}{' '}
+            <span className="font-bold text-foreground break-all">{customerEmail}</span>
           </p>
         )}
       </div>
@@ -292,14 +293,17 @@ export default function OrderConfirmation() {
             {/* Section header */}
             <div className="text-center mb-6">
               <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-3"
+                className="inline-flex flex-col items-center rounded-2xl px-8 py-3 mb-4"
                 style={{ background: '#FFD600', color: '#1a1a1a' }}
               >
-                <span className="font-mono text-sm font-black tabular-nums">{formatCountdown(countdown)}</span>
-                <span>·</span>
-                <span>{t('upsell.badge')}</span>
+                <span className="font-mono text-4xl font-black tabular-nums leading-none tracking-tight">
+                  {formatCountdown(countdown)}
+                </span>
+                <span className="text-[9px] font-black uppercase tracking-widest mt-1.5 opacity-80">
+                  {t('upsell.badge')}
+                </span>
               </div>
-              <h2 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight leading-tight">
+              <h2 className="text-lg md:text-2xl font-black text-white uppercase tracking-tight leading-tight px-2">
                 {t('upsell.sectionTitle')}
               </h2>
             </div>

@@ -640,6 +640,79 @@ Das bietet dir die Stickerkollektion zur WM 2026:
     },
   },
   {
+    id: 'bundle-3boxes-hardcover',
+    slug: '3-caixas-50-album-hardcover',
+    images: [
+      '/assets/de7-boxbundle-001_1780457266087.webp',
+      '/assets/de7-boxbundle-002_1780457266087.webp',
+      '/assets/de7-boxbundle-003_1780457266079.webp',
+      '/assets/de7-boxbundle-004_1780457266077.webp',
+    ],
+    price: 13700,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: 'bestSeller',
+    featured: true,
+    inStock: true,
+    stripeProductName: '3 Boxes of 50 Packets + Hardcover Album FIFA World Cup 2026',
+    sortOrder: 8,
+    translations: {
+      'pt-BR': {
+        name: 'Coleção Oficial FIFA World Cup 2026™ – 3 Caixas de 50 Envelopes + Álbum Hardcover',
+        shortDescription: '3 Caixas de 50 envelopes + 1 Álbum Hardcover. Cada envelope contém 7 figurinhas.',
+        description: `A coleção oficial de figurinhas Panini FIFA World Cup 2026™ chegou!
+
+Este bundle inclui:
+• 3 Caixas de 50 envelopes (= 1.050 figurinhas no total)
+• 1 Álbum Hardcover oficial
+
+Cada envelope contém 7 figurinhas.
+
+O pacote ideal para quem quer dar um grande salto na coleção e guardar tudo no álbum premium de capa dura.`,
+      },
+      'en': {
+        name: 'Official FIFA World Cup 2026™ Sticker Collection – 3 Boxes of 50 Packets + Hardcover Album',
+        shortDescription: '3 Boxes of 50 packets + 1 Hardcover Album. Each packet contains 7 stickers.',
+        description: `The Panini FIFA World Cup 2026™ official sticker collection is here!
+
+This bundle includes:
+• 3 Boxes of 50 packets (= 1,050 stickers total)
+• 1 Official Hardcover Album
+
+Each packet contains 7 stickers.
+
+The ideal bundle for those who want to make a huge leap in their collection and store everything in a premium hardcover album.`,
+      },
+      'es': {
+        name: 'Colección Oficial FIFA World Cup 2026™ – 3 Cajas de 50 Sobres + Álbum Tapa Dura',
+        shortDescription: '3 Cajas de 50 sobres + 1 Álbum Tapa Dura. Cada sobre contiene 7 cromos.',
+        description: `¡La colección oficial de cromos Panini FIFA World Cup 2026™ ya está aquí!
+
+Este bundle incluye:
+• 3 Cajas de 50 sobres (= 1.050 cromos en total)
+• 1 Álbum oficial de Tapa Dura
+
+Cada sobre contiene 7 cromos.
+
+El bundle ideal para quienes quieren dar un gran salto en su colección y guardar todo en un álbum premium de tapa dura.`,
+      },
+      'de': {
+        name: 'Offizielle FIFA World Cup 2026™ Stickerkollektion – 3 Boxen à 50 Tüten + Hardcover-Album',
+        shortDescription: '3 Boxen mit je 50 Tüten + 1 Hardcover-Album. Jede Tüte enthält 7 Sticker.',
+        description: `Die offizielle Panini FIFA World Cup 2026™ Stickerkollektion ist da!
+
+Dieses Bundle enthält:
+• 3 Boxen mit je 50 Tüten (= 1.050 Sticker insgesamt)
+• 1 Offizielles Hardcover-Album
+
+Jede Tüte enthält 7 Sticker.
+
+Das ideale Bundle für alle, die einen großen Sprung in ihrer Sammlung machen und alles im hochwertigen Hardcover-Album aufbewahren möchten.`,
+      },
+    },
+  },
+  {
     id: 'complete-collection',
     slug: 'box-50-pocket-classic-tin',
     images: [

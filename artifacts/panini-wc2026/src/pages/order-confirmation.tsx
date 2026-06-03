@@ -45,7 +45,7 @@ export default function OrderConfirmation() {
 
   const [upsellStates, setUpsellStates] = useState<Record<string, UpsellState>>({});
   const [upsellPurchases, setUpsellPurchases] = useState<UpsellPurchase[]>([]);
-  const [countdown, setCountdown] = useState(5 * 60);
+  const [countdown, setCountdown] = useState(7 * 60);
 
   useEffect(() => {
     const timer = setInterval(() => {

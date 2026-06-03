@@ -109,5 +109,16 @@
     "shortDesc": "50 Tüten × 7 Sticker = 350 offizielle FIFA World Cup 2026™ Sticker. Jetzt 50% günstiger sichern.",
     "addButton": "Zur Bestellung hinzufügen – nur €25",
     "removeButton": "Aus Angebot entfernen"
+  },
+  "upsell": {
+    "sectionTitle": "Exklusive Angebote Nur Für Sie",
+    "badge": "-50% EXKLUSIV",
+    "buyButton": "Jetzt kaufen",
+    "buyingButton": "Wird verarbeitet...",
+    "boughtButton": "Gekauft!",
+    "errorMessage": "Fehler — Erneut versuchen",
+    "alreadyOwned": "Bereits erworben",
+    "additionalPurchases": "Zusätzliche Käufe",
+    "cumulativeTotal": "Gesamtsumme"
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
@@ -7,11 +7,13 @@ import {
   getVerifyCheckoutSessionQueryKey,
   useVerifyPaymentIntent,
   getVerifyPaymentIntentQueryKey,
+  useListProducts,
 } from '@workspace/api-client-react';
+import type { Product } from '@workspace/api-client-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, User, MapPin, CreditCard, Package, Truck } from 'lucide-react';
+import { CheckCircle2, User, MapPin, CreditCard, Package, Truck, Zap, ShoppingBag } from 'lucide-react';
 
 const CARD_BRAND_LABELS: Record<string, string> = {
   visa: 'Visa',
@@ -23,6 +25,15 @@ const CARD_BRAND_LABELS: Record<string, string> = {
   unionpay: 'UnionPay',
 };
 
+interface UpsellPurchase {
+  productId: string;
+  name: string;
+  price: number;
+  image: string;
+}
+
+type UpsellState = 'idle' | 'loading' | 'success' | 'error';
+
 export default function OrderConfirmation() {
   const searchString = useSearch();
   const searchParams = new URLSearchParams(searchString);
@@ -31,6 +42,9 @@ export default function OrderConfirmation() {
   const { t, i18n } = useTranslation();
   const { clearCart } = useCart();
   const clearedRef = useRef(false);
+
+  const [upsellStates, setUpsellStates] = useState<Record<string, UpsellState>>({});
+  const [upsellPurchases, setUpsellPurchases] = useState<UpsellPurchase[]>([]);
 
   const { data: sessionData, isLoading: sessionLoading, isError: sessionError } = useVerifyCheckoutSession(
     { session_id: sessionId || '' },
@@ -51,6 +65,8 @@ export default function OrderConfirmation() {
       },
     }
   );
+
+  const { data: allProducts } = useListProducts();
 
   const data = sessionData || paymentData;
   const isLoading = sessionLoading || paymentLoading;
@@ -86,6 +102,14 @@ export default function OrderConfirmation() {
     } catch { return null; }
   })();
 
+  const ownedProductIds: Set<string> = (() => {
+    try {
+      const raw = sessionStorage.getItem('panini_order_product_ids');
+      const arr: string[] = raw ? JSON.parse(raw) : [];
+      return new Set(arr);
+    } catch { return new Set(); }
+  })();
+
   useEffect(() => {
     if (data?.status === 'complete' && !clearedRef.current) {
       clearCart();
@@ -105,6 +129,45 @@ export default function OrderConfirmation() {
         || item.name;
     }
     return item.name;
+  };
+
+  const getProductName = (product: Product) => {
+    const lang = i18n.language as keyof typeof product.translations;
+    return product.translations[lang]?.name
+      || product.translations['pt-BR']?.name
+      || product.translations['en']?.name
+      || '';
+  };
+
+  const handleUpsellPurchase = async (product: Product) => {
+    const extData = paymentData as any;
+    const customerId = extData?.stripeCustomerId;
+    const pmId = extData?.paymentMethodId;
+    if (!customerId || !pmId) return;
+
+    setUpsellStates(prev => ({ ...prev, [product.id]: 'loading' }));
+
+    try {
+      const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || '';
+      const res = await fetch(`${apiBase}/api/checkout/upsell`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerId, paymentMethodId: pmId, productId: product.id }),
+      });
+
+      if (!res.ok) throw new Error('payment_failed');
+
+      const name = getProductName(product);
+      const upsellPrice = product.price * 0.5 / 100;
+
+      setUpsellStates(prev => ({ ...prev, [product.id]: 'success' }));
+      setUpsellPurchases(prev => [
+        ...prev,
+        { productId: product.id, name, price: upsellPrice, image: product.images[0] || '' },
+      ]);
+    } catch {
+      setUpsellStates(prev => ({ ...prev, [product.id]: 'error' }));
+    }
   };
 
   if (!sessionId && !paymentIntentId) {
@@ -154,6 +217,8 @@ export default function OrderConfirmation() {
       };
     } | null;
     paymentMethod?: { brand: string; last4: string } | null;
+    stripeCustomerId?: string | null;
+    paymentMethodId?: string | null;
   };
 
   const customerEmail = apiData.customerEmail || storedShipping?.email || null;
@@ -167,6 +232,9 @@ export default function OrderConfirmation() {
   } : null);
   const paymentMethod = apiData.paymentMethod || null;
 
+  const upsellCustomerId = paymentIntentId ? (apiData.stripeCustomerId || null) : null;
+  const upsellPaymentMethodId = paymentIntentId ? (apiData.paymentMethodId || null) : null;
+
   const displayItems = storedItems.length > 0 ? storedItems : (data.items || []);
 
   const totalOriginal = storedItems.reduce((sum, item) =>
@@ -174,6 +242,14 @@ export default function OrderConfirmation() {
   const totalPaid = storedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const savings = totalOriginal - totalPaid;
   const hasSavings = savings > 0.001 && storedItems.length > 0;
+
+  const purchasedUpsellIds = new Set(upsellPurchases.map(u => u.productId));
+  const upsellProducts = (allProducts || []).filter(p =>
+    p.inStock && !ownedProductIds.has(p.id) && !purchasedUpsellIds.has(p.id)
+  );
+
+  const showUpsell = !!(upsellCustomerId && upsellPaymentMethodId);
+  const cumulativeTotal = totalPaid + upsellPurchases.reduce((sum, u) => sum + u.price, 0);
 
   return (
     <div className="min-h-[70vh] bg-background py-12 md:py-20">
@@ -208,7 +284,6 @@ export default function OrderConfirmation() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-5 space-y-4">
-              {/* Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {shippingName && (
                   <div>
@@ -224,7 +299,6 @@ export default function OrderConfirmation() {
                 )}
               </div>
 
-              {/* Shipping address */}
               {shippingAddress && (
                 <div className="pt-3 border-t">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
@@ -242,7 +316,6 @@ export default function OrderConfirmation() {
                 </div>
               )}
 
-              {/* Payment method */}
               {paymentMethod && (
                 <div className="pt-3 border-t">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
@@ -299,7 +372,6 @@ export default function OrderConfirmation() {
                 </div>
               ) : null}
 
-              {/* Totals */}
               <div className="space-y-2 pt-2">
                 {hasSavings && (
                   <div className="flex justify-between text-sm text-muted-foreground">
@@ -342,6 +414,146 @@ export default function OrderConfirmation() {
             </CardContent>
           </Card>
 
+          {/* One-Click Upsell Section */}
+          {showUpsell && upsellProducts.length > 0 && (
+            <div className="mt-8">
+              <div className="text-center mb-6">
+                <div
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest mb-3"
+                  style={{ background: '#FFD600', color: '#1a1a1a' }}
+                >
+                  <Zap className="h-4 w-4" />
+                  {t('upsell.badge')}
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black text-primary uppercase tracking-tight">
+                  {t('upsell.sectionTitle')}
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {upsellProducts.map(product => {
+                  const state = upsellStates[product.id] || 'idle';
+                  const purchased = state === 'success';
+                  const loading = state === 'loading';
+                  const errored = state === 'error';
+                  const upsellPrice = product.price * 0.5 / 100;
+                  const originalPrice = product.price / 100;
+                  const name = getProductName(product);
+
+                  return (
+                    <div
+                      key={product.id}
+                      className="rounded-xl border overflow-hidden shadow-sm transition-colors"
+                      style={{
+                        borderColor: purchased ? '#22c55e' : '#e5e7eb',
+                        background: purchased ? 'rgba(34,197,94,0.04)' : undefined,
+                      }}
+                    >
+                      {product.images[0] && (
+                        <div className="h-40 w-full overflow-hidden bg-muted">
+                          <img
+                            src={product.images[0]}
+                            alt={name}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      )}
+
+                      <div className="p-4">
+                        <span
+                          className="inline-block text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded mb-2"
+                          style={{ background: '#e00', color: '#fff' }}
+                        >
+                          -50%
+                        </span>
+
+                        <p className="font-bold text-sm leading-snug mb-3">{name}</p>
+
+                        <div className="flex items-baseline gap-2 mb-3">
+                          <span className="text-sm text-muted-foreground line-through">
+                            {formatPrice(originalPrice)}
+                          </span>
+                          <span className="text-xl font-black text-primary">
+                            {formatPrice(upsellPrice)}
+                          </span>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => !purchased && !loading && handleUpsellPurchase(product)}
+                          disabled={purchased || loading}
+                          className="w-full h-11 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          style={
+                            purchased
+                              ? { background: '#22c55e', color: '#fff', border: '1.5px solid #22c55e' }
+                              : loading
+                              ? { background: '#f5f5f5', color: '#999', border: '1.5px solid #e5e7eb' }
+                              : errored
+                              ? { background: '#fee2e2', color: '#dc2626', border: '1.5px solid #fca5a5' }
+                              : { background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }
+                          }
+                        >
+                          {purchased ? (
+                            <><CheckCircle2 className="h-4 w-4" />{t('upsell.boughtButton')}</>
+                          ) : loading ? (
+                            t('upsell.buyingButton')
+                          ) : errored ? (
+                            t('upsell.errorMessage')
+                          ) : (
+                            t('upsell.buyButton')
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Cumulative purchase summary */}
+              {upsellPurchases.length > 0 && (
+                <Card className="mt-6 shadow-sm" style={{ borderColor: '#22c55e' }}>
+                  <CardHeader className="border-b py-4" style={{ background: 'rgba(34,197,94,0.06)' }}>
+                    <CardTitle className="flex items-center gap-2 text-lg font-bold" style={{ color: '#15803d' }}>
+                      <ShoppingBag className="h-5 w-5" />
+                      {t('upsell.additionalPurchases')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-5">
+                    <div className="space-y-3 mb-4">
+                      {upsellPurchases.map((u, idx) => (
+                        <div key={idx} className="flex items-center gap-4 py-2 border-b last:border-0">
+                          {u.image && (
+                            <div className="h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                              <img src={u.image} alt={u.name} className="h-full w-full object-cover" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-sm leading-snug">{u.name}</p>
+                            <p className="text-xs font-semibold" style={{ color: '#16a34a' }}>-50%</p>
+                          </div>
+                          <p className="font-bold text-primary text-sm flex-shrink-0">
+                            {formatPrice(u.price)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center py-3 px-4 bg-primary/5 rounded-xl border border-primary/10">
+                      <span className="text-base font-bold uppercase">{t('upsell.cumulativeTotal')}</span>
+                      <span className="text-xl font-black text-primary">{formatPrice(cumulativeTotal)}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
+        </div>
+
+        <div className="mt-10 text-center">
+          <Button asChild variant="outline" size="lg">
+            <Link href="/produtos">{t('buttons.backToStore')}</Link>
+          </Button>
         </div>
 
       </div>

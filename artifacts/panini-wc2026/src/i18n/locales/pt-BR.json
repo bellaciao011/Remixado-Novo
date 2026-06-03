@@ -109,5 +109,16 @@
     "shortDesc": "50 envelopes × 7 figurinhas = 350 figurinhas oficiais FIFA World Cup 2026™. Aproveite agora com 50% de desconto.",
     "addButton": "Adicionar ao Pedido – apenas €25",
     "removeButton": "Remover da Oferta"
+  },
+  "upsell": {
+    "sectionTitle": "Ofertas Exclusivas Só Para Você",
+    "badge": "-50% EXCLUSIVO",
+    "buyButton": "Comprar Agora",
+    "buyingButton": "Processando...",
+    "boughtButton": "Adquirido!",
+    "errorMessage": "Erro — Tentar novamente",
+    "alreadyOwned": "Já adquirido",
+    "additionalPurchases": "Compras Adicionais",
+    "cumulativeTotal": "Total Acumulado"
   }
 }

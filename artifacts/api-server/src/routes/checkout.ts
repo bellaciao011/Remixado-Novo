@@ -82,7 +82,7 @@ router.post('/checkout/session', async (req: Request, res: Response): Promise<vo
 
 router.post('/checkout/payment-intent', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { items } = req.body;
+    const { items, email } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       res.status(400).json({ error: 'Items are required' });
@@ -117,10 +117,28 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       quantity: i.quantity,
     }));
 
+    // Find or create Stripe Customer when email is provided (enables off-session upsells)
+    let customerId: string | undefined;
+    if (email && typeof email === 'string' && email.trim()) {
+      try {
+        const existing = await stripe.customers.list({ email: email.trim(), limit: 1 });
+        if (existing.data.length > 0) {
+          customerId = existing.data[0].id;
+        } else {
+          const customer = await stripe.customers.create({ email: email.trim() });
+          customerId = customer.id;
+        }
+      } catch (custErr) {
+        console.warn('Customer create/retrieve failed, continuing without customer:', custErr);
+      }
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
+      ...(customerId ? { customer: customerId, setup_future_usage: 'off_session' } : {}),
+      ...(email ? { receipt_email: email.trim() } : {}),
       metadata: {
         cart_items: JSON.stringify(cartItems),
       },
@@ -131,6 +149,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       paymentIntentId: paymentIntent.id,
       amountTotal: amountTotal / 100,
       currency: 'eur',
+      stripeCustomerId: customerId || null,
     });
   } catch (error: any) {
     console.error('PaymentIntent error:', error);
@@ -235,6 +254,10 @@ router.get('/checkout/verify-payment', async (req: Request, res: Response): Prom
     const pm = paymentIntent.payment_method as any;
     const cardBrand = pm?.card?.brand || null;
     const cardLast4 = pm?.card?.last4 || null;
+    const paymentMethodId = pm?.id || (typeof paymentIntent.payment_method === 'string' ? paymentIntent.payment_method : null);
+    const stripeCustomerId = typeof paymentIntent.customer === 'string'
+      ? paymentIntent.customer
+      : (paymentIntent.customer as any)?.id || null;
 
     res.json({
       status: isSucceeded ? 'complete' : paymentIntent.status,
@@ -244,10 +267,65 @@ router.get('/checkout/verify-payment', async (req: Request, res: Response): Prom
       items: [],
       shipping: paymentIntent.shipping || null,
       paymentMethod: cardBrand ? { brand: cardBrand, last4: cardLast4 } : null,
+      stripeCustomerId: stripeCustomerId || null,
+      paymentMethodId: paymentMethodId || null,
     });
   } catch (error: any) {
     console.error('Verify payment intent error:', error);
     res.status(404).json({ error: error.message || 'Payment intent not found' });
+  }
+});
+
+router.post('/checkout/upsell', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { customerId, paymentMethodId, productId } = req.body;
+
+    if (!customerId || !paymentMethodId || !productId) {
+      res.status(400).json({ error: 'customerId, paymentMethodId, and productId are required' });
+      return;
+    }
+
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) {
+      res.status(400).json({ error: `Product not found: ${productId}` });
+      return;
+    }
+
+    if (!product.inStock) {
+      res.status(400).json({ error: `Product out of stock: ${productId}` });
+      return;
+    }
+
+    const upsellAmount = Math.round(product.price * 0.5);
+
+    const stripe = await getUncachableStripeClient();
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: upsellAmount,
+      currency: 'eur',
+      customer: customerId,
+      payment_method: paymentMethodId,
+      off_session: true,
+      confirm: true,
+      metadata: {
+        upsell_product_id: productId,
+        upsell_type: 'one_click_upsell',
+      },
+    });
+
+    res.json({
+      status: paymentIntent.status,
+      amountCharged: upsellAmount / 100,
+      currency: 'eur',
+      paymentIntentId: paymentIntent.id,
+    });
+  } catch (error: any) {
+    console.error('Upsell error:', error);
+    if (error.code === 'authentication_required' || error.code === 'requires_action') {
+      res.status(402).json({ error: 'Authentication required for this payment', code: error.code });
+      return;
+    }
+    res.status(400).json({ error: error.message || 'Failed to process upsell payment' });
   }
 });
 

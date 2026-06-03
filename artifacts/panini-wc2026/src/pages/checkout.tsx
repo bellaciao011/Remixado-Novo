@@ -298,7 +298,8 @@ export default function CheckoutPage() {
             productId: item.productId,
             quantity: item.quantity,
           })),
-        },
+          email: shipping.email,
+        } as any,
       },
       {
         onSuccess: (data) => {
@@ -308,6 +309,7 @@ export default function CheckoutPage() {
           setOrderBumpSelected(false);
           setStep('payment');
           setIsProceedingToPayment(false);
+          sessionStorage.setItem('panini_order_product_ids', JSON.stringify(items.map(i => i.productId)));
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         onError: () => {

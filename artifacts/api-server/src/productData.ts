@@ -1101,4 +1101,89 @@ Die Pocket Tins und Classic Tins werden in zufälligen Designs versendet – ein
       },
     },
   },
+  {
+    id: 'stadium-collection-box',
+    slug: 'stadium-collection-box',
+    images: [
+      '/assets/de12-boxbundle-001_1780459830771.webp',
+      '/assets/de12-boxbundle-002_1780459830771.webp',
+      '/assets/de12-boxbundle-003_1780459830770.webp',
+      '/assets/de12-boxbundle-004_1780459830764.webp',
+    ],
+    price: 10200,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: null,
+    featured: false,
+    inStock: true,
+    stripeProductName: '2026 Panini FIFA World Cup Sticker Stadium Collection Box',
+    sortOrder: 13,
+    translations: {
+      'pt-BR': {
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Stadium Collection Box',
+        shortDescription: 'Caixa selada com 280 figurinhas de todas as nações participantes',
+        description: `A Stadium Collection Box 2026 da Panini FIFA World Cup é uma caixa selada com 280 figurinhas apresentando todas as nações participantes da Copa do Mundo FIFA. Oficialmente licenciada pela FIFA, esta coleção original inclui figurinhas de diversas seleções e atletas.
+
+Cada figurinha é fabricada pela Panini, tornando este produto indispensável para fãs de futebol e colecionadores que desejam eternizar o torneio da Copa do Mundo 2026.
+
+Esta coleção oferece uma visão abrangente do esporte mais popular do mundo por meio de uma série de figurinhas empolgantes e detalhadas.
+
+Conteúdo da caixa:
+• 280 figurinhas oficiais
+• Figurinhas de todas as nações participantes da Copa do Mundo FIFA 2026
+• 7 figurinhas por envelope
+• Produto licenciado oficialmente pela FIFA
+• Fabricado pela Panini`,
+      },
+      'en': {
+        name: '2026 Panini FIFA World Cup Sticker Stadium Collection Box',
+        shortDescription: 'Sealed box with 280 stickers featuring all participating nations',
+        description: `The 2026 Panini FIFA World Cup Sticker Stadium Collection Box is a sealed box containing 280 stickers featuring all nations participating in the FIFA World Cup. Officially licensed by FIFA, this original collection includes stickers of various soccer teams and athletes.
+
+Each sticker is manufactured by Panini, making it a must-have for soccer fans and collectors looking to commemorate the 2026 World Cup tournament.
+
+This collection offers a comprehensive look at the world's most popular sport through a series of exciting and detailed stickers.
+
+Box contents:
+• 280 official stickers
+• Stickers of all nations participating in the 2026 FIFA World Cup
+• 7 stickers per packet
+• Officially licensed by FIFA
+• Manufactured by Panini`,
+      },
+      'es': {
+        name: 'Caja Stadium Collection de Stickers FIFA World Cup 2026 de Panini',
+        shortDescription: 'Caja sellada con 280 stickers de todas las naciones participantes',
+        description: `La Caja Stadium Collection de Stickers de la Copa Mundial FIFA 2026 de Panini es una caja sellada que contiene 280 stickers con todas las naciones participantes en la Copa del Mundo FIFA. Con licencia oficial de FIFA, esta colección original incluye stickers de varios equipos de fútbol y atletas.
+
+Cada sticker está fabricado por Panini, convirtiéndola en un artículo imprescindible para los fanáticos del fútbol y los coleccionistas que buscan conmemorar el torneo de la Copa del Mundo 2026.
+
+Esta colección ofrece una visión completa del deporte más popular del mundo a través de una serie de stickers emocionantes y detallados.
+
+Contenido de la caja:
+• 280 stickers oficiales
+• Stickers de todas las naciones participantes de la Copa Mundial FIFA 2026
+• 7 stickers por sobre
+• Producto con licencia oficial de FIFA
+• Fabricado por Panini`,
+      },
+      'de': {
+        name: '2026 Panini FIFA Fußball-WM Sticker Stadium Collection Box',
+        shortDescription: 'Versiegelte Box mit 280 Stickern aller teilnehmenden Nationen',
+        description: `Die 2026 Panini FIFA Fußball-Weltmeisterschaft Sticker Stadium Collection Box ist eine versiegelte Box mit 280 Stickern aller teilnehmenden Nationen der FIFA Fußball-Weltmeisterschaft. Offiziell von der FIFA lizenziert, umfasst diese originale Sammlung Sticker verschiedener Fußballmannschaften und Athleten.
+
+Jeder Sticker wird von Panini hergestellt – ein Muss für Fußballfans und Sammler, die das WM-Turnier 2026 in Erinnerung behalten möchten.
+
+Diese Kollektion bietet einen umfassenden Blick auf den beliebtesten Sport der Welt durch eine Reihe aufregender und detaillierter Sticker.
+
+Inhalt der Box:
+• 280 offizielle Sticker
+• Sticker aller teilnehmenden Nationen der FIFA Fußball-WM 2026
+• 7 Sticker pro Tüte
+• Offiziell von der FIFA lizenziert
+• Hergestellt von Panini`,
+      },
+    },
+  },
 ];

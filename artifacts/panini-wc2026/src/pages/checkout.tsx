@@ -145,12 +145,11 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
       <Button
         type="submit"
         size="lg"
-        className="w-full h-14 text-lg font-bold shadow-xl"
+        className="w-full h-14 text-lg font-bold shadow-xl animate-pulse"
+        style={{ animationDuration: '2s' }}
         disabled={!stripe || !elements || isProcessing}
       >
-        {isProcessing
-          ? t('general.loading')
-          : `${t('checkout.proceedToPayment')} — ${formatPrice(amountTotal / 100)}`}
+        {isProcessing ? t('general.loading') : t('checkout.proceedToPayment')}
       </Button>
     </form>
   );

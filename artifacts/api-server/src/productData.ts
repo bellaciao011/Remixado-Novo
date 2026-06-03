@@ -29,6 +29,48 @@ export const ORDER_BUMP_PRICE = 2500;
 export const ORDER_BUMP_ORIGINAL_PRICE = 5000;
 export const ORDER_BUMP_ID = 'order-bump-50packs';
 
+export interface OrderBumpProduct {
+  id: string;
+  price: number;
+  originalPrice: number;
+  currency: string;
+  image: string;
+  stripeProductName: string;
+  translations: {
+    'pt-BR': { name: string; shortDescription: string };
+    'en': { name: string; shortDescription: string };
+    'es': { name: string; shortDescription: string };
+    'de': { name: string; shortDescription: string };
+  };
+}
+
+export const ORDER_BUMP_PRODUCT: OrderBumpProduct = {
+  id: ORDER_BUMP_ID,
+  price: ORDER_BUMP_PRICE,
+  originalPrice: ORDER_BUMP_ORIGINAL_PRICE,
+  currency: 'eur',
+  image: '/assets/figurinhas_1780497538703.webp',
+  stripeProductName: 'Box 50 Tüten FIFA World Cup 2026 – Order Bump',
+  translations: {
+    'pt-BR': {
+      name: 'Caixa com 50 Envelopes – 350 Figurinhas Oficiais',
+      shortDescription: '50 envelopes × 7 figurinhas = 350 figurinhas oficiais FIFA World Cup 2026™',
+    },
+    'en': {
+      name: 'Box with 50 Packs – 350 Official Stickers',
+      shortDescription: '50 packs × 7 stickers = 350 official FIFA World Cup 2026™ stickers',
+    },
+    'es': {
+      name: 'Caja con 50 Sobres – 350 Cromos Oficiales',
+      shortDescription: '50 sobres × 7 cromos = 350 cromos oficiales Copa Mundial FIFA 2026™',
+    },
+    'de': {
+      name: 'Box mit 50 Tüten – 350 offizielle Sticker',
+      shortDescription: '50 Tüten × 7 Sticker = 350 offizielle FIFA World Cup 2026™ Sticker',
+    },
+  },
+};
+
 export const PRODUCTS: ProductData[] = [
   {
     id: 'box-100-packs',

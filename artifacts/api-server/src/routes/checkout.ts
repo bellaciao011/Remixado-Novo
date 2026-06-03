@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
-import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID } from '../productData';
+import { PRODUCTS, ORDER_BUMP_PRICE } from '../productData';
 
 const router = Router();
 
@@ -112,10 +112,18 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       amountTotal += product.price * item.quantity;
     }
 
+    const cartItems = (items as { productId: string; quantity: number }[]).map(i => ({
+      productId: i.productId,
+      quantity: i.quantity,
+    }));
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
+      metadata: {
+        cart_items: JSON.stringify(cartItems),
+      },
     });
 
     res.json({
@@ -133,23 +141,25 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
 router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { addOrderBump, baseItems } = req.body as {
-      addOrderBump: boolean;
-      baseItems: { productId: string; quantity: number }[];
-    };
+    const { addOrderBump } = req.body as { addOrderBump: boolean };
 
-    if (!baseItems || !Array.isArray(baseItems) || baseItems.length === 0) {
-      res.status(400).json({ error: 'baseItems are required' });
+    const stripe = await getUncachableStripeClient();
+
+    // Retrieve authoritative cart from PI metadata — never trust client-supplied items
+    const pi = await stripe.paymentIntents.retrieve(id);
+    const cartItems: { productId: string; quantity: number }[] = (() => {
+      try {
+        return JSON.parse(pi.metadata?.cart_items || '[]');
+      } catch { return []; }
+    })();
+
+    if (cartItems.length === 0) {
+      res.status(400).json({ error: 'Cart metadata not found on PaymentIntent' });
       return;
     }
 
     let amountTotal = 0;
-
-    for (const item of baseItems) {
-      if (!item.productId || !item.quantity || item.quantity < 1) {
-        res.status(400).json({ error: 'Each item requires productId and quantity >= 1' });
-        return;
-      }
+    for (const item of cartItems) {
       const product = PRODUCTS.find(p => p.id === item.productId);
       if (!product) {
         res.status(400).json({ error: `Product not found: ${item.productId}` });
@@ -162,7 +172,6 @@ router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): 
       amountTotal += ORDER_BUMP_PRICE;
     }
 
-    const stripe = await getUncachableStripeClient();
     await stripe.paymentIntents.update(id, { amount: amountTotal });
 
     res.json({ amountTotal: amountTotal / 100, currency: 'eur' });

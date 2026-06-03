@@ -14,6 +14,24 @@ const ORDER_BUMP = {
   price: 2500,
   originalPrice: 5000,
   image: '/assets/figurinhas_1780497538703.webp',
+  translations: {
+    'pt-BR': {
+      name: 'Caixa com 50 Envelopes – 350 Figurinhas Oficiais',
+      shortDescription: '50 envelopes × 7 figurinhas = 350 figurinhas oficiais FIFA World Cup 2026™',
+    },
+    'en': {
+      name: 'Box with 50 Packs – 350 Official Stickers',
+      shortDescription: '50 packs × 7 stickers = 350 official FIFA World Cup 2026™ stickers',
+    },
+    'es': {
+      name: 'Caja con 50 Sobres – 350 Cromos Oficiales',
+      shortDescription: '50 sobres × 7 cromos = 350 cromos oficiales Copa Mundial FIFA 2026™',
+    },
+    'de': {
+      name: 'Box mit 50 Tüten – 350 offizielle Sticker',
+      shortDescription: '50 Tüten × 7 Sticker = 350 offizielle FIFA World Cup 2026™ Sticker',
+    },
+  },
 };
 
 const getItemName = (item: CartItem, lang: string): string => {
@@ -113,7 +131,7 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
     setStripeError(null);
 
     try {
-      sessionStorage.setItem('panini_order_items', JSON.stringify(items.map(item => ({
+      const baseOrderItems = items.map(item => ({
         name: item.name,
         translations: item.translations,
         quantity: item.quantity,
@@ -121,7 +139,22 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
         originalPrice: item.originalPrice,
         currency: item.currency,
         image: item.image,
-      }))));
+      }));
+      const allOrderItems = orderBumpSelected
+        ? [
+            ...baseOrderItems,
+            {
+              name: ORDER_BUMP.translations['pt-BR'].name,
+              translations: ORDER_BUMP.translations,
+              quantity: 1,
+              price: ORDER_BUMP.price / 100,
+              originalPrice: ORDER_BUMP.originalPrice / 100,
+              currency: 'eur',
+              image: ORDER_BUMP.image,
+            },
+          ]
+        : baseOrderItems;
+      sessionStorage.setItem('panini_order_items', JSON.stringify(allOrderItems));
       sessionStorage.setItem('panini_order_shipping', JSON.stringify(shipping));
       sessionStorage.setItem('panini_order_bump', JSON.stringify(orderBumpSelected));
       if (paymentIntentId) {
@@ -292,10 +325,7 @@ export default function CheckoutPage() {
       const res = await fetch(`${apiBase}/api/checkout/payment-intent/${paymentIntentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          addOrderBump: nextSelected,
-          baseItems: items.map(item => ({ productId: item.productId, quantity: item.quantity })),
-        }),
+        body: JSON.stringify({ addOrderBump: nextSelected }),
       });
       if (res.ok) {
         const data = await res.json();

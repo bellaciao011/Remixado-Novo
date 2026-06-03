@@ -723,7 +723,7 @@ export default function CheckoutPage() {
                 <div className="px-5 pb-5">
                   {orderBumpSelected ? (
                     <div
-                      className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2"
+                      className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 opacity-60 cursor-default"
                       style={{ background: '#22c55e', color: '#fff', border: '1.5px solid #22c55e' }}
                     >
                       <Check className="h-4 w-4" />
@@ -747,39 +747,33 @@ export default function CheckoutPage() {
 
           {/* Stripe Elements — only shown after shipping is validated */}
           {step === 'payment' && stripePromise && clientSecret && (
-            <Card className="shadow-sm">
-              <CardHeader className="border-b">
-                <CardTitle className="text-xl font-bold">{t('checkout.paymentDetails')}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <Elements
-                  key={i18n.language}
-                  stripe={stripePromise}
-                  options={{
-                    clientSecret,
-                    locale: i18n.language as any,
-                    appearance: {
-                      theme: 'flat',
-                      variables: { borderRadius: '6px', fontSizeBase: '14px' },
-                      rules: {
-                        '.Block': { border: 'none', boxShadow: 'none', backgroundColor: 'transparent', padding: '0' },
-                        '.Input': { border: '1px solid #e5e7eb', boxShadow: 'none', backgroundColor: '#fff', padding: '10px 12px' },
-                        '.Input:focus': { border: '1px solid hsl(var(--ring))', boxShadow: '0 0 0 2px hsl(var(--ring) / 0.2)' },
-                        '.Label': { fontWeight: '600', fontSize: '13px' },
-                      },
+            <div>
+              <p className="text-xl font-bold mb-4 px-1">{t('checkout.paymentDetails')}</p>
+              <Elements
+                key={i18n.language}
+                stripe={stripePromise}
+                options={{
+                  clientSecret,
+                  locale: i18n.language as any,
+                  appearance: {
+                    theme: 'stripe',
+                    variables: {
+                      borderRadius: '8px',
+                      fontSizeBase: '14px',
+                      colorPrimary: 'hsl(220 70% 30%)',
                     },
-                  }}
-                >
-                  <PaymentForm
-                    amountTotal={amountTotal}
-                    shipping={shipping}
-                    items={items}
-                    orderBumpSelected={orderBumpSelected}
-                    paymentIntentId={paymentIntentId}
-                  />
-                </Elements>
-              </CardContent>
-            </Card>
+                  },
+                }}
+              >
+                <PaymentForm
+                  amountTotal={amountTotal}
+                  shipping={shipping}
+                  items={items}
+                  orderBumpSelected={orderBumpSelected}
+                  paymentIntentId={paymentIntentId}
+                />
+              </Elements>
+            </div>
           )}
         </div>
       </div>

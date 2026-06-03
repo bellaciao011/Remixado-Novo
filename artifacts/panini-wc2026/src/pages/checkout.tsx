@@ -142,11 +142,17 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
         <p className="text-destructive font-medium text-sm">{errorMessage}</p>
       )}
 
+      <style>{`
+        @keyframes pulse-scale {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+        }
+        .btn-pulse { animation: pulse-scale 2s ease-in-out infinite; }
+      `}</style>
       <Button
         type="submit"
         size="lg"
-        className="w-full h-14 text-lg font-bold shadow-xl animate-pulse"
-        style={{ animationDuration: '2s' }}
+        className="w-full h-14 text-lg font-bold shadow-xl btn-pulse"
         disabled={!stripe || !elements || isProcessing}
       >
         {isProcessing ? t('general.loading') : t('checkout.proceedToPayment')}

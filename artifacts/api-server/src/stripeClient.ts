@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import { StripeSync } from 'stripe-replit-sync';
 
 function getKeys(): { publishableKey: string; secretKey: string } {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -32,18 +31,12 @@ export async function getStripeSecretKey(): Promise<string> {
   return secretKey;
 }
 
-let stripeSync: StripeSync | null = null;
+let webhookSecret: string | null = null;
 
-export async function getStripeSync(): Promise<StripeSync> {
-  if (!stripeSync) {
-    const secretKey = await getStripeSecretKey();
-    stripeSync = new StripeSync({
-      poolConfig: {
-        connectionString: process.env.DATABASE_URL!,
-        max: 2,
-      },
-      stripeSecretKey: secretKey,
-    });
-  }
-  return stripeSync;
+export function setWebhookSecret(secret: string): void {
+  webhookSecret = secret;
+}
+
+export function getWebhookSecret(): string | null {
+  return webhookSecret ?? process.env.STRIPE_WEBHOOK_SECRET ?? null;
 }

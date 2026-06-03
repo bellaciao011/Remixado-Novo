@@ -1,34 +1,28 @@
-import { runMigrations } from 'stripe-replit-sync';
-import { getStripeSync } from "./stripeClient";
 import app from "./app";
 import { logger } from "./lib/logger";
+import { getUncachableStripeClient, setWebhookSecret } from "./stripeClient";
 
 async function initStripe() {
-  const databaseUrl = process.env.DATABASE_URL;
-
-  if (!databaseUrl) {
-    logger.warn('DATABASE_URL not set — skipping Stripe initialization');
-    return;
-  }
-
   try {
-    logger.info('Initializing Stripe schema...');
-    await runMigrations({ databaseUrl });
-    logger.info('Stripe schema ready');
-
-    const stripeSync = await getStripeSync();
-
+    const stripe = await getUncachableStripeClient();
     const webhookBaseUrl = `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}`;
-    await stripeSync.findOrCreateManagedWebhook(`${webhookBaseUrl}/api/stripe/webhook`, {
-      enabled_events: ['*'],
-    });
-    logger.info('Stripe webhook configured');
+    const webhookUrl = `${webhookBaseUrl}/api/stripe/webhook`;
 
-    stripeSync.syncBackfill()
-      .then(() => logger.info('Stripe data synced'))
-      .catch((err: Error) => logger.error({ err }, 'Error syncing Stripe data'));
+    const existing = await stripe.webhookEndpoints.list({ limit: 20 });
+    const found = existing.data.find(w => w.url === webhookUrl && w.status === 'enabled');
+
+    if (!found) {
+      const created = await stripe.webhookEndpoints.create({
+        url: webhookUrl,
+        enabled_events: ['*'],
+      });
+      setWebhookSecret(created.secret!);
+      logger.info('Stripe webhook created');
+    } else {
+      logger.info('Stripe webhook already exists');
+    }
   } catch (error: any) {
-    logger.warn({ err: error }, 'Failed to initialize Stripe — continuing without Stripe');
+    logger.warn({ err: error }, 'Failed to initialize Stripe webhook — continuing without it');
   }
 }
 

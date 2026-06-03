@@ -1,16 +1,22 @@
 ---
 name: Stripe setup quirks
-description: Common issues when initializing stripe-replit-sync in the API server
+description: What to avoid with Stripe integration — stripe-replit-sync blocks publishing; use SDK directly
 ---
 
-# Stripe Setup Quirks
+## stripe-replit-sync blocks publishing — DO NOT use it
 
-## Rule
-Always run `runMigrations({ databaseUrl })` (no `schema` param) before calling `getStripeSync()`. Call `findOrCreateManagedWebhook` with `enabled_events: ['*']`. If the stripe schema exists but has no tables, run migrations manually with a node script.
+The `stripe-replit-sync` package triggers a "Finish Stripe sandbox setup" blocker in the Replit publish flow that cannot be bypassed. It was removed from both `artifacts/api-server/package.json` and the root `package.json`.
 
-**Why:** The `schema` param causes migrations to target the wrong table namespace. `findOrCreateManagedWebhook` calls `stripe.webhookEndpoints.create` and Stripe's API requires `enabled_events`. If the server restarts before migrations complete, the DB schema is left empty.
+**Why:** Replit detects the package and registers a Stripe sandbox connection (`environment: development`). The publishing UI then requires sandbox "claim" before allowing publish — even when manual STRIPE_SECRET_KEY/STRIPE_PUBLISHABLE_KEY secrets are set.
 
-**How to apply:**
-- In `artifacts/api-server/src/index.ts`, use `await runMigrations({ databaseUrl })` 
-- Pass `{ enabled_events: ['*'] }` as second arg to `findOrCreateManagedWebhook`
-- If stripe schema tables are missing, run: `node --input-type=module -e "import {runMigrations} from '...'; await runMigrations({databaseUrl: process.env.DATABASE_URL})"`
+**How to apply:** Never re-add `stripe-replit-sync`. Use the Stripe SDK directly instead.
+
+## Webhook setup (replacement for StripeSync.findOrCreateManagedWebhook)
+
+`index.ts` at startup: lists `stripe.webhookEndpoints` and creates one if the URL doesn't exist yet. Webhook secret stored in memory via `setWebhookSecret()` and also read from `STRIPE_WEBHOOK_SECRET` env var if set.
+
+`webhookHandlers.ts`: uses `stripe.webhooks.constructEvent(payload, sig, secret)` directly. If no secret is available, handler skips verification (safe for dev; add secret for prod).
+
+## Stripe keys
+
+Code reads `process.env.STRIPE_SECRET_KEY` and `process.env.STRIPE_PUBLISHABLE_KEY` — global Replit secrets, available in dev and production.

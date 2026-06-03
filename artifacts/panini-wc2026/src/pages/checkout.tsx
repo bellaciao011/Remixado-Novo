@@ -321,11 +321,40 @@ export default function CheckoutPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-6 pt-4 border-t">
-                <div className="flex justify-between items-center">
-                  <span className="text-xl font-bold uppercase">{t('labels.total')}</span>
-                  <span className="text-2xl font-black text-primary">{formatPrice(totalPrice)}</span>
-                </div>
+              <div className="mt-6 pt-4 border-t space-y-2">
+                {(() => {
+                  const totalOriginal = items.reduce((sum, item) =>
+                    sum + ((item.originalPrice ?? item.price) * item.quantity), 0);
+                  const savings = totalOriginal - totalPrice;
+                  const hasDiscount = savings > 0.001;
+                  return (
+                    <>
+                      {hasDiscount && (
+                        <div className="flex justify-between items-center text-[#999]">
+                          <span className="text-sm">{t('checkout.originalTotal')}</span>
+                          <span className="text-base line-through">{formatPrice(totalOriginal)}</span>
+                        </div>
+                      )}
+                      {hasDiscount && (
+                        <div className="flex justify-between items-center text-[#e00]">
+                          <span className="text-sm font-semibold">{t('checkout.youSave')}</span>
+                          <span className="text-base font-bold">- {formatPrice(savings)}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center pt-2 border-t">
+                        <span className="text-xl font-bold uppercase">{t('labels.total')}</span>
+                        <div className="text-right">
+                          <span className="text-2xl font-black text-primary">{formatPrice(totalPrice)}</span>
+                          {hasDiscount && (
+                            <span className="block text-[11px] font-bold text-[#e00] uppercase tracking-wide">
+                              {Math.round(savings / totalOriginal * 100)}% {t('checkout.offLabel')}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </CardContent>
           </Card>

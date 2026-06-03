@@ -22,11 +22,19 @@ export function ProductCard({ product }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
+    const translationsMap: Record<string, { name: string }> = {};
+    for (const [lang, tr] of Object.entries(product.translations)) {
+      if (tr && typeof tr.name === 'string') {
+        translationsMap[lang] = { name: tr.name };
+      }
+    }
+
     addItem({
       productId: product.id,
       priceId: product.priceId,
       quantity: 1,
       name: translation.name,
+      translations: translationsMap,
       price: product.price / 100,
       image: product.images[0] || '',
       currency: product.currency,

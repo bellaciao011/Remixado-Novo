@@ -3,11 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'wouter';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { useCart } from '@/contexts/CartContext';
+import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, ShoppingCart, Lock } from 'lucide-react';
+
+const getItemName = (item: CartItem, lang: string): string => {
+  if (item.translations) {
+    return item.translations[lang]?.name
+      || item.translations['pt-BR']?.name
+      || item.name;
+  }
+  return item.name;
+};
 
 interface ShippingData {
   email: string;
@@ -150,7 +159,7 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
 }
 
 export default function CheckoutPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { items, totalPrice } = useCart();
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -247,10 +256,10 @@ export default function CheckoutPage() {
                 {items.map((item) => (
                   <div key={item.productId} className="flex items-center gap-4 py-3 border-b last:border-0">
                     <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                      <img src={item.image} alt={getItemName(item, i18n.language)} className="h-full w-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold">{item.name}</p>
+                      <p className="font-semibold">{getItemName(item, i18n.language)}</p>
                       <p className="text-sm text-muted-foreground">
                         {t('checkout.quantity')}: {item.quantity}
                       </p>

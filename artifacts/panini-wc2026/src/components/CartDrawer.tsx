@@ -1,14 +1,29 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
-import { useCart } from '../contexts/CartContext';
+import { useCart, CartItem } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react';
 
+const formatPrice = (price: number, currency = 'eur') => {
+  const cur = currency.toUpperCase();
+  const locale = cur === 'EUR' ? 'de-DE' : 'pt-BR';
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: cur }).format(price);
+};
+
+const getItemName = (item: CartItem, lang: string): string => {
+  if (item.translations) {
+    return item.translations[lang]?.name
+      || item.translations['pt-BR']?.name
+      || item.name;
+  }
+  return item.name;
+};
+
 export function CartDrawer() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [, navigate] = useLocation();
   const { items, isCartOpen, setIsCartOpen, updateQuantity, removeItem, totalPrice } = useCart();
 
@@ -17,12 +32,7 @@ export function CartDrawer() {
     navigate('/checkout');
   };
 
-  const formatPrice = (price: number, currency = 'BRL') => {
-    const locale = currency.toUpperCase() === 'EUR' ? 'de-DE' : 'pt-BR';
-    return new Intl.NumberFormat(locale, { style: 'currency', currency: currency.toUpperCase() }).format(price);
-  };
-
-  const totalCurrency = items.length > 0 ? (items[0].currency || 'brl') : 'brl';
+  const totalCurrency = items.length > 0 ? (items[0].currency || 'eur') : 'eur';
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -47,36 +57,36 @@ export function CartDrawer() {
                 {items.map((item) => (
                   <div key={item.productId} className="flex gap-4">
                     <div className="h-24 w-24 rounded-md overflow-hidden bg-muted flex-shrink-0">
-                      <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                      <img src={item.image} alt={getItemName(item, i18n.language)} className="h-full w-full object-cover" />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
-                        <h4 className="font-semibold line-clamp-2">{item.name}</h4>
+                        <h4 className="font-semibold line-clamp-2">{getItemName(item, i18n.language)}</h4>
                         <p className="text-primary font-bold mt-1">{formatPrice(item.price, item.currency)}</p>
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center border rounded-md">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-8 w-8" 
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
                           <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-8 w-8" 
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                           onClick={() => removeItem(item.productId)}
                         >
@@ -88,14 +98,14 @@ export function CartDrawer() {
                 ))}
               </div>
             </ScrollArea>
-            
+
             <div className="p-6 border-t bg-muted/30">
               <div className="flex justify-between items-center mb-6 text-lg font-bold">
                 <span>{t('labels.total')}</span>
                 <span className="text-primary">{formatPrice(totalPrice, totalCurrency)}</span>
               </div>
-              <Button 
-                className="w-full h-14 text-lg font-bold shadow-lg" 
+              <Button
+                className="w-full h-14 text-lg font-bold shadow-lg"
                 onClick={handleCheckout}
               >
                 {t('buttons.checkout')}

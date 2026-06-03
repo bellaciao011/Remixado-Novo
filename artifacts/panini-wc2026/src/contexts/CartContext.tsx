@@ -6,6 +6,7 @@ export interface CartItem {
   priceId: string;
   quantity: number;
   name: string;
+  translations?: Record<string, { name: string }>;
   price: number;
   image: string;
   currency: string;
@@ -44,9 +45,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find(item => item.productId === newItem.productId);
       if (existingItem) {
-        return currentItems.map(item => 
-          item.productId === newItem.productId 
-            ? { ...item, quantity: item.quantity + newItem.quantity }
+        return currentItems.map(item =>
+          item.productId === newItem.productId
+            ? { ...item, quantity: item.quantity + newItem.quantity, translations: newItem.translations }
             : item
         );
       }
@@ -64,8 +65,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       removeItem(productId);
       return;
     }
-    setItems(currentItems => 
-      currentItems.map(item => 
+    setItems(currentItems =>
+      currentItems.map(item =>
         item.productId === productId ? { ...item, quantity } : item
       )
     );

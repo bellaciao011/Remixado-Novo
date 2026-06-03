@@ -1298,7 +1298,7 @@ Inhalt des Exklusiven Stadion-Kits:
     originalPrice: null,
     currency: 'eur',
     priceId: '',
-    badge: null,
+    badge: 'limitedEdition',
     featured: true,
     inStock: true,
     stripeProductName: '2026 Panini FIFA World Cup Sticker Stadium Collection Box',

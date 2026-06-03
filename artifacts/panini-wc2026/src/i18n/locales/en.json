@@ -76,7 +76,8 @@
     "postCode": "Post Code",
     "phoneNumber": "Phone Number",
     "phoneNote": "For delivery questions.",
-    "shippingRequired": "Please fill in all required shipping address fields."
+    "shippingRequired": "Please fill in all required shipping address fields.",
+    "fillRequiredFields": "Please complete the following required fields:"
   },
   "general": {
     "loading": "Loading...",

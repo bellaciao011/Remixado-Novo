@@ -76,7 +76,8 @@
     "postCode": "CEP / Código Postal",
     "phoneNumber": "Número de Telefone",
     "phoneNote": "Para questões de entrega.",
-    "shippingRequired": "Por favor, preencha todos os campos obrigatórios do endereço de entrega."
+    "shippingRequired": "Por favor, preencha todos os campos obrigatórios do endereço de entrega.",
+    "fillRequiredFields": "Os seguintes campos são obrigatórios:"
   },
   "general": {
     "loading": "Carregando...",

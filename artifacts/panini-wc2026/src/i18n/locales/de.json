@@ -76,7 +76,8 @@
     "postCode": "Postleitzahl",
     "phoneNumber": "Telefonnummer",
     "phoneNote": "Für Lieferfragen.",
-    "shippingRequired": "Bitte füllen Sie alle Pflichtfelder der Lieferadresse aus."
+    "shippingRequired": "Bitte füllen Sie alle Pflichtfelder der Lieferadresse aus.",
+    "fillRequiredFields": "Bitte füllen Sie die folgenden Pflichtfelder aus:"
   },
   "general": {
     "loading": "Wird geladen...",

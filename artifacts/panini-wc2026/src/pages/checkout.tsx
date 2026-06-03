@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'wouter';
 import { loadStripe } from '@stripe/stripe-js';
@@ -7,7 +7,7 @@ import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ShoppingCart, Lock } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Lock, AlertCircle } from 'lucide-react';
 
 const getItemName = (item: CartItem, lang: string): string => {
   if (item.translations) {
@@ -28,6 +28,23 @@ interface ShippingData {
   city: string;
   postCode: string;
 }
+
+type ShippingField = keyof ShippingData;
+
+const REQUIRED_FIELDS: ShippingField[] = [
+  'email', 'firstName', 'lastName', 'streetAddress', 'country', 'city', 'postCode',
+];
+
+const FIELD_LABEL_KEY: Record<ShippingField, string> = {
+  email: 'checkout.emailAddress',
+  firstName: 'checkout.firstName',
+  lastName: 'checkout.lastName',
+  streetAddress: 'checkout.streetAddress',
+  country: 'checkout.country',
+  county: 'checkout.county',
+  city: 'checkout.city',
+  postCode: 'checkout.postCode',
+};
 
 const COUNTRIES = [
   { code: 'AT', name: 'Austria' },
@@ -65,33 +82,39 @@ const COUNTRIES = [
   { code: 'US', name: 'United States' },
 ];
 
-function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping: ShippingData }) {
+interface PaymentFormProps {
+  amountTotal: number;
+  shipping: ShippingData;
+  invalidFields: Set<ShippingField>;
+  onShippingInvalid: (fields: Set<ShippingField>) => void;
+  shippingCardRef: React.RefObject<HTMLDivElement>;
+}
+
+function PaymentForm({ amountTotal, shipping, invalidFields, onShippingInvalid, shippingCardRef }: PaymentFormProps) {
   const { t } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
   const [, navigate] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const formatPrice = (val: number) =>
-    new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+  const [stripeError, setStripeError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
-    const required: (keyof ShippingData)[] = [
-      'email', 'firstName', 'lastName', 'streetAddress', 'country', 'city', 'postCode',
-    ];
-    for (const field of required) {
-      if (!shipping[field]?.trim()) {
-        setErrorMessage(t('checkout.shippingRequired'));
-        return;
-      }
+    const missing = new Set(
+      REQUIRED_FIELDS.filter(f => !shipping[f]?.trim())
+    ) as Set<ShippingField>;
+
+    if (missing.size > 0) {
+      onShippingInvalid(missing);
+      shippingCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
     }
 
+    onShippingInvalid(new Set());
     setIsProcessing(true);
-    setErrorMessage(null);
+    setStripeError(null);
 
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
@@ -113,7 +136,7 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
     });
 
     if (error) {
-      setErrorMessage(error.message || t('general.error'));
+      setStripeError(error.message || t('general.error'));
       setIsProcessing(false);
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       navigate(`/pedido/confirmado?payment_intent=${paymentIntent.id}`);
@@ -138,8 +161,11 @@ function PaymentForm({ amountTotal, shipping }: { amountTotal: number; shipping:
         <span>{t('checkout.securePayment')}</span>
       </div>
 
-      {errorMessage && (
-        <p className="text-destructive font-medium text-sm">{errorMessage}</p>
+      {stripeError && (
+        <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+          <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+          <p className="text-sm font-medium text-destructive">{stripeError}</p>
+        </div>
       )}
 
       <style>{`
@@ -177,6 +203,8 @@ export default function CheckoutPage() {
     city: '',
     postCode: '',
   });
+  const [invalidFields, setInvalidFields] = useState<Set<ShippingField>>(new Set());
+  const shippingCardRef = useRef<HTMLDivElement>(null);
 
   const { data: configData } = useGetCheckoutConfig();
   const createPaymentIntent = useCreatePaymentIntent();
@@ -184,9 +212,13 @@ export default function CheckoutPage() {
   const formatPrice = (val: number) =>
     new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
 
-  const handleShipping = (field: keyof ShippingData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  const handleShipping = (field: ShippingField) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setShipping(prev => ({ ...prev, [field]: e.target.value }));
+      if (invalidFields.has(field)) {
+        setInvalidFields(prev => { const s = new Set(prev); s.delete(field); return s; });
+      }
+    };
 
   useEffect(() => {
     if (configData?.publishableKey) {
@@ -227,9 +259,21 @@ export default function CheckoutPage() {
     );
   }
 
-  const inputClass =
-    'w-full border border-input rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring';
-  const labelClass = 'block text-sm font-semibold mb-1';
+  const inputClass = (field?: ShippingField) => {
+    const isInvalid = field && invalidFields.has(field);
+    return [
+      'w-full border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2',
+      isInvalid
+        ? 'border-destructive focus:ring-destructive/30'
+        : 'border-input focus:ring-ring',
+    ].join(' ');
+  };
+
+  const labelClass = (field?: ShippingField) => {
+    const isInvalid = field && invalidFields.has(field);
+    return `block text-sm font-semibold mb-1 ${isInvalid ? 'text-destructive' : ''}`;
+  };
+
   const requiredMark = <span className="text-destructive ml-0.5">*</span>;
 
   return (
@@ -282,21 +326,39 @@ export default function CheckoutPage() {
           </Card>
 
           {/* Shipping Address */}
-          <Card className="shadow-sm">
+          <Card className="shadow-sm" ref={shippingCardRef}>
             <CardHeader className="border-b">
               <CardTitle className="text-xl font-bold">
                 {t('checkout.shippingAddress')}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 space-y-5">
+
+              {/* Validation alert */}
+              {invalidFields.size > 0 && (
+                <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+                  <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-destructive">
+                      {t('checkout.fillRequiredFields')}
+                    </p>
+                    <ul className="mt-2 text-sm text-destructive/90 space-y-1 list-disc list-inside">
+                      {REQUIRED_FIELDS.filter(f => invalidFields.has(f)).map(field => (
+                        <li key={field}>{t(FIELD_LABEL_KEY[field])}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
               {/* Email */}
               <div>
-                <label className={labelClass}>
+                <label className={labelClass('email')}>
                   {t('checkout.emailAddress')}{requiredMark}
                 </label>
                 <input
                   type="email"
-                  className={inputClass}
+                  className={inputClass('email')}
                   value={shipping.email}
                   onChange={handleShipping('email')}
                 />
@@ -306,19 +368,19 @@ export default function CheckoutPage() {
               {/* First + Last Name */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>{t('checkout.firstName')}{requiredMark}</label>
+                  <label className={labelClass('firstName')}>{t('checkout.firstName')}{requiredMark}</label>
                   <input
                     type="text"
-                    className={inputClass}
+                    className={inputClass('firstName')}
                     value={shipping.firstName}
                     onChange={handleShipping('firstName')}
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>{t('checkout.lastName')}{requiredMark}</label>
+                  <label className={labelClass('lastName')}>{t('checkout.lastName')}{requiredMark}</label>
                   <input
                     type="text"
-                    className={inputClass}
+                    className={inputClass('lastName')}
                     value={shipping.lastName}
                     onChange={handleShipping('lastName')}
                   />
@@ -327,10 +389,10 @@ export default function CheckoutPage() {
 
               {/* Street Address */}
               <div>
-                <label className={labelClass}>{t('checkout.streetAddress')}{requiredMark}</label>
+                <label className={labelClass('streetAddress')}>{t('checkout.streetAddress')}{requiredMark}</label>
                 <input
                   type="text"
-                  className={inputClass}
+                  className={inputClass('streetAddress')}
                   value={shipping.streetAddress}
                   onChange={handleShipping('streetAddress')}
                 />
@@ -338,9 +400,9 @@ export default function CheckoutPage() {
 
               {/* Country */}
               <div>
-                <label className={labelClass}>{t('checkout.country')}{requiredMark}</label>
+                <label className={labelClass('country')}>{t('checkout.country')}{requiredMark}</label>
                 <select
-                  className={inputClass}
+                  className={inputClass('country')}
                   value={shipping.country}
                   onChange={handleShipping('country')}
                 >
@@ -352,10 +414,10 @@ export default function CheckoutPage() {
 
               {/* County (optional) */}
               <div>
-                <label className={labelClass}>{t('checkout.county')}</label>
+                <label className={labelClass()}>{t('checkout.county')}</label>
                 <input
                   type="text"
-                  className={inputClass}
+                  className={inputClass()}
                   value={shipping.county}
                   onChange={handleShipping('county')}
                 />
@@ -364,19 +426,19 @@ export default function CheckoutPage() {
               {/* City + Post Code */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>{t('checkout.city')}{requiredMark}</label>
+                  <label className={labelClass('city')}>{t('checkout.city')}{requiredMark}</label>
                   <input
                     type="text"
-                    className={inputClass}
+                    className={inputClass('city')}
                     value={shipping.city}
                     onChange={handleShipping('city')}
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>{t('checkout.postCode')}{requiredMark}</label>
+                  <label className={labelClass('postCode')}>{t('checkout.postCode')}{requiredMark}</label>
                   <input
                     type="text"
-                    className={inputClass}
+                    className={inputClass('postCode')}
                     value={shipping.postCode}
                     onChange={handleShipping('postCode')}
                   />
@@ -389,7 +451,13 @@ export default function CheckoutPage() {
           {/* Stripe Elements Payment Form */}
           {stripePromise && clientSecret ? (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <PaymentForm amountTotal={amountTotal} shipping={shipping} />
+              <PaymentForm
+                amountTotal={amountTotal}
+                shipping={shipping}
+                invalidFields={invalidFields}
+                onShippingInvalid={setInvalidFields}
+                shippingCardRef={shippingCardRef}
+              />
             </Elements>
           ) : (
             <div className="flex items-center justify-center py-12">

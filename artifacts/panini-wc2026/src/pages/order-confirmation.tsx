@@ -11,7 +11,7 @@ import {
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, ArrowRight, User, MapPin, CreditCard, Package, Truck } from 'lucide-react';
+import { CheckCircle2, User, MapPin, CreditCard, Package, Truck } from 'lucide-react';
 
 const CARD_BRAND_LABELS: Record<string, string> = {
   visa: 'Visa',
@@ -344,14 +344,6 @@ export default function OrderConfirmation() {
 
         </div>
 
-        <div className="mt-10 text-center">
-          <Button size="lg" asChild className="h-14 px-8 text-lg font-bold shadow-xl bg-primary hover:bg-primary/90">
-            <Link href="/">
-              {t('buttons.backToStore')}
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
-        </div>
       </div>
     </div>
   );

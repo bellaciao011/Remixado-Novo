@@ -640,6 +640,136 @@ Das bietet dir die Stickerkollektion zur WM 2026:
     },
   },
   {
+    id: 'big-collectors-bundle',
+    slug: 'big-collectors-bundle',
+    images: [
+      '/assets/de11-boxbundle-001_1780458779150.webp',
+      '/assets/de11-boxbundle-002_1780458779149.webp',
+      '/assets/de11-boxbundle-003_1780458779149.webp',
+      '/assets/de11-boxbundle-004_1780458779149.webp',
+      '/assets/de11-boxbundle-005_1780458779146.webp',
+    ],
+    price: 11700,
+    originalPrice: null,
+    currency: 'eur',
+    priceId: '',
+    badge: 'exclusive',
+    featured: true,
+    inStock: true,
+    stripeProductName: 'Big Collectors Bundle FIFA World Cup 2026',
+    sortOrder: 12,
+    translations: {
+      'pt-BR': {
+        name: 'Coleção Oficial FIFA World Cup 2026™ – Big Collector\'s Bundle',
+        shortDescription: '1 Álbum + Big Collector\'s Box com 143 envelopes (1.007 figurinhas) + 3 Panini EXTRA-Stickers',
+        description: `Com o Big Collector's Bundle exclusivo online, você garante álbum, 1.007 figurinhas + 3 dos raros Panini EXTRA-Stickers da Copa do Mundo FIFA 2026™.
+
+Nosso maior bundle é ideal para quem quer começar a coleção com tudo desde o início!
+
+Conteúdo do Big Collector's Bundle:
+• 1 Álbum com 112 páginas e 6 figurinhas
+• 1 Big Collector's Box exclusiva online com 143 envelopes de 7 figurinhas cada (= 1.001 figurinhas no total) + 3 Panini EXTRA-Stickers aleatórios
+
+Vantagens do Big Collector's Bundle:
+• Enorme diversão com figurinhas: 1.007 figurinhas + álbum – comece a colar na hora e complete com sorte
+• Compra fácil: adicione o bundle ao carrinho com um clique
+• Direto do fabricante: produtos originais entregues pela Panini
+• Menos repetições: a exclusiva Big Collector's Box oferece as melhores chances de completar o álbum sem muitas figurinhas duplicadas
+• Bônus: apenas na Big Collector's Box você recebe 3 dos 20 raríssimos Panini EXTRA-Stickers* como exclusividade
+
+O que espera você na coleção da Copa do Mundo 2026™:
+• Coleção totalmente licenciada com todas as 48 seleções classificadas
+• Cada seleção com seus principais jogadores, foto do time e logo oficial da federação
+• Visão detalhada da Copa 2026 nos EUA, México e Canadá
+• 980 figurinhas diferentes para colecionar e colar
+• Traz o verdadeiro clima de Copa para casa – perfeito para trocar, colecionar e torcer
+
+*Os Panini EXTRA-Stickers não fazem parte da coleção principal e são adicionados aleatoriamente em média a cada 100º envelope`,
+      },
+      'en': {
+        name: 'Official FIFA World Cup 2026™ Sticker Collection – Big Collector\'s Bundle',
+        shortDescription: '1 Album + Big Collector\'s Box with 143 packs (1,007 stickers) + 3 Panini EXTRA-Stickers',
+        description: `With the online-exclusive Big Collector's Bundle, you get an album, 1,007 stickers + 3 of the rare Panini EXTRA-Stickers for the FIFA World Cup 2026™.
+
+Our biggest bundle is the right choice for you if you want to dive straight into your collection at full speed!
+
+What's in the Big Collector's Bundle:
+• 1 Album with 112 pages and 6 stickers
+• 1 Online-exclusive Big Collector's Box with 143 packs of 7 stickers each (= 1,001 stickers total) + 3 random Panini EXTRA-Stickers
+
+Your advantages with the Big Collector's Bundle:
+• Massive sticker fun: 1,007 stickers plus album – start sticking right away and complete it with a bit of luck
+• Easy shopping: add the bundle to your cart with just one click
+• Direct from the manufacturer: original Panini products delivered
+• Fewer duplicates: the exclusive Big Collector's Box gives you the best chances of completing your album without too many duplicates
+• Bonus: only in the Big Collector's Box do you receive 3 of 20 especially rare Panini EXTRA-Stickers* as an exclusive addition
+
+What awaits you in the ultimate FIFA World Cup 2026™ sticker collection:
+• Fully licensed collection featuring all 48 qualified national teams
+• Each team with their top players, team photo and official federation logo
+• Detailed overview of the 2026 World Cup in the USA, Mexico and Canada
+• 980 different stickers to collect and stick
+• Brings the real World Cup feeling home – perfect for swapping, collecting and cheering
+
+*Panini EXTRA-Stickers are not part of the main collection and are randomly included on average every 100th pack`,
+      },
+      'es': {
+        name: 'Colección Oficial FIFA World Cup 2026™ – Big Collector\'s Bundle',
+        shortDescription: '1 Álbum + Big Collector\'s Box con 143 sobres (1.007 cromos) + 3 Panini EXTRA-Stickers',
+        description: `Con el Big Collector's Bundle exclusivo online, te aseguras álbum, 1.007 cromos + 3 de los raros Panini EXTRA-Stickers de la Copa del Mundo FIFA 2026™.
+
+¡Nuestro bundle más grande es perfecto para quien quiere comenzar su colección a toda máquina!
+
+Contenido del Big Collector's Bundle:
+• 1 Álbum con 112 páginas y 6 cromos
+• 1 Big Collector's Box exclusiva online con 143 sobres de 7 cromos cada uno (= 1.001 cromos en total) + 3 Panini EXTRA-Stickers aleatorios
+
+Tus ventajas con el Big Collector's Bundle:
+• Enorme diversión: 1.007 cromos + álbum – empieza a pegar enseguida y complétalo con suerte
+• Compra fácil: añade el bundle al carrito con un solo clic
+• Directo del fabricante: productos originales Panini entregados
+• Menos duplicados: la exclusiva Big Collector's Box te da las mejores posibilidades de completar el álbum sin demasiados repetidos
+• Bonus: solo en la Big Collector's Box recibes 3 de los 20 rarísimos Panini EXTRA-Stickers* como exclusividad
+
+Lo que te espera en la colección definitiva de la Copa del Mundo 2026™:
+• Colección totalmente licenciada con los 48 equipos clasificados
+• Cada selección con sus mejores jugadores, foto del equipo y logo oficial de la federación
+• Visión detallada de la Copa 2026 en EE.UU., México y Canadá
+• 980 cromos diferentes para coleccionar y pegar
+• Trae el verdadero ambiente mundialista a casa – perfecto para intercambiar, coleccionar y animar
+
+*Los Panini EXTRA-Stickers no forman parte de la colección principal y se incluyen aleatoriamente de media en cada 100º sobre`,
+      },
+      'de': {
+        name: 'Offizielle FIFA World Cup 2026™ Stickerkollektion – Big Collector\'s-Bundle',
+        shortDescription: '1 Album + Big Collector\'s Box mit 143 Tüten (1.007 Sticker) + 3 Panini EXTRA-Sticker',
+        description: `Mit dem online-exklusiven Big Collector's Bundle sicherst du dir Album, 1.007 Sticker + 3 der seltenen Panini EXTRA-Sticker zur FIFA Fußball-Weltmeisterschaft 2026™.
+
+Unser größtes Bundle ist das Richtige für dich, wenn du mit deiner Sammlung direkt voll durchstarten willst!
+
+Im Big Collector's-Bundle enthalten:
+• 1 Album mit 112 Seiten und 6 Stickern
+• 1 online-exklusive Big Collector's Box mit 143 Tüten mit je 7 Stickern (= 1.001 Sticker insgesamt) + 3 zufällige Panini EXTRA-Sticker
+
+Deine Vorteile beim Big Collector's Bundle:
+• Riesiger Sticker-Spaß: 1.007 Sticker plus Album – sofort loskleben und mit etwas Glück vervollständigen
+• Einfach einkaufen: Bundle mit nur einem Klick in den Warenkorb legen
+• Direkt vom Hersteller: Originalverpackte Produkte von Panini geliefert
+• Weniger Dopplungen: Die exklusive Big Collector's Box bietet dir die besten Chancen dein Album ohne viele doppelte Sticker zu komplettieren
+• Bonus: Nur in der Big Collector's Box erhältst du 3 von 20 besonders seltenen Panini EXTRA-Sticker* als exklusiven Zusatz
+
+Das erwartet dich in der ultimativen Stickerkollektion zur WM 2026™:
+• Vollständig lizenzierte Kollektion mit allen 48 qualifizierten Nationalteams
+• Jede Mannschaft mit ihren Top-Spielern, Teamfoto und offiziellem Verbandslogo
+• Detaillierter Überblick über die WM 2026 in den USA, Mexiko und Kanada
+• Insgesamt 980 verschiedene Sticker zum Sammeln und Einkleben
+• Bringt echtes WM-Feeling nach Hause – perfekt zum Tauschen, Sammeln und Mitfiebern
+
+*Panini EXTRA-Sticker sind nicht Teil der Hauptkollektion und werden durchschnittlich jeder 100. Tüte zufällig beigelegt`,
+      },
+    },
+  },
+  {
     id: 'adrenalyn-omni-set',
     slug: 'adrenalyn-xl-omni-set',
     images: [

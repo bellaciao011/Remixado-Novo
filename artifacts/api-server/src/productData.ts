@@ -898,7 +898,7 @@ In dieser limitierten Box:
     originalPrice: null,
     currency: 'eur',
     priceId: '',
-    badge: null,
+    badge: 'offer',
     featured: true,
     inStock: true,
     stripeProductName: 'FIFA World Cup 2026 Treasure Box Panini',

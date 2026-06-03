@@ -105,10 +105,39 @@ export function CartDrawer() {
             </ScrollArea>
 
             <div className="p-6 border-t bg-muted/30">
-              <div className="flex justify-between items-center mb-6 text-lg font-bold">
-                <span>{t('labels.total')}</span>
-                <span className="text-primary">{formatPrice(totalPrice, totalCurrency)}</span>
-              </div>
+              {(() => {
+                const totalOriginal = items.reduce((sum, item) =>
+                  sum + ((item.originalPrice ?? item.price) * item.quantity), 0);
+                const savings = totalOriginal - totalPrice;
+                const hasDiscount = savings > 0.001;
+                return (
+                  <div className="space-y-1 mb-4">
+                    {hasDiscount && (
+                      <div className="flex justify-between items-center text-[#999] text-sm">
+                        <span>{t('checkout.originalTotal')}</span>
+                        <span className="line-through">{formatPrice(totalOriginal, totalCurrency)}</span>
+                      </div>
+                    )}
+                    {hasDiscount && (
+                      <div className="flex justify-between items-center text-[#e00] text-sm font-semibold">
+                        <span>{t('checkout.youSave')}</span>
+                        <span>- {formatPrice(savings, totalCurrency)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center pt-2 border-t text-lg font-bold">
+                      <span>{t('labels.total')}</span>
+                      <div className="text-right">
+                        <span className="text-primary">{formatPrice(totalPrice, totalCurrency)}</span>
+                        {hasDiscount && (
+                          <span className="block text-[11px] font-bold text-[#e00] uppercase tracking-wide">
+                            {Math.round(savings / totalOriginal * 100)}% {t('checkout.offLabel')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
               <Button
                 className="w-full h-14 text-lg font-bold shadow-lg"
                 onClick={handleCheckout}

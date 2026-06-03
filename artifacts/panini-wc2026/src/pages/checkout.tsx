@@ -193,7 +193,9 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <PaymentElement options={{ terms: { card: 'never' } }} />
+      <div className="stripe-payment-wrapper border border-gray-200 rounded-lg p-5 bg-white">
+        <PaymentElement options={{ terms: { card: 'never' } }} />
+      </div>
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
@@ -208,6 +210,7 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
           50% { transform: scale(1.03); }
         }
         .btn-pulse { animation: pulse-scale 2s ease-in-out infinite; }
+        .stripe-payment-wrapper .StripeElement { border-color: transparent !important; box-shadow: none !important; }
       `}</style>
       <Button
         type="submit"

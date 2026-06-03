@@ -193,9 +193,7 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="stripe-payment-wrapper border border-gray-200 rounded-lg p-5 bg-white">
-        <PaymentElement options={{ terms: { card: 'never' } }} />
-      </div>
+      <PaymentElement options={{ terms: { card: 'never' } }} />
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
@@ -210,7 +208,6 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
           50% { transform: scale(1.03); }
         }
         .btn-pulse { animation: pulse-scale 2s ease-in-out infinite; }
-        .stripe-payment-wrapper .StripeElement { border-color: transparent !important; box-shadow: none !important; }
       `}</style>
       <Button
         type="submit"
@@ -750,33 +747,37 @@ export default function CheckoutPage() {
 
           {/* Stripe Elements — only shown after shipping is validated */}
           {step === 'payment' && stripePromise && clientSecret && (
-            <div>
-              <p className="text-xl font-bold mb-4 px-1">{t('checkout.paymentDetails')}</p>
-              <Elements
-                key={i18n.language}
-                stripe={stripePromise}
-                options={{
-                  clientSecret,
-                  locale: i18n.language as any,
-                  appearance: {
-                    theme: 'stripe',
-                    variables: {
-                      borderRadius: '8px',
-                      fontSizeBase: '14px',
-                      colorPrimary: 'hsl(220 70% 30%)',
+            <Card className="shadow-sm">
+              <CardHeader className="border-b">
+                <CardTitle className="text-xl font-bold">{t('checkout.paymentDetails')}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <Elements
+                  key={i18n.language}
+                  stripe={stripePromise}
+                  options={{
+                    clientSecret,
+                    locale: i18n.language as any,
+                    appearance: {
+                      theme: 'stripe',
+                      variables: {
+                        borderRadius: '8px',
+                        fontSizeBase: '14px',
+                        colorPrimary: 'hsl(220 70% 30%)',
+                      },
                     },
-                  },
-                }}
-              >
-                <PaymentForm
-                  amountTotal={amountTotal}
-                  shipping={shipping}
-                  items={items}
-                  orderBumpSelected={orderBumpSelected}
-                  paymentIntentId={paymentIntentId}
-                />
-              </Elements>
-            </div>
+                  }}
+                >
+                  <PaymentForm
+                    amountTotal={amountTotal}
+                    shipping={shipping}
+                    items={items}
+                    orderBumpSelected={orderBumpSelected}
+                    paymentIntentId={paymentIntentId}
+                  />
+                </Elements>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>

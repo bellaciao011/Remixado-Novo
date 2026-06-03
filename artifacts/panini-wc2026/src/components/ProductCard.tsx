@@ -36,6 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
       name: translation.name,
       translations: translationsMap,
       price: product.price / 100,
+      originalPrice: product.originalPrice ? product.originalPrice / 100 : undefined,
       image: product.images[0] || '',
       currency: product.currency,
     });
@@ -48,6 +49,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const price = product.price / 100;
   const originalPrice = product.originalPrice ? product.originalPrice / 100 : null;
+  const discountPct = originalPrice && originalPrice > price
+    ? Math.round((originalPrice - price) / originalPrice * 100)
+    : null;
 
   const cur = product.currency.toUpperCase();
   const formatPrice = (val: number) =>
@@ -64,6 +68,11 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.badge && (
             <span className="absolute top-2 left-2 z-10 bg-[#FFD600] text-black text-[11px] font-bold px-2 py-0.5 uppercase tracking-wide">
               {t(`labels.${product.badge}`)}
+            </span>
+          )}
+          {discountPct && (
+            <span className="absolute top-2 right-2 z-10 bg-[#e00] text-white text-[11px] font-bold px-2 py-0.5 uppercase tracking-wide">
+              -{discountPct}%
             </span>
           )}
           <img

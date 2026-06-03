@@ -310,8 +310,13 @@ export default function CheckoutPage() {
                         {t('checkout.quantity')}: {item.quantity}
                       </p>
                     </div>
-                    <div className="font-bold text-primary">
-                      {formatPrice(item.price * item.quantity)}
+                    <div className="text-right">
+                      {item.originalPrice && item.originalPrice > item.price && (
+                        <p className="text-[12px] text-[#999] line-through leading-none">
+                          {formatPrice(item.originalPrice * item.quantity)}
+                        </p>
+                      )}
+                      <p className="font-bold text-primary">{formatPrice(item.price * item.quantity)}</p>
                     </div>
                   </div>
                 ))}

@@ -62,7 +62,12 @@ export function CartDrawer() {
                     <div className="flex-1 flex flex-col justify-between">
                       <div>
                         <h4 className="font-semibold line-clamp-2">{getItemName(item, i18n.language)}</h4>
-                        <p className="text-primary font-bold mt-1">{formatPrice(item.price, item.currency)}</p>
+                        {item.originalPrice && item.originalPrice > item.price && (
+                          <p className="text-[12px] text-[#999] line-through leading-none">
+                            {formatPrice(item.originalPrice, item.currency)}
+                          </p>
+                        )}
+                        <p className="text-primary font-bold mt-0.5">{formatPrice(item.price, item.currency)}</p>
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="flex items-center border rounded-md">

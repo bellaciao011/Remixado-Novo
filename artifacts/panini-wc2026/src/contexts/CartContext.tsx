@@ -8,6 +8,7 @@ export interface CartItem {
   name: string;
   translations?: Record<string, { name: string }>;
   price: number;
+  originalPrice?: number;
   image: string;
   currency: string;
 }

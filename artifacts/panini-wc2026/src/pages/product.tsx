@@ -58,6 +58,9 @@ export default function ProductDetail() {
 
   const price = product.price / 100;
   const originalPrice = product.originalPrice ? product.originalPrice / 100 : null;
+  const discountPct = originalPrice && originalPrice > price
+    ? Math.round((originalPrice - price) / originalPrice * 100)
+    : null;
 
   const cur = product.currency.toUpperCase();
   const formatPrice = (val: number) =>
@@ -67,12 +70,20 @@ export default function ProductDetail() {
     ).format(val);
 
   const handleAddToCart = () => {
+    const translationsMap: Record<string, { name: string }> = {};
+    for (const [lang, tr] of Object.entries(product.translations)) {
+      if (tr && typeof tr.name === 'string') {
+        translationsMap[lang] = { name: tr.name };
+      }
+    }
     addItem({
       productId: product.id,
       priceId: product.priceId,
       quantity,
       name: translation.name,
+      translations: translationsMap,
       price,
+      originalPrice: originalPrice ?? undefined,
       image: product.images[0] || '',
       currency: product.currency,
     });
@@ -163,7 +174,14 @@ export default function ProductDetail() {
                     {formatPrice(originalPrice)}
                   </span>
                 )}
-                <span className="text-[22px] font-bold text-[#1a1a1a]">{formatPrice(price)}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[22px] font-bold text-[#1a1a1a]">{formatPrice(price)}</span>
+                  {discountPct && (
+                    <span className="bg-[#e00] text-white text-[12px] font-bold px-2 py-0.5 uppercase">
+                      -{discountPct}%
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

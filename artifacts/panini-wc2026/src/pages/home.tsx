@@ -23,13 +23,13 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-12 bg-background">
+      <section className="py-6 md:py-10 bg-background">
         <div className="container px-4 md:px-8 max-w-screen-xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-2 md:mb-0">
+          <div className="flex flex-row justify-between items-center mb-5">
+            <h2 className="text-2xl font-bold text-foreground">
               {t('labels.featured')}
             </h2>
-            <Button variant="outline" asChild className="font-semibold border border-border hover:bg-muted text-sm h-9">
+            <Button variant="outline" asChild className="font-semibold border border-border hover:bg-muted text-sm h-9 flex-shrink-0">
               <Link href="/produtos">
                 {t('buttons.viewMore')}
                 <ArrowRight className="ml-2 h-4 w-4" />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
 import { useTranslation } from 'react-i18next';
-import { ShoppingCart, Menu } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCart } from '../contexts/CartContext';
 import { Button } from './ui/button';
@@ -89,10 +89,6 @@ export function Header() {
             <span className="sr-only">{t('nav.cart')}</span>
           </Button>
 
-          <Button variant="ghost" size="icon" className="md:hidden">
-            <Menu className="h-6 w-6" />
-            <span className="sr-only">{t('nav.menu')}</span>
-          </Button>
         </div>
       </div>
     </header>

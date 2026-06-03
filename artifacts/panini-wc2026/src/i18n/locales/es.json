@@ -80,7 +80,16 @@
     "phoneNumber": "Número de Teléfono",
     "phoneNote": "Para consultas de entrega.",
     "shippingRequired": "Por favor, complete todos los campos obligatorios de la dirección de envío.",
-    "fillRequiredFields": "Por favor, complete los siguientes campos obligatorios:"
+    "fillRequiredFields": "Por favor, complete los siguientes campos obligatorios:",
+    "continueToPayment": "Continuar al Pago",
+    "editShipping": "Editar Dirección",
+    "buyerInfo": "Datos del Comprador",
+    "paymentMethodLabel": "Método de Pago",
+    "cardEndingIn": "Tarjeta terminada en",
+    "deliveryInfo": "Información de Entrega",
+    "estimatedDelivery": "Entrega estimada",
+    "deliveryTime": "5 a 10 días hábiles",
+    "trackingNote": "Recibirás la información de seguimiento por correo electrónico una vez que tu pedido haya sido despachado."
   },
   "general": {
     "loading": "Cargando...",

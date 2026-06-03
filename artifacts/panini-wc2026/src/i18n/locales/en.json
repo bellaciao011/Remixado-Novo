@@ -80,7 +80,16 @@
     "phoneNumber": "Phone Number",
     "phoneNote": "For delivery questions.",
     "shippingRequired": "Please fill in all required shipping address fields.",
-    "fillRequiredFields": "Please complete the following required fields:"
+    "fillRequiredFields": "Please complete the following required fields:",
+    "continueToPayment": "Continue to Payment",
+    "editShipping": "Edit Address",
+    "buyerInfo": "Buyer Information",
+    "paymentMethodLabel": "Payment Method",
+    "cardEndingIn": "Card ending in",
+    "deliveryInfo": "Delivery Information",
+    "estimatedDelivery": "Estimated delivery",
+    "deliveryTime": "5 to 10 business days",
+    "trackingNote": "You will receive tracking information by email once your order has been dispatched."
   },
   "general": {
     "loading": "Loading...",

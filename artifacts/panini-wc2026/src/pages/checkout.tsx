@@ -7,7 +7,7 @@ import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, ShoppingCart, Lock, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Lock, AlertCircle, Check, Pencil } from 'lucide-react';
 
 const getItemName = (item: CartItem, lang: string): string => {
   if (item.translations) {
@@ -85,12 +85,13 @@ const COUNTRIES = [
 interface PaymentFormProps {
   amountTotal: number;
   shipping: ShippingData;
+  items: CartItem[];
   invalidFields: Set<ShippingField>;
   onShippingInvalid: (fields: Set<ShippingField>) => void;
   shippingCardRef: React.RefObject<HTMLDivElement>;
 }
 
-function PaymentForm({ amountTotal, shipping, invalidFields, onShippingInvalid, shippingCardRef }: PaymentFormProps) {
+function PaymentForm({ shipping, items }: PaymentFormProps) {
   const { t } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
@@ -102,19 +103,21 @@ function PaymentForm({ amountTotal, shipping, invalidFields, onShippingInvalid, 
     e.preventDefault();
     if (!stripe || !elements) return;
 
-    const missing = new Set(
-      REQUIRED_FIELDS.filter(f => !shipping[f]?.trim())
-    ) as Set<ShippingField>;
-
-    if (missing.size > 0) {
-      onShippingInvalid(missing);
-      shippingCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-
-    onShippingInvalid(new Set());
     setIsProcessing(true);
     setStripeError(null);
+
+    try {
+      sessionStorage.setItem('panini_order_items', JSON.stringify(items.map(item => ({
+        name: item.name,
+        translations: item.translations,
+        quantity: item.quantity,
+        price: item.price,
+        originalPrice: item.originalPrice,
+        currency: item.currency,
+        image: item.image,
+      }))));
+      sessionStorage.setItem('panini_order_shipping', JSON.stringify(shipping));
+    } catch {}
 
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
@@ -193,6 +196,8 @@ export default function CheckoutPage() {
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [amountTotal, setAmountTotal] = useState<number>(0);
+  const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
+  const [isProceedingToPayment, setIsProceedingToPayment] = useState(false);
   const [shipping, setShipping] = useState<ShippingData>({
     email: '',
     firstName: '',
@@ -226,26 +231,43 @@ export default function CheckoutPage() {
     }
   }, [configData?.publishableKey]);
 
-  useEffect(() => {
-    if (items.length > 0) {
-      createPaymentIntent.mutate(
-        {
-          data: {
-            items: items.map(item => ({
-              productId: item.productId,
-              quantity: item.quantity,
-            })),
-          },
-        },
-        {
-          onSuccess: (data) => {
-            setClientSecret(data.clientSecret);
-            setAmountTotal(data.amountTotal);
-          },
-        }
-      );
+  const handleProceedToPayment = () => {
+    const missing = new Set(
+      REQUIRED_FIELDS.filter(f => !shipping[f]?.trim())
+    ) as Set<ShippingField>;
+
+    if (missing.size > 0) {
+      setInvalidFields(missing);
+      shippingCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
     }
-  }, []);
+
+    setInvalidFields(new Set());
+    setIsProceedingToPayment(true);
+
+    createPaymentIntent.mutate(
+      {
+        data: {
+          items: items.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+        },
+      },
+      {
+        onSuccess: (data) => {
+          setClientSecret(data.clientSecret);
+          setAmountTotal(data.amountTotal);
+          setStep('payment');
+          setIsProceedingToPayment(false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        onError: () => {
+          setIsProceedingToPayment(false);
+        },
+      }
+    );
+  };
 
   if (items.length === 0) {
     return (
@@ -275,6 +297,7 @@ export default function CheckoutPage() {
   };
 
   const requiredMark = <span className="text-destructive ml-0.5">*</span>;
+  const countryName = COUNTRIES.find(c => c.code === shipping.country)?.name || shipping.country;
 
   return (
     <div className="min-h-screen bg-background py-12 md:py-20">
@@ -289,6 +312,23 @@ export default function CheckoutPage() {
           <h1 className="text-3xl md:text-4xl font-black text-primary uppercase tracking-tight">
             {t('nav.checkout')}
           </h1>
+        </div>
+
+        {/* Step indicator */}
+        <div className="flex items-center gap-3 mb-8">
+          <div className={`flex items-center gap-2 text-sm font-semibold ${step === 'shipping' ? 'text-primary' : 'text-muted-foreground'}`}>
+            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'payment' ? 'bg-green-500 text-white' : 'bg-primary text-primary-foreground'}`}>
+              {step === 'payment' ? <Check className="h-3 w-3" /> : '1'}
+            </span>
+            {t('checkout.shippingAddress')}
+          </div>
+          <div className="flex-1 h-px bg-border" />
+          <div className={`flex items-center gap-2 text-sm font-semibold ${step === 'payment' ? 'text-primary' : 'text-muted-foreground'}`}>
+            <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'payment' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground border'}`}>
+              2
+            </span>
+            {t('checkout.paymentDetails')}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-6">
@@ -360,144 +400,181 @@ export default function CheckoutPage() {
           </Card>
 
           {/* Shipping Address */}
-          <Card className="shadow-sm" ref={shippingCardRef}>
-            <CardHeader className="border-b">
+          <Card className="shadow-sm" ref={shippingCardRef as React.RefObject<HTMLDivElement>}>
+            <CardHeader className="border-b flex flex-row items-center justify-between">
               <CardTitle className="text-xl font-bold">
                 {t('checkout.shippingAddress')}
               </CardTitle>
+              {step === 'payment' && (
+                <button
+                  onClick={() => setStep('shipping')}
+                  className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  {t('checkout.editShipping')}
+                </button>
+              )}
             </CardHeader>
-            <CardContent className="p-6 space-y-5">
+            <CardContent className="p-6">
 
-              {/* Validation alert */}
-              {invalidFields.size > 0 && (
-                <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
-                  <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+              {/* In payment step, show read-only summary */}
+              {step === 'payment' ? (
+                <div className="text-sm text-foreground space-y-1">
+                  <p className="font-semibold">{shipping.firstName} {shipping.lastName}</p>
+                  <p className="text-muted-foreground">{shipping.email}</p>
+                  <p className="text-muted-foreground">{shipping.streetAddress}</p>
+                  <p className="text-muted-foreground">
+                    {shipping.city}{shipping.postCode ? `, ${shipping.postCode}` : ''}{shipping.county ? ` — ${shipping.county}` : ''}
+                  </p>
+                  <p className="text-muted-foreground">{countryName}</p>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {/* Validation alert */}
+                  {invalidFields.size > 0 && (
+                    <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+                      <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-semibold text-destructive">
+                          {t('checkout.fillRequiredFields')}
+                        </p>
+                        <ul className="mt-2 text-sm text-destructive/90 space-y-1 list-disc list-inside">
+                          {REQUIRED_FIELDS.filter(f => invalidFields.has(f)).map(field => (
+                            <li key={field}>{t(FIELD_LABEL_KEY[field])}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Email */}
                   <div>
-                    <p className="text-sm font-semibold text-destructive">
-                      {t('checkout.fillRequiredFields')}
-                    </p>
-                    <ul className="mt-2 text-sm text-destructive/90 space-y-1 list-disc list-inside">
-                      {REQUIRED_FIELDS.filter(f => invalidFields.has(f)).map(field => (
-                        <li key={field}>{t(FIELD_LABEL_KEY[field])}</li>
-                      ))}
-                    </ul>
+                    <label className={labelClass('email')}>
+                      {t('checkout.emailAddress')}{requiredMark}
+                    </label>
+                    <input
+                      type="email"
+                      className={inputClass('email')}
+                      value={shipping.email}
+                      onChange={handleShipping('email')}
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">{t('checkout.emailNote')}</p>
                   </div>
+
+                  {/* First + Last Name */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelClass('firstName')}>{t('checkout.firstName')}{requiredMark}</label>
+                      <input
+                        type="text"
+                        className={inputClass('firstName')}
+                        value={shipping.firstName}
+                        onChange={handleShipping('firstName')}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass('lastName')}>{t('checkout.lastName')}{requiredMark}</label>
+                      <input
+                        type="text"
+                        className={inputClass('lastName')}
+                        value={shipping.lastName}
+                        onChange={handleShipping('lastName')}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Street Address */}
+                  <div>
+                    <label className={labelClass('streetAddress')}>{t('checkout.streetAddress')}{requiredMark}</label>
+                    <input
+                      type="text"
+                      className={inputClass('streetAddress')}
+                      value={shipping.streetAddress}
+                      onChange={handleShipping('streetAddress')}
+                    />
+                  </div>
+
+                  {/* Country */}
+                  <div>
+                    <label className={labelClass('country')}>{t('checkout.country')}{requiredMark}</label>
+                    <select
+                      className={inputClass('country')}
+                      value={shipping.country}
+                      onChange={handleShipping('country')}
+                    >
+                      {COUNTRIES.map(c => (
+                        <option key={c.code} value={c.code}>{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* County (optional) */}
+                  <div>
+                    <label className={labelClass()}>{t('checkout.county')}</label>
+                    <input
+                      type="text"
+                      className={inputClass()}
+                      value={shipping.county}
+                      onChange={handleShipping('county')}
+                    />
+                  </div>
+
+                  {/* City + Post Code */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className={labelClass('city')}>{t('checkout.city')}{requiredMark}</label>
+                      <input
+                        type="text"
+                        className={inputClass('city')}
+                        value={shipping.city}
+                        onChange={handleShipping('city')}
+                      />
+                    </div>
+                    <div>
+                      <label className={labelClass('postCode')}>{t('checkout.postCode')}{requiredMark}</label>
+                      <input
+                        type="text"
+                        className={inputClass('postCode')}
+                        value={shipping.postCode}
+                        onChange={handleShipping('postCode')}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Proceed button */}
+                  <style>{`
+                    @keyframes pulse-scale {
+                      0%, 100% { transform: scale(1); }
+                      50% { transform: scale(1.03); }
+                    }
+                    .btn-pulse { animation: pulse-scale 2s ease-in-out infinite; }
+                  `}</style>
+                  <button
+                    type="button"
+                    onClick={handleProceedToPayment}
+                    disabled={isProceedingToPayment}
+                    className="btn-pulse w-full h-14 text-[15px] font-bold uppercase tracking-widest shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:animation-none"
+                    style={{ backgroundColor: '#FFD600', color: '#1a1a1a' }}
+                  >
+                    {isProceedingToPayment ? t('general.loading') : t('checkout.continueToPayment')}
+                  </button>
                 </div>
               )}
-
-              {/* Email */}
-              <div>
-                <label className={labelClass('email')}>
-                  {t('checkout.emailAddress')}{requiredMark}
-                </label>
-                <input
-                  type="email"
-                  className={inputClass('email')}
-                  value={shipping.email}
-                  onChange={handleShipping('email')}
-                />
-                <p className="text-xs text-muted-foreground mt-1">{t('checkout.emailNote')}</p>
-              </div>
-
-              {/* First + Last Name */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass('firstName')}>{t('checkout.firstName')}{requiredMark}</label>
-                  <input
-                    type="text"
-                    className={inputClass('firstName')}
-                    value={shipping.firstName}
-                    onChange={handleShipping('firstName')}
-                  />
-                </div>
-                <div>
-                  <label className={labelClass('lastName')}>{t('checkout.lastName')}{requiredMark}</label>
-                  <input
-                    type="text"
-                    className={inputClass('lastName')}
-                    value={shipping.lastName}
-                    onChange={handleShipping('lastName')}
-                  />
-                </div>
-              </div>
-
-              {/* Street Address */}
-              <div>
-                <label className={labelClass('streetAddress')}>{t('checkout.streetAddress')}{requiredMark}</label>
-                <input
-                  type="text"
-                  className={inputClass('streetAddress')}
-                  value={shipping.streetAddress}
-                  onChange={handleShipping('streetAddress')}
-                />
-              </div>
-
-              {/* Country */}
-              <div>
-                <label className={labelClass('country')}>{t('checkout.country')}{requiredMark}</label>
-                <select
-                  className={inputClass('country')}
-                  value={shipping.country}
-                  onChange={handleShipping('country')}
-                >
-                  {COUNTRIES.map(c => (
-                    <option key={c.code} value={c.code}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* County (optional) */}
-              <div>
-                <label className={labelClass()}>{t('checkout.county')}</label>
-                <input
-                  type="text"
-                  className={inputClass()}
-                  value={shipping.county}
-                  onChange={handleShipping('county')}
-                />
-              </div>
-
-              {/* City + Post Code */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass('city')}>{t('checkout.city')}{requiredMark}</label>
-                  <input
-                    type="text"
-                    className={inputClass('city')}
-                    value={shipping.city}
-                    onChange={handleShipping('city')}
-                  />
-                </div>
-                <div>
-                  <label className={labelClass('postCode')}>{t('checkout.postCode')}{requiredMark}</label>
-                  <input
-                    type="text"
-                    className={inputClass('postCode')}
-                    value={shipping.postCode}
-                    onChange={handleShipping('postCode')}
-                  />
-                </div>
-              </div>
-
             </CardContent>
           </Card>
 
-          {/* Stripe Elements Payment Form */}
-          {stripePromise && clientSecret ? (
+          {/* Stripe Elements — only shown after shipping is validated */}
+          {step === 'payment' && stripePromise && clientSecret && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
               <PaymentForm
                 amountTotal={amountTotal}
                 shipping={shipping}
+                items={items}
                 invalidFields={invalidFields}
                 onShippingInvalid={setInvalidFields}
-                shippingCardRef={shippingCardRef}
+                shippingCardRef={shippingCardRef as React.RefObject<HTMLDivElement>}
               />
             </Elements>
-          ) : (
-            <div className="flex items-center justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-              <span className="ml-3 text-muted-foreground">{t('general.loading')}</span>
-            </div>
           )}
         </div>
       </div>

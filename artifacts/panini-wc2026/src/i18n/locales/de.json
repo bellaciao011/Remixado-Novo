@@ -80,7 +80,16 @@
     "phoneNumber": "Telefonnummer",
     "phoneNote": "Für Lieferfragen.",
     "shippingRequired": "Bitte füllen Sie alle Pflichtfelder der Lieferadresse aus.",
-    "fillRequiredFields": "Bitte füllen Sie die folgenden Pflichtfelder aus:"
+    "fillRequiredFields": "Bitte füllen Sie die folgenden Pflichtfelder aus:",
+    "continueToPayment": "Weiter zur Zahlung",
+    "editShipping": "Adresse bearbeiten",
+    "buyerInfo": "Käuferinformationen",
+    "paymentMethodLabel": "Zahlungsmethode",
+    "cardEndingIn": "Karte endet auf",
+    "deliveryInfo": "Lieferinformationen",
+    "estimatedDelivery": "Voraussichtliche Lieferung",
+    "deliveryTime": "5 bis 10 Werktage",
+    "trackingNote": "Sie erhalten die Sendungsverfolgungsinformationen per E-Mail, sobald Ihre Bestellung versandt wurde."
   },
   "general": {
     "loading": "Wird geladen...",

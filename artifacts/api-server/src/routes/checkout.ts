@@ -49,7 +49,7 @@ router.post('/checkout/session', async (req: Request, res: Response): Promise<vo
 
       lineItems.push({
         price_data: {
-          currency: 'brl',
+          currency: 'eur',
           product_data: {
             name: productName,
             ...(imageUrl ? { images: [imageUrl] } : {}),
@@ -114,7 +114,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
-      currency: 'brl',
+      currency: 'eur',
       automatic_payment_methods: { enabled: true },
     });
 
@@ -122,7 +122,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
       amountTotal: amountTotal / 100,
-      currency: 'brl',
+      currency: 'eur',
     });
   } catch (error: any) {
     console.error('PaymentIntent error:', error);
@@ -175,25 +175,24 @@ router.get('/checkout/verify-payment', async (req: Request, res: Response): Prom
     }
 
     const stripe = await getUncachableStripeClient();
-    const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent_id);
+    const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent_id, {
+      expand: ['payment_method'],
+    });
 
     const isSucceeded = paymentIntent.status === 'succeeded';
 
-    const items = [];
-    if (paymentIntent.description) {
-      items.push({
-        name: paymentIntent.description,
-        quantity: 1,
-        amount: paymentIntent.amount / 100,
-      });
-    }
+    const pm = paymentIntent.payment_method as any;
+    const cardBrand = pm?.card?.brand || null;
+    const cardLast4 = pm?.card?.last4 || null;
 
     res.json({
       status: isSucceeded ? 'complete' : paymentIntent.status,
-      customerEmail: null,
+      customerEmail: paymentIntent.receipt_email || null,
       amountTotal: paymentIntent.amount / 100,
       currency: paymentIntent.currency,
-      items,
+      items: [],
+      shipping: paymentIntent.shipping || null,
+      paymentMethod: cardBrand ? { brand: cardBrand, last4: cardLast4 } : null,
     });
   } catch (error: any) {
     console.error('Verify payment intent error:', error);

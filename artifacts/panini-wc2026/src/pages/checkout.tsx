@@ -321,6 +321,8 @@ export default function CheckoutPage() {
             quantity: item.quantity,
           })),
           email: shipping.email,
+          firstName: shipping.firstName,
+          lastName: shipping.lastName,
           locale: i18n.language,
           utmSource: getUtm('utm_source'),
           utmMedium: getUtm('utm_medium'),

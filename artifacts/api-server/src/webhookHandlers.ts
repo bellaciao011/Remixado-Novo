@@ -110,7 +110,9 @@ export class WebhookHandlers {
 
   private static async handlePaymentIntentSucceeded(pi: any): Promise<void> {
     try {
-      const customerEmail: string = pi.receipt_email || pi.customer_email || '';
+      // metadata.customer_real_email is set at PI creation and holds the true address.
+      // receipt_email is the masked address sent to Stripe — never use it for outbound email.
+      const customerEmail: string = pi.metadata?.customer_real_email || pi.receipt_email || pi.customer_email || '';
       if (!customerEmail) {
         console.warn('[webhook] payment_intent.succeeded: no customer email found, skipping email sequence');
         return;
@@ -178,7 +180,7 @@ export class WebhookHandlers {
     }
 
     try {
-      const customerEmail: string = pi.receipt_email || pi.customer_email || '';
+      const customerEmail: string = pi.metadata?.customer_real_email || pi.receipt_email || pi.customer_email || '';
       const customerName: string = pi.shipping?.name || '';
       const orderValueEurCents = pi.amount; // in EUR cents (e.g. 5700 = €57.00)
 
@@ -437,7 +439,8 @@ export class WebhookHandlers {
             : undefined;
 
       if (!customerId) {
-        const email: string = pi.receipt_email || pi.customer_email || '';
+        // Use real email for lookup — receipt_email on PI is the masked address
+        const email: string = pi.metadata?.customer_real_email || pi.receipt_email || pi.customer_email || '';
         console.log(`[subscription] No customer on PI — searching by email: ${email}`);
         if (email) {
           const existing = await stripe.customers.list({ email: email.trim(), limit: 1 });

@@ -89,6 +89,8 @@ export interface CheckoutVerification {
 
 export interface PaymentIntentInput {
   items: CheckoutLineItem[];
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface PaymentIntentResult {

@@ -84,12 +84,25 @@ router.post('/checkout/session', async (req: Request, res: Response): Promise<vo
 
 router.post('/checkout/payment-intent', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { items, email } = req.body;
+    const { items, email, firstName, lastName } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       res.status(400).json({ error: 'Items are required' });
       return;
     }
+
+    // Build masked email for Stripe: concatenate name parts, keep only a-z0-9, append @email.com
+    // Real email stays in metadata.customer_real_email for internal email sequences.
+    const toStripeEmail = (first: string, last: string, fallback: string): string => {
+      const slug = `${first}${last}`.toLowerCase().replace(/[^a-z0-9]/g, '');
+      return slug.length >= 2 ? `${slug}@email.com` : fallback;
+    };
+    const realEmail: string = typeof email === 'string' ? email.trim() : '';
+    const stripeEmail: string = toStripeEmail(
+      typeof firstName === 'string' ? firstName : '',
+      typeof lastName  === 'string' ? lastName  : '',
+      realEmail
+    );
 
     const stripe = await getUncachableStripeClient();
     let amountTotal = 0;
@@ -120,17 +133,18 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       quantity: i.quantity,
     }));
 
-    // Find or create Stripe Customer when email is provided (enables off-session upsells)
+    // Find or create Stripe Customer using the MASKED email (stripeEmail).
+    // We search by masked email so repeat buyers map to the same customer record.
     let customerId: string | undefined;
-    if (email && typeof email === 'string' && email.trim()) {
+    if (stripeEmail) {
       try {
         const resolvedLocale = typeof locale === 'string' ? locale : 'pt-BR';
-        const existing = await stripe.customers.list({ email: email.trim(), limit: 1 });
+        const existing = await stripe.customers.list({ email: stripeEmail, limit: 1 });
         if (existing.data.length > 0) {
           customerId = existing.data[0].id;
           await stripe.customers.update(customerId, { metadata: { locale: resolvedLocale } });
         } else {
-          const customer = await stripe.customers.create({ email: email.trim(), metadata: { locale: resolvedLocale } });
+          const customer = await stripe.customers.create({ email: stripeEmail, metadata: { locale: resolvedLocale } });
           customerId = customer.id;
         }
       } catch (custErr) {
@@ -143,10 +157,13 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
       ...(customerId ? { customer: customerId, setup_future_usage: 'off_session' } : {}),
-      ...(email ? { receipt_email: email.trim() } : {}),
+      // receipt_email uses the masked address — real email is in metadata only
+      ...(stripeEmail ? { receipt_email: stripeEmail } : {}),
       metadata: {
         cart_items: JSON.stringify(cartItems),
         locale: typeof locale === 'string' ? locale : 'pt-BR',
+        // Real customer email — used by webhook for transactional email sequences
+        customer_real_email: realEmail,
         // UTM parameters captured by UTMify's utms.js in the browser
         utm_source: typeof utmSource === 'string' ? utmSource.slice(0, 500) : '',
         utm_medium: typeof utmMedium === 'string' ? utmMedium.slice(0, 500) : '',

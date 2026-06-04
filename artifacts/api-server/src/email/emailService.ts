@@ -6,7 +6,7 @@ import {
   buildLogisticsEmail,
 } from './templates';
 
-const FROM_ADDRESS = 'Panini FIFA World Cup 2026 <onboarding@resend.dev>';
+const FROM_ADDRESS = 'Panini FIFA World Cup 2026 <noreply@stickeroffer.store>';
 
 const LOGISTICS_DAYS = [1, 2, 3, 4, 6, 8, 10, 12, 15, 18, 22, 24, 26, 28];
 

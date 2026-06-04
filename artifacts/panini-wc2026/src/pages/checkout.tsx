@@ -228,15 +228,6 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    const value = totalPrice;
-    const contentIds = items.map(i => i.productId);
-    const numItems = items.reduce((s, i) => s + i.quantity, 0);
-    try {
-      utmifyEvent('InitiateCheckout', { value, currency: 'EUR', content_ids: contentIds, num_items: numItems });
-    } catch { /* non-fatal */ }
-    try {
-      fbq('InitiateCheckout', { value, currency: 'EUR', content_ids: contentIds, num_items: numItems });
-    } catch { /* non-fatal */ }
   }, []);
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -331,6 +322,11 @@ export default function CheckoutPage() {
           setProceedError(null);
           sessionStorage.setItem('panini_order_product_ids', JSON.stringify(items.map(i => i.productId)));
           window.scrollTo({ top: 0, behavior: 'smooth' });
+          const icValue = data.amountTotal;
+          const icContentIds = items.map(i => i.productId);
+          const icNumItems = items.reduce((s, i) => s + i.quantity, 0);
+          try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
+          try { fbq('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
         },
         onError: (err: any) => {
           setIsProceedingToPayment(false);

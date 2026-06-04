@@ -83,6 +83,7 @@
     "fillRequiredFields": "Os seguintes campos são obrigatórios:",
     "continueToPayment": "Prosseguir para Pagamento",
     "editShipping": "Editar Endereço",
+    "paymentError": "Nao foi possivel processar seu pedido. Verifique se seus dados estao corretos e tente novamente.",
     "buyerInfo": "Dados do Comprador",
     "paymentMethodLabel": "Forma de Pagamento",
     "cardEndingIn": "Cartão terminado em",

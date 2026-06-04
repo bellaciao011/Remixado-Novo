@@ -83,6 +83,7 @@
     "fillRequiredFields": "Bitte füllen Sie die folgenden Pflichtfelder aus:",
     "continueToPayment": "Weiter zur Zahlung",
     "editShipping": "Adresse bearbeiten",
+    "paymentError": "Ihre Bestellung konnte nicht verarbeitet werden. Bitte pruefen Sie Ihre Angaben und versuchen Sie es erneut.",
     "buyerInfo": "Käuferinformationen",
     "paymentMethodLabel": "Zahlungsmethode",
     "cardEndingIn": "Karte endet auf",

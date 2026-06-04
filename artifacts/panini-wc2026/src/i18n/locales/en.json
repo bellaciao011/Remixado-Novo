@@ -83,6 +83,7 @@
     "fillRequiredFields": "Please complete the following required fields:",
     "continueToPayment": "Continue to Payment",
     "editShipping": "Edit Address",
+    "paymentError": "We could not process your order. Please check your details and try again.",
     "buyerInfo": "Buyer Information",
     "paymentMethodLabel": "Payment Method",
     "cardEndingIn": "Card ending in",

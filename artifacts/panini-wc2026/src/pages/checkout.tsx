@@ -328,9 +328,9 @@ export default function CheckoutPage() {
           try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
           try { fbq('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
         },
-        onError: (err: any) => {
+        onError: () => {
           setIsProceedingToPayment(false);
-          setProceedError(err?.message || t('general.error'));
+          setProceedError(t('checkout.paymentError'));
         },
       }
     );

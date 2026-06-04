@@ -512,6 +512,20 @@ export class WebhookHandlers {
       const amountEurCents: number = pi.amount;
       const idempotencyKey = `sub_create_${pi.id}`;
 
+      // Stripe subscriptions require an existing product ID in price_data.product —
+      // product_data inline is NOT supported. Find or create the product once.
+      const PRODUCT_NAME = 'Panini FIFA World Cup 2026 — Assinatura Mensal';
+      let subProductId: string;
+      const existingProducts = await stripe.products.list({ active: true, limit: 100 });
+      const existingProduct = existingProducts.data.find(p => p.name === PRODUCT_NAME);
+      if (existingProduct) {
+        subProductId = existingProduct.id;
+      } else {
+        const newProduct = await stripe.products.create({ name: PRODUCT_NAME });
+        subProductId = newProduct.id;
+        console.log(`[subscription] Created Stripe product ${subProductId}`);
+      }
+
       const subscription = await stripe.subscriptions.create(
         {
           customer: customerId,
@@ -519,7 +533,7 @@ export class WebhookHandlers {
             {
               price_data: {
                 currency: 'eur',
-                product_data: { name: 'Panini FIFA World Cup 2026 — Assinatura Mensal' },
+                product: subProductId,
                 recurring: { interval: 'month' },
                 unit_amount: amountEurCents,
               },

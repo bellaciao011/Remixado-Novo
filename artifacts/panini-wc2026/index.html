@@ -14,7 +14,10 @@
     <meta name="twitter:description" content="Panini FIFA World Cup 2026 Store — built on Replit. Update this description to reflect the app." />
     <link rel="icon" type="image/png" href="/favicon.png" />
 
-    <!-- Preconnect to critical third-party origins -->
+    <!-- Preload LCP hero image — directly discoverable in initial HTML, not hash-gated by JS -->
+    <link rel="preload" as="image" href="/assets/PAN-INT-WC-STK-BANNER-1920X500-INT_EN_(1)_1780517958151.webp" type="image/webp" fetchpriority="high" />
+
+    <!-- Preconnect to critical third-party origins (max 4) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -22,7 +25,7 @@
     <link rel="dns-prefetch" href="https://www.clarity.ms" />
     <link rel="dns-prefetch" href="https://cdn.utmify.com.br" />
 
-    <!-- Google Fonts — non-blocking via media swap trick -->
+    <!-- Google Fonts — non-blocking via preload + onload swap -->
     <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
       onload="this.onload=null;this.rel='stylesheet'" />
@@ -30,9 +33,24 @@
       <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" />
     </noscript>
-    <!-- Font fallback so text renders immediately without layout shift -->
+
+    <!-- Critical CSS inline: renders above-the-fold layout before the full CSS bundle arrives -->
     <style>
-      body { font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      *, *::before, *::after { box-sizing: border-box; }
+      html { line-height: 1.5; -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #ffffff;
+        color: #1a1a1a;
+        -webkit-font-smoothing: antialiased;
+      }
+      #root { min-height: 100vh; display: flex; flex-direction: column; }
+      img { display: block; max-width: 100%; height: auto; }
+      /* Hero section — immediate black background prevents white flash */
+      .hero-section { width: 100%; background-color: #000000; }
+      /* Navbar placeholder height to prevent layout shift */
+      .navbar-placeholder { height: 56px; background: #fff; }
     </style>
   </head>
   <body>
@@ -44,7 +62,6 @@
     <!-- Analytics loaded after page is interactive to avoid render-blocking -->
     <script>
       window.addEventListener('load', function() {
-        // Defer all analytics until after first render
         setTimeout(function() {
           // Google Analytics
           var ga = document.createElement('script');

@@ -5,7 +5,7 @@ import { useGetFeaturedProducts } from '@workspace/api-client-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-import bannerImg from '@assets/PAN-INT-WC-STK-BANNER-1920X500-INT_EN_(1)_1780517958151.webp';
+const HERO_URL = '/assets/PAN-INT-WC-STK-BANNER-1920X500-INT_EN_(1)_1780517958151.webp';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ export default function Home() {
       {/* Hero Banner — full width, fully visible */}
       <section className="w-full bg-black">
         <img
-          src={bannerImg}
+          src={HERO_URL}
           alt="FIFA World Cup 2026"
           className="w-full h-auto block mx-auto"
           width="1920"

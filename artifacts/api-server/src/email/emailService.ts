@@ -1,19 +1,16 @@
 import { getResendClient } from './resendClient';
 import {
   OrderInfo,
-  resolveLocale,
   buildOrderConfirmationEmail,
   buildUpsellConfirmationEmail,
   buildLogisticsEmail,
 } from './templates';
+import { insertScheduledEmail } from './emailScheduler';
 
 const FROM_ADDRESS = 'Panini FIFA World Cup 2026 <noreply@stickeroffer.store>';
 
+// Days after purchase when each logistics email is sent
 const LOGISTICS_DAYS = [1, 2, 3, 4, 6, 8, 10, 12, 15, 18, 22, 24, 26, 28];
-
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function getLogoUrl(): string {
   const domain = process.env.REPLIT_DOMAINS?.split(',')[0] || 'localhost:8080';
@@ -65,43 +62,43 @@ export async function sendUpsellConfirmation(
   }
 }
 
+/**
+ * Schedules the full logistics email sequence in PostgreSQL.
+ *
+ * Each email is written to the `scheduled_emails` table with its future
+ * `send_at` timestamp.  A background worker in index.ts reads this table
+ * every 60 s and calls Resend only when each email is actually due.
+ *
+ * This replaces Resend's `scheduledAt` parameter (requires paid plan and was
+ * sending all emails immediately on the free plan).
+ */
 export async function scheduleLogisticsSequence(order: OrderInfo): Promise<void> {
-  const resend = getResendClient();
   const logoUrl = getLogoUrl();
   const now = new Date();
-  let failCount = 0;
+  let scheduled = 0;
 
   for (let idx = 0; idx < LOGISTICS_DAYS.length; idx++) {
     const days = LOGISTICS_DAYS[idx];
     const step = idx + 1;
-    const scheduledAt = addDays(now, days);
+    const sendAt = addDays(now, days);
     const { subject, html } = buildLogisticsEmail(order, step, logoUrl);
 
     try {
-      await resend.emails.send({
-        from: FROM_ADDRESS,
-        to: order.customerEmail,
+      await insertScheduledEmail({
+        paymentIntentId: order.orderId,
+        step,
+        recipientEmail: order.customerEmail,
         subject,
         html,
-        scheduledAt: scheduledAt.toISOString(),
+        sendAt,
       });
-      console.log(`[email] Logistics email ${step}/${LOGISTICS_DAYS.length} scheduled for ${scheduledAt.toISOString()} → ${order.customerEmail}`);
+      scheduled++;
     } catch (err) {
-      failCount++;
-      console.error(`[email] Logistics step ${step} failed:`, err);
-    }
-
-    // Pause between API calls to respect Resend rate limits
-    if (idx < LOGISTICS_DAYS.length - 1) {
-      await sleep(600);
+      console.error(`[email] Failed to schedule logistics step ${step}:`, err);
     }
   }
 
-  if (failCount > 0) {
-    console.error(`[email] ${failCount}/${LOGISTICS_DAYS.length} logistics emails failed to schedule for ${order.customerEmail}`);
-  } else {
-    console.log(`[email] All ${LOGISTICS_DAYS.length} logistics emails scheduled for ${order.customerEmail}`);
-  }
+  console.log(`[email] ${scheduled}/${LOGISTICS_DAYS.length} logistics emails queued in DB for ${order.customerEmail} (first send: +1 day)`);
 }
 
 export async function sendTestEmail(templateNumber: number, toEmail: string, locale?: string): Promise<void> {

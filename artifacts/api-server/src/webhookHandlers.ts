@@ -190,9 +190,16 @@ export class WebhookHandlers {
           });
           const bt = charge.balance_transaction as any;
           if (bt && bt.currency === 'brl' && bt.amount > 0) {
-            totalBrlCents = bt.amount; // the actual BRL amount Stripe settled (e.g. 33608 = R$336.08)
+            // Primary: use the exact BRL amount Stripe settled for this transaction
+            totalBrlCents = bt.amount;
             utmifyCurrency = 'BRL';
-            console.log(`[webhook] UTMify BRL: €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL`);
+            console.log(`[webhook] UTMify BRL (exact): €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL`);
+          } else if (bt && bt.exchange_rate > 0) {
+            // Fallback: Stripe provided an exchange_rate but not a BRL settlement —
+            // approximate by multiplying the EUR amount by the rate for this transaction.
+            totalBrlCents = Math.round(orderValueEurCents * bt.exchange_rate);
+            utmifyCurrency = 'BRL';
+            console.log(`[webhook] UTMify BRL (approx via rate ${bt.exchange_rate}): €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL`);
           }
         } catch (btErr) {
           console.warn('[webhook] Could not fetch balance_transaction for BRL conversion:', btErr);

@@ -1,5 +1,5 @@
 import { getUncachableStripeClient, getWebhookSecret } from './stripeClient';
-import { PRODUCTS } from './productData';
+import { PRODUCTS, ORDER_BUMP_PRODUCT, ORDER_BUMP_ID } from './productData';
 import { sendOrderConfirmation, scheduleLogisticsSequence } from './email/emailService';
 import type { OrderInfo } from './email/templates';
 import { resolveLocale } from './email/templates';
@@ -195,7 +195,7 @@ export class WebhookHandlers {
       });
 
       if (products.length === 0) {
-        // Fallback when cart metadata is unavailable (e.g. upsell purchase)
+        // Fallback when cart metadata is unavailable
         products.push({
           id: 'panini-wc2026',
           planId: 'panini-wc2026',
@@ -203,6 +203,19 @@ export class WebhookHandlers {
           name: 'Panini FIFA World Cup 2026',
           quantity: 1,
           priceInCents: orderValue,
+        });
+      }
+
+      // Include order bump if it was selected (stored in metadata by PUT /payment-intent/:id)
+      const orderBumpId = pi.metadata?.order_bump || '';
+      if (orderBumpId === ORDER_BUMP_ID) {
+        products.push({
+          id: ORDER_BUMP_PRODUCT.id,
+          planId: ORDER_BUMP_PRODUCT.id,
+          planName: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
+          name: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
+          quantity: 1,
+          priceInCents: ORDER_BUMP_PRODUCT.price,
         });
       }
 

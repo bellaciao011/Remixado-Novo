@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
-import { PRODUCTS, ORDER_BUMP_PRICE } from '../productData';
+import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID } from '../productData';
 import { sendUpsellConfirmation } from '../email/emailService';
 import type { OrderInfo } from '../email/templates';
 
@@ -203,7 +203,13 @@ router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): 
       amountTotal += ORDER_BUMP_PRICE;
     }
 
-    await stripe.paymentIntents.update(id, { amount: amountTotal });
+    await stripe.paymentIntents.update(id, {
+      amount: amountTotal,
+      metadata: {
+        ...pi.metadata,
+        order_bump: addOrderBump ? ORDER_BUMP_ID : '',
+      },
+    });
 
     res.json({ amountTotal: amountTotal / 100, currency: 'eur' });
   } catch (error: any) {
@@ -322,6 +328,7 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
       metadata: {
         upsell_product_id: productId,
         upsell_type: 'one_click_upsell',
+        cart_items: JSON.stringify([{ productId, quantity: 1 }]),
       },
     });
 

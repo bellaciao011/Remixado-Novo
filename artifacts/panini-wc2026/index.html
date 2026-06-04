@@ -17,7 +17,7 @@
     <!-- Preload LCP hero image — directly discoverable in initial HTML, not hash-gated by JS -->
     <link rel="preload" as="image" href="/assets/PAN-INT-WC-STK-BANNER-1920X500-INT_EN_(1)_1780517958151.webp" type="image/webp" fetchpriority="high" />
 
-    <!-- Preconnect to critical third-party origins (max 4) -->
+    <!-- Preconnect to critical third-party origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -51,67 +51,93 @@
     </style>
 
     <!--
-      Analytics strategy:
-      - On confirmation page (/pedido/confirmado): load IMMEDIATELY so Purchase
-        events fire reliably before the React retry window expires.
-      - On all other pages: defer to window.load + 200ms to avoid blocking FCP/LCP.
+      Analytics loading strategy:
+      ─────────────────────────────────────────────────────────────────────
+      CONFIRMATION PAGE (/pedido/confirmado):
+        Analytics are loaded IMMEDIATELY (synchronous init block) so that
+        fbq and window._pixel exist before React mounts and fires Purchase.
+
+      ALL OTHER PAGES:
+        Deferred to window.load + 200 ms to avoid blocking FCP/LCP.
+      ─────────────────────────────────────────────────────────────────────
+
+      FACEBOOK PIXEL INIT (REQUIRED):
+        The stub below creates window.fbq as a queuing function.
+        fbq('init', PIXEL_ID) MUST be called to register the pixel — without
+        this, the stub exists but no events are ever sent to Facebook.
+        fbq('track', 'PageView') fires the standard page-view event.
+
+        NOTE: UTMify pixel.js also tries to call fbq('init') internally, but
+        it detects whether fbq is already initialized. Calling init here first
+        ensures UTMify's Meta tracker (Tracker.inited) becomes true.
+      ─────────────────────────────────────────────────────────────────────
     -->
     <script>
-      (function() {
-        function initAnalytics() {
-          // Google Analytics
-          var ga = document.createElement('script');
-          ga.async = true;
-          ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-XP7H71X8WT';
-          document.head.appendChild(ga);
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          window.gtag = gtag;
-          gtag('js', new Date());
-          gtag('config', 'G-XP7H71X8WT');
+      var FB_PIXEL_ID = '1622885129012772';
+      var UTMIFY_PIXEL_ID = '6a20c524847b051638093bcf';
 
-          // Facebook Pixel stub (UTMify pixel.js handles init + PageView automatically)
-          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-          n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-          n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-          t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-          document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      function initAnalytics() {
+        // ── 1. Google Analytics ────────────────────────────────────────
+        var ga = document.createElement('script');
+        ga.async = true;
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-XP7H71X8WT';
+        document.head.appendChild(ga);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-XP7H71X8WT');
 
-          // Microsoft Clarity
-          (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, 'clarity', 'script', 'x1h21qdu16');
+        // ── 2. Facebook Pixel ─────────────────────────────────────────
+        // Step A: load stub + fbevents.js (async)
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        // Step B: REQUIRED — register the pixel ID (queued until fbevents.js loads)
+        fbq('init', FB_PIXEL_ID);
+        // Step C: fire PageView on every page
+        fbq('track', 'PageView');
 
-          // UTMify: UTM parameter capture
-          var utms = document.createElement('script');
-          utms.async = true;
-          utms.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
-          document.head.appendChild(utms);
+        // ── 3. Microsoft Clarity ──────────────────────────────────────
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, 'clarity', 'script', 'x1h21qdu16');
 
-          // UTMify: conversion pixel
-          window.pixelId = '6a20c524847b051638093bcf';
-          var px = document.createElement('script');
-          px.async = true;
-          px.src = 'https://cdn.utmify.com.br/scripts/pixel/pixel.js';
-          document.head.appendChild(px);
-        }
+        // ── 4. UTMify ─────────────────────────────────────────────────
+        // utms.js: captures UTM parameters from the URL
+        var utms = document.createElement('script');
+        utms.async = true;
+        utms.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
+        document.head.appendChild(utms);
 
-        // On the order-confirmation page, analytics MUST load before React fires
-        // the Purchase event — do not defer, load immediately.
-        if (window.location.href.indexOf('pedido/confirmado') !== -1) {
-          initAnalytics();
-        } else {
-          // All other pages: defer to avoid blocking FCP/LCP rendering
-          window.addEventListener('load', function() {
-            setTimeout(initAnalytics, 200);
-          });
-        }
-      })();
+        // pixel.js: conversion tracking — MUST set window.pixelId before loading
+        // pixel.js will internally call fbq('init', FB_PIXEL_ID) if fbq is already
+        // defined, so fbq must be initialized first (done above in step B).
+        window.pixelId = UTMIFY_PIXEL_ID;
+        var px = document.createElement('script');
+        px.async = true;
+        px.src = 'https://cdn.utmify.com.br/scripts/pixel/pixel.js';
+        document.head.appendChild(px);
+      }
+
+      // On the order-confirmation page, load analytics IMMEDIATELY so that
+      // fbq and window._pixel are available when React fires Purchase.
+      if (window.location.href.indexOf('pedido/confirmado') !== -1) {
+        initAnalytics();
+      } else {
+        // All other pages: defer to avoid blocking FCP/LCP
+        window.addEventListener('load', function() {
+          setTimeout(initAnalytics, 200);
+        });
+      }
     </script>
   </head>
   <body>
+    <!-- FB Pixel noscript fallback (requires pixel initialized above) -->
     <noscript><img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=1622885129012772&ev=PageView&noscript=1" /></noscript>
     <div id="root"></div>

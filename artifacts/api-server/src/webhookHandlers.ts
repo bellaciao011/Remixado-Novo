@@ -179,7 +179,9 @@ export class WebhookHandlers {
             user_data: userData,
             custom_data: {
               value: orderValue,
-              currency: pi.currency || 'eur',
+              // Facebook requires uppercase ISO 4217 currency codes (EUR not eur)
+              currency: (pi.currency || 'eur').toUpperCase(),
+              content_type: 'product',
             },
           },
         ],

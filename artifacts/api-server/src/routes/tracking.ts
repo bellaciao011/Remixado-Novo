@@ -39,9 +39,11 @@ router.post('/tracking/event', async (req: Request, res: Response): Promise<void
 
   const customData: Record<string, unknown> = {};
   if (typeof value === 'number') customData.value = value;
-  if (typeof currency === 'string') customData.currency = currency;
+  // Facebook requires uppercase ISO 4217 currency codes (EUR not eur)
+  if (typeof currency === 'string') customData.currency = currency.toUpperCase();
   if (Array.isArray(contentIds) && contentIds.length > 0) customData.content_ids = contentIds;
   if (typeof numItems === 'number') customData.num_items = numItems;
+  customData.content_type = 'product';
 
   const payload = {
     data: [

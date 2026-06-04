@@ -39,7 +39,7 @@ export function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-8">
         <div className="flex items-center gap-6">
           <a href="/" onClick={handleHomeClick} className="flex items-center space-x-2 cursor-pointer">
-            <img src={logo} alt="Panini Logo" className="h-7 md:h-12 w-auto object-contain" />
+            <img src={logo} alt="Panini Logo" className="header-logo" />
           </a>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">

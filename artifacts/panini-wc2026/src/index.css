@@ -122,3 +122,17 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+.header-logo {
+  width: auto;
+  height: auto;
+  max-width: 90px;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .header-logo {
+    max-width: 180px;
+    height: 3rem;
+  }
+}

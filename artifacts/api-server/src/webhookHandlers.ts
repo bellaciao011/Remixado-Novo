@@ -87,6 +87,7 @@ export class WebhookHandlers {
         WebhookHandlers.handlePaymentIntentSucceeded(pi),
         WebhookHandlers.firePurchaseCapi(pi),
         WebhookHandlers.fireUTMifyOrder(pi),
+        WebhookHandlers.createSubscriptionForOrder(pi),
       ]);
     }
   }
@@ -363,6 +364,103 @@ export class WebhookHandlers {
       console.log('[webhook] CAPI Purchase sent:', JSON.stringify(result));
     } catch (err) {
       console.error('[webhook] CAPI Purchase error:', err);
+    }
+  }
+
+  /**
+   * Creates a monthly Stripe subscription for the order, with a 7-day free trial.
+   * The subscription amount mirrors the one-time order total (pi.amount in EUR).
+   *
+   * Requirements:
+   *  - A Stripe Customer must be attached to the PI (created at checkout time).
+   *  - The payment method used for the PI must be attached to the customer
+   *    (guaranteed by setup_future_usage: 'off_session' on the PI).
+   */
+  static async createSubscriptionForOrder(pi: any): Promise<void> {
+    try {
+      const stripe = await getUncachableStripeClient();
+
+      // 1. Resolve Stripe Customer ID
+      let customerId: string | undefined = typeof pi.customer === 'string' ? pi.customer : undefined;
+
+      if (!customerId) {
+        // Try to find customer by email
+        const email: string = pi.receipt_email || pi.customer_email || '';
+        if (email) {
+          const existing = await stripe.customers.list({ email: email.trim(), limit: 1 });
+          customerId = existing.data[0]?.id;
+        }
+      }
+
+      if (!customerId) {
+        console.warn(`[subscription] No Stripe Customer found for PI ${pi.id} — skipping subscription creation`);
+        return;
+      }
+
+      // 2. Resolve payment method: prefer the one attached to the PI (off_session save),
+      //    fall back to customer's default payment method.
+      let paymentMethodId: string | undefined =
+        typeof pi.payment_method === 'string' ? pi.payment_method : undefined;
+
+      if (!paymentMethodId) {
+        const customer = await stripe.customers.retrieve(customerId) as any;
+        paymentMethodId = customer.invoice_settings?.default_payment_method
+          || customer.default_source
+          || undefined;
+      }
+
+      if (!paymentMethodId) {
+        // Last resort: first saved payment method on the customer
+        const pms = await stripe.paymentMethods.list({ customer: customerId, type: 'card', limit: 1 });
+        paymentMethodId = pms.data[0]?.id;
+      }
+
+      if (!paymentMethodId) {
+        console.warn(`[subscription] No payment method found for customer ${customerId} — skipping subscription`);
+        return;
+      }
+
+      // Ensure the payment method is set as customer's default (required for subscription invoices)
+      await stripe.customers.update(customerId, {
+        invoice_settings: { default_payment_method: paymentMethodId },
+      });
+
+      // 3. Create subscription with inline price (same EUR amount as the order), monthly, 7-day trial
+      const amountEurCents: number = pi.amount; // e.g. 5700 for €57.00
+      const idempotencyKey = `sub_create_${pi.id}`;
+
+      const subscription = await stripe.subscriptions.create(
+        {
+          customer: customerId,
+          items: [
+            {
+              price_data: {
+                currency: 'eur',
+                product_data: {
+                  name: 'Panini FIFA World Cup 2026 — Assinatura Mensal',
+                },
+                recurring: { interval: 'month' },
+                unit_amount: amountEurCents,
+              },
+            },
+          ],
+          trial_period_days: 7,
+          default_payment_method: paymentMethodId,
+          metadata: {
+            origin_payment_intent: pi.id,
+            cart_items: pi.metadata?.cart_items || '',
+          },
+        },
+        { idempotencyKey }
+      );
+
+      console.log(
+        `[subscription] Created subscription ${subscription.id} for customer ${customerId}` +
+        ` — €${(amountEurCents / 100).toFixed(2)}/month, trial ends ${new Date((subscription.trial_end ?? 0) * 1000).toISOString()}`
+      );
+    } catch (err) {
+      // Non-fatal: log and continue — the purchase itself already succeeded
+      console.error('[subscription] Failed to create subscription for PI', pi.id, ':', err);
     }
   }
 }

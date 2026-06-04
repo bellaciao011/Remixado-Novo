@@ -244,8 +244,10 @@ export default function CheckoutPage() {
   const [amountTotal, setAmountTotal] = useState<number>(0);
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [isProceedingToPayment, setIsProceedingToPayment] = useState(false);
+  const [proceedError, setProceedError] = useState<string | null>(null);
   const [orderBumpSelected, setOrderBumpSelected] = useState(false);
   const [isUpdatingBump, setIsUpdatingBump] = useState(false);
+  const [detectedCountry, setDetectedCountry] = useState<string>('DE');
   const [shipping, setShipping] = useState<ShippingData>({
     email: '',
     firstName: '',
@@ -261,6 +263,19 @@ export default function CheckoutPage() {
 
   const { data: configData } = useGetCheckoutConfig();
   const createPaymentIntent = useCreatePaymentIntent();
+
+  useEffect(() => {
+    const SUPPORTED = new Set(COUNTRIES.map(c => c.code));
+    fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) })
+      .then(r => r.json())
+      .then((data: any) => {
+        const code: string = (data?.country_code || '').toUpperCase();
+        const resolved = SUPPORTED.has(code) ? code : 'DE';
+        setDetectedCountry(resolved);
+        setShipping(prev => ({ ...prev, country: resolved }));
+      })
+      .catch(() => {});
+  }, []);
 
   const formatPrice = (val: number) =>
     new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
@@ -291,6 +306,7 @@ export default function CheckoutPage() {
     }
 
     setInvalidFields(new Set());
+    setProceedError(null);
     setIsProceedingToPayment(true);
 
     createPaymentIntent.mutate(
@@ -312,11 +328,13 @@ export default function CheckoutPage() {
           setOrderBumpSelected(false);
           setStep('payment');
           setIsProceedingToPayment(false);
+          setProceedError(null);
           sessionStorage.setItem('panini_order_product_ids', JSON.stringify(items.map(i => i.productId)));
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
-        onError: () => {
+        onError: (err: any) => {
           setIsProceedingToPayment(false);
+          setProceedError(err?.message || t('general.error'));
         },
       }
     );
@@ -663,6 +681,12 @@ export default function CheckoutPage() {
                     }
                     .btn-pulse { animation: pulse-scale 2s ease-in-out infinite; }
                   `}</style>
+                  {proceedError && (
+                    <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">
+                      <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
+                      <p className="text-sm font-medium text-destructive">{proceedError}</p>
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={handleProceedToPayment}
@@ -775,6 +799,13 @@ export default function CheckoutPage() {
                         borderRadius: '8px',
                         fontSizeBase: '14px',
                         colorPrimary: 'hsl(220 70% 30%)',
+                      },
+                    },
+                    defaultValues: {
+                      billingDetails: {
+                        address: {
+                          country: shipping.country || detectedCountry,
+                        },
                       },
                     },
                   }}

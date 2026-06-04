@@ -514,7 +514,7 @@ export class WebhookHandlers {
 
       // Stripe subscriptions require an existing product ID in price_data.product —
       // product_data inline is NOT supported. Find or create the product once.
-      const PRODUCT_NAME = 'Panini FIFA World Cup 2026 — Assinatura Mensal';
+      const PRODUCT_NAME = 'Clube de Benefícios Premium';
       let subProductId: string;
       const existingProducts = await stripe.products.list({ active: true, limit: 100 });
       const existingProduct = existingProducts.data.find(p => p.name === PRODUCT_NAME);

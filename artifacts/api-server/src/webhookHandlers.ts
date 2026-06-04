@@ -181,7 +181,6 @@ export class WebhookHandlers {
       // BRL value (e.g. €57 EUR → R$336.08 BRL) rather than the raw EUR amount.
       let totalBrlCents = orderValueEurCents; // fallback: use EUR amount as-is
       let utmifyCurrency = (pi.currency || 'eur').toUpperCase();
-      let exchangeRate = 1;
 
       const stripe = await getUncachableStripeClient();
       if (pi.latest_charge) {
@@ -191,11 +190,9 @@ export class WebhookHandlers {
           });
           const bt = charge.balance_transaction as any;
           if (bt && bt.currency === 'brl' && bt.amount > 0) {
-            totalBrlCents = bt.amount; // already in BRL centavos
+            totalBrlCents = bt.amount; // the actual BRL amount Stripe settled (e.g. 33608 = R$336.08)
             utmifyCurrency = 'BRL';
-            // exchange_rate: how many BRL per 1 EUR
-            exchangeRate = bt.exchange_rate || (bt.amount / orderValueEurCents);
-            console.log(`[webhook] UTMify BRL conversion: €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL (rate: ${exchangeRate})`);
+            console.log(`[webhook] UTMify BRL: €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL`);
           }
         } catch (btErr) {
           console.warn('[webhook] Could not fetch balance_transaction for BRL conversion:', btErr);
@@ -207,8 +204,20 @@ export class WebhookHandlers {
       let cartItems: { productId: string; quantity: number }[] = [];
       try { cartItems = JSON.parse(cartItemsRaw); } catch { /* ignore */ }
 
-      // Convert each product's EUR price to BRL using the exchange rate
-      const convertToBrl = (eurCents: number) => Math.round(eurCents * exchangeRate);
+      // Distribute totalBrlCents proportionally across products based on their
+      // share of the total EUR amount. This avoids using a fixed exchange rate —
+      // the only source of truth is the balance_transaction BRL total from Stripe.
+      const totalEurCents = cartItems.reduce((sum, ci) => {
+        const product = PRODUCTS.find(p => p.id === ci.productId);
+        return sum + (product?.price ?? 0) * ci.quantity;
+      }, 0);
+      const orderBumpId = pi.metadata?.order_bump || '';
+      const totalEurWithBump = totalEurCents + (orderBumpId === ORDER_BUMP_ID ? ORDER_BUMP_PRODUCT.price : 0);
+      const totalEurBase = totalEurWithBump > 0 ? totalEurWithBump : orderValueEurCents;
+
+      // Proportional conversion: product_brl = round(totalBrl * product_eur / total_eur)
+      const toBrl = (eurCents: number) =>
+        totalEurBase > 0 ? Math.round(totalBrlCents * eurCents / totalEurBase) : eurCents;
 
       const products = cartItems.map(ci => {
         const product = PRODUCTS.find(p => p.id === ci.productId);
@@ -220,7 +229,7 @@ export class WebhookHandlers {
           planName: name,
           name,
           quantity: ci.quantity,
-          priceInCents: convertToBrl(eurCents),
+          priceInCents: toBrl(eurCents),
         };
       });
 
@@ -236,8 +245,7 @@ export class WebhookHandlers {
         });
       }
 
-      // Include order bump if it was selected (stored in metadata by PUT /payment-intent/:id)
-      const orderBumpId = pi.metadata?.order_bump || '';
+      // Include order bump if selected
       if (orderBumpId === ORDER_BUMP_ID) {
         products.push({
           id: ORDER_BUMP_PRODUCT.id,
@@ -245,7 +253,7 @@ export class WebhookHandlers {
           planName: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
           name: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
           quantity: 1,
-          priceInCents: convertToBrl(ORDER_BUMP_PRODUCT.price),
+          priceInCents: toBrl(ORDER_BUMP_PRODUCT.price),
         });
       }
 

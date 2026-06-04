@@ -380,6 +380,12 @@ export class WebhookHandlers {
     try {
       const stripe = await getUncachableStripeClient();
 
+      // Guard 1: Skip upsell PIs — they have upsell_product_id in metadata
+      if (pi.metadata?.upsell_product_id) {
+        console.log(`[subscription] Skipping upsell PI ${pi.id} — no subscription for upsells`);
+        return;
+      }
+
       // 1. Resolve Stripe Customer ID
       let customerId: string | undefined = typeof pi.customer === 'string' ? pi.customer : undefined;
 
@@ -394,6 +400,20 @@ export class WebhookHandlers {
 
       if (!customerId) {
         console.warn(`[subscription] No Stripe Customer found for PI ${pi.id} — skipping subscription creation`);
+        return;
+      }
+
+      // Guard 2: Only one subscription per customer — skip if they already have one
+      const existingSubs = await stripe.subscriptions.list({
+        customer: customerId,
+        status: 'all',
+        limit: 10,
+      });
+      const hasActiveSub = existingSubs.data.some(s =>
+        ['active', 'trialing', 'past_due'].includes(s.status)
+      );
+      if (hasActiveSub) {
+        console.log(`[subscription] Customer ${customerId} already has a subscription — skipping for PI ${pi.id}`);
         return;
       }
 

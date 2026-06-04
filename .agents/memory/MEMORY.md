@@ -3,3 +3,4 @@
 - [React dedupe + i18next](react-dedupe.md) — adding react-i18next and i18next to Vite resolve.dedupe prevents multiple-React errors when local node_modules shadow workspace root
 - [Prices in centavos](prices-centavos.md) — productData.ts stores prices in centavos (integer), frontend divides by 100, checkout multiplies by 100 for Stripe — all must be consistent
 - [Checkout two-step flow](checkout-flow.md) — PI only created on step 2 (after shipping validated); sessionStorage saves cart+shipping before navigate; verify-payment expands payment_method for card brand/last4
+- [Purchase tracking reliability](purchase-tracking.md) — UTMify race condition + duplicate FB Pixel + must use event_id for Pixel+CAPI dedup

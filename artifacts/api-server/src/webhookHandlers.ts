@@ -3,6 +3,14 @@ import { PRODUCTS } from './productData';
 import { sendOrderConfirmation, scheduleLogisticsSequence } from './email/emailService';
 import type { OrderInfo } from './email/templates';
 import { resolveLocale } from './email/templates';
+import { createHash } from 'crypto';
+
+const FB_PIXEL_ID = '1622885129012772';
+const FB_API_VERSION = 'v18.0';
+
+function sha256(value: string): string {
+  return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
+}
 
 export class WebhookHandlers {
   static async processWebhook(payload: Buffer, signature: string): Promise<void> {
@@ -26,7 +34,10 @@ export class WebhookHandlers {
 
     if (event.type === 'payment_intent.succeeded') {
       const pi = event.data.object as any;
-      await WebhookHandlers.handlePaymentIntentSucceeded(pi);
+      await Promise.all([
+        WebhookHandlers.handlePaymentIntentSucceeded(pi),
+        WebhookHandlers.firePurchaseCapi(pi),
+      ]);
     }
   }
 
@@ -89,6 +100,55 @@ export class WebhookHandlers {
       await scheduleLogisticsSequence(order);
     } catch (err) {
       console.error('[webhook] Error handling payment_intent.succeeded:', err);
+    }
+  }
+
+  static async firePurchaseCapi(pi: any): Promise<void> {
+    const accessToken = process.env.FB_CAPI_ACCESS_TOKEN;
+    if (!accessToken) return;
+
+    try {
+      const customerEmail: string = pi.receipt_email || pi.customer_email || '';
+      const firstName: string = pi.shipping?.name?.split(' ')[0] || '';
+      const lastName: string = pi.shipping?.name?.split(' ').slice(1).join(' ') || '';
+      const country: string = pi.shipping?.address?.country || '';
+      const orderValue = pi.amount / 100;
+      const eventId = `purchase_${pi.id}`;
+
+      const userData: Record<string, string[]> = {};
+      if (customerEmail) userData.em = [sha256(customerEmail)];
+      if (firstName) userData.fn = [sha256(firstName)];
+      if (lastName) userData.ln = [sha256(lastName)];
+      if (country) userData.country = [sha256(country.toLowerCase())];
+
+      const payload = {
+        data: [
+          {
+            event_name: 'Purchase',
+            event_time: Math.floor(Date.now() / 1000),
+            action_source: 'website',
+            event_id: eventId,
+            user_data: userData,
+            custom_data: {
+              value: orderValue,
+              currency: pi.currency || 'eur',
+            },
+          },
+        ],
+      };
+
+      const res = await fetch(
+        `https://graph.facebook.com/${FB_API_VERSION}/${FB_PIXEL_ID}/events?access_token=${accessToken}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }
+      );
+      const result = await res.json();
+      console.log('[webhook] CAPI Purchase sent:', JSON.stringify(result));
+    } catch (err) {
+      console.error('[webhook] CAPI Purchase error:', err);
     }
   }
 }

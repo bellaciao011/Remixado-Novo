@@ -53,6 +53,8 @@ const handleStripeWebhook = async (req: any, res: any) => {
 
 app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
+// Catch-all for Stripe webhook URLs with UUID suffix (old/integration webhooks) — return 200 to stop retries
+app.post('/api/stripe/webhook/:id', (_req: any, res: any) => res.status(200).json({ received: true }));
 
 app.use(cors());
 app.use(express.json());

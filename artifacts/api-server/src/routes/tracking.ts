@@ -28,6 +28,7 @@ router.post('/tracking/event', async (req: Request, res: Response): Promise<void
     contentIds,
     numItems,
     eventSourceUrl,
+    eventId,
   } = req.body;
 
   const userData: Record<string, string[]> = {};
@@ -49,6 +50,7 @@ router.post('/tracking/event', async (req: Request, res: Response): Promise<void
         event_time: Math.floor(Date.now() / 1000),
         action_source: 'website',
         event_source_url: eventSourceUrl || '',
+        ...(eventId ? { event_id: eventId } : {}),
         user_data: userData,
         custom_data: customData,
       },

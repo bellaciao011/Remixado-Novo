@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fbq, gtagEvent, sendCapiEvent } from '@/lib/tracking';
+import { fbq, utmifyEvent, gtagEvent, sendCapiEvent } from '@/lib/tracking';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
@@ -136,37 +136,25 @@ export default function OrderConfirmation() {
       const orderValue = data.amountTotal ?? 0;
       const contentIds = storedItems.map(i => i.name).filter(Boolean);
       const numItems = storedItems.reduce((s, i) => s + i.quantity, 0);
+      const paymentIntentRef = (data as any).paymentIntentId || paymentIntentId || '';
+      const eventId = `purchase_${paymentIntentRef || Date.now()}`;
 
-      // UTMify purchase event
+      // UTMify — Purchase (with retry if pixel not yet loaded)
       try {
-        // @ts-ignore
-        if (typeof window._pixel !== 'undefined' && typeof window._pixel.fire === 'function') {
-          // @ts-ignore
-          window._pixel.fire('Purchase', { value: orderValue, currency: 'EUR' });
-        }
+        utmifyEvent('Purchase', { value: orderValue, currency: 'EUR' });
+      } catch { /* ignore */ }
+
+      // Google Analytics — purchase event
+      try {
         // @ts-ignore
         window.dataLayer = window.dataLayer || [];
         // @ts-ignore
         window.dataLayer.push({
           event: 'purchase',
-          ecommerce: { transaction_id: (data as any).id ?? '', value: orderValue, currency: 'EUR' },
+          ecommerce: { transaction_id: paymentIntentRef, value: orderValue, currency: 'EUR' },
         });
-      } catch { /* ignore */ }
-
-      // Facebook Pixel — Purchase
-      try {
-        fbq('Purchase', {
-          value: orderValue,
-          currency: 'EUR',
-          content_ids: contentIds,
-          num_items: numItems || 1,
-        });
-      } catch { /* ignore */ }
-
-      // Google Analytics — purchase event
-      try {
         gtagEvent('purchase', {
-          transaction_id: (data as any).id ?? '',
+          transaction_id: paymentIntentRef,
           value: orderValue,
           currency: 'EUR',
           items: storedItems.map(i => ({
@@ -177,7 +165,18 @@ export default function OrderConfirmation() {
         });
       } catch { /* ignore */ }
 
-      // Facebook CAPI — server-side Purchase
+      // Facebook Pixel — Purchase (event_id for deduplication with CAPI)
+      try {
+        fbq('Purchase', {
+          value: orderValue,
+          currency: 'EUR',
+          content_ids: contentIds,
+          num_items: numItems || 1,
+          eventID: eventId,
+        });
+      } catch { /* ignore */ }
+
+      // Facebook CAPI — server-side Purchase (deduplicates with Pixel via event_id)
       const email = (data as any).customerEmail || storedShipping?.email || null;
       const firstName = storedShipping?.firstName || null;
       const lastName = storedShipping?.lastName || null;
@@ -192,6 +191,7 @@ export default function OrderConfirmation() {
         contentIds,
         numItems: numItems || 1,
         eventSourceUrl: window.location.href,
+        eventId,
       });
     }
   }, [data?.status, clearCart]);

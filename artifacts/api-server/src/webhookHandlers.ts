@@ -73,22 +73,38 @@ export class WebhookHandlers {
 
     if (event.type === 'payment_intent.succeeded') {
       const pi = event.data.object as any;
-      const idempotencyKey = `pi_succeeded_${pi.id}`;
 
-      if (await isAlreadyProcessed(idempotencyKey)) {
-        console.log(`[webhook] Skipping duplicate event for PI ${pi.id} (already processed)`);
+      // Two independent idempotency keys so subscription can still be created
+      // even if the main processing (email/CAPI/UTMify) was done by an older
+      // deployment that didn't have subscription logic yet.
+      const mainKey = `pi_succeeded_${pi.id}`;
+      const subKey  = `sub_for_pi_${pi.id}`;
+
+      const [mainDone, subDone] = await Promise.all([
+        isAlreadyProcessed(mainKey),
+        isAlreadyProcessed(subKey),
+      ]);
+
+      if (mainDone && subDone) {
+        console.log(`[webhook] PI ${pi.id} fully processed — skipping`);
         return;
       }
 
-      // Mark BEFORE processing so concurrent retries are blocked immediately
-      await markAsProcessed(idempotencyKey);
+      if (!mainDone) {
+        await markAsProcessed(mainKey);
+        await Promise.all([
+          WebhookHandlers.handlePaymentIntentSucceeded(pi),
+          WebhookHandlers.firePurchaseCapi(pi),
+          WebhookHandlers.fireUTMifyOrder(pi),
+        ]);
+      } else {
+        console.log(`[webhook] PI ${pi.id} main processing already done — running subscription only`);
+      }
 
-      await Promise.all([
-        WebhookHandlers.handlePaymentIntentSucceeded(pi),
-        WebhookHandlers.firePurchaseCapi(pi),
-        WebhookHandlers.fireUTMifyOrder(pi),
-        WebhookHandlers.createSubscriptionForOrder(pi),
-      ]);
+      if (!subDone) {
+        await markAsProcessed(subKey);
+        await WebhookHandlers.createSubscriptionForOrder(pi);
+      }
     }
   }
 
@@ -449,9 +465,14 @@ export class WebhookHandlers {
         return;
       }
 
-      // 2. Resolve payment method (three fallback levels)
+      // 2. Resolve payment method
+      // pi.payment_method can be a string ID or an expanded PM object
       let paymentMethodId: string | undefined =
-        typeof pi.payment_method === 'string' ? pi.payment_method : undefined;
+        typeof pi.payment_method === 'string'
+          ? pi.payment_method
+          : typeof pi.payment_method === 'object' && pi.payment_method?.id
+            ? pi.payment_method.id
+            : undefined;
       console.log(`[subscription] payment_method from PI: ${paymentMethodId ?? 'null — will try customer'}`);
 
       if (!paymentMethodId) {
@@ -464,9 +485,17 @@ export class WebhookHandlers {
       }
 
       if (!paymentMethodId) {
-        const pms = await stripe.paymentMethods.list({ customer: customerId, type: 'card', limit: 1 });
-        paymentMethodId = pms.data[0]?.id;
-        console.log(`[subscription] payment_method from PM list: ${paymentMethodId ?? 'null'}`);
+        // automatic_payment_methods allows card, link, google_pay, apple_pay, etc.
+        // Try multiple types since we don't know which the customer used.
+        for (const pmType of ['card', 'link', 'sepa_debit', 'us_bank_account'] as const) {
+          const pms = await stripe.paymentMethods.list({ customer: customerId, type: pmType, limit: 1 });
+          if (pms.data[0]?.id) {
+            paymentMethodId = pms.data[0].id;
+            console.log(`[subscription] payment_method from PM list (type=${pmType}): ${paymentMethodId}`);
+            break;
+          }
+        }
+        if (!paymentMethodId) console.log(`[subscription] payment_method from PM list: null (tried card/link/sepa/bank)`);
       }
 
       if (!paymentMethodId) {

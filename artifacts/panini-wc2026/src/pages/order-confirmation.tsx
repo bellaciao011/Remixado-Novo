@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fbq, utmifyEvent, gtagEvent, sendCapiEvent } from '@/lib/tracking';
+import { fbq, utmifyEvent, gtagEvent } from '@/lib/tracking';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
@@ -176,23 +176,9 @@ export default function OrderConfirmation() {
         });
       } catch { /* ignore */ }
 
-      // Facebook CAPI — server-side Purchase (deduplicates with Pixel via event_id)
-      const email = (data as any).customerEmail || storedShipping?.email || null;
-      const firstName = storedShipping?.firstName || null;
-      const lastName = storedShipping?.lastName || null;
-      const country = storedShipping?.country || (data as any).shipping?.address?.country || null;
-      sendCapiEvent('Purchase', {
-        email,
-        firstName,
-        lastName,
-        country,
-        value: orderValue,
-        currency: 'EUR',
-        contentIds,
-        numItems: numItems || 1,
-        eventSourceUrl: window.location.href,
-        eventId,
-      });
+      // Facebook CAPI is handled server-side by the Stripe webhook (firePurchaseCapi).
+      // Firing CAPI here from the browser as well would create a second event
+      // with the same event_id — unreliable deduplication depending on network timing.
     }
   }, [data?.status, clearCart]);
 

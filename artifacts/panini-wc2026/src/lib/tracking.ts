@@ -19,7 +19,14 @@ export function utmifyEvent(event: string, params?: Record<string, unknown>, _re
 
 export function fbq(event: string, params?: Record<string, unknown>, _retries = 0) {
   if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
-    (window as any).fbq('track', event, params);
+    // eventID must be passed as the 4th argument to fbq() — NOT inside params —
+    // so Facebook can deduplicate pixel events with CAPI server-side events.
+    const { eventID, ...rest } = (params || {}) as any;
+    if (eventID) {
+      (window as any).fbq('track', event, rest, { eventID });
+    } else {
+      (window as any).fbq('track', event, params);
+    }
   } else if (_retries < MAX_RETRIES) {
     setTimeout(() => fbq(event, params, _retries + 1), RETRY_INTERVAL_MS);
   }

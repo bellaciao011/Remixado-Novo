@@ -3,6 +3,7 @@ import healthRouter from "./health";
 import productsRouter from "./products";
 import checkoutRouter from "./checkout";
 import trackingRouter from "./tracking";
+import emailRouter from "./email";
 
 const router: IRouter = Router();
 
@@ -10,5 +11,6 @@ router.use(healthRouter);
 router.use(productsRouter);
 router.use(checkoutRouter);
 router.use(trackingRouter);
+router.use(emailRouter);
 
 export default router;

@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
 import { PRODUCTS, ORDER_BUMP_PRICE } from '../productData';
+import { sendUpsellConfirmation } from '../email/emailService';
+import type { OrderInfo } from '../email/templates';
 
 const router = Router();
 
@@ -312,6 +314,27 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
         upsell_type: 'one_click_upsell',
       },
     });
+
+    if (paymentIntent.status === 'succeeded') {
+      try {
+        const customer = await stripe.customers.retrieve(customerId);
+        const customerEmail = (customer as any).email || '';
+        if (customerEmail) {
+          const order: OrderInfo = {
+            customerEmail,
+            customerName: (customer as any).name || undefined,
+            orderId: paymentIntent.id,
+            items: [],
+            totalAmount: upsellAmount / 100,
+            currency: 'eur',
+          };
+          const upsellProductName = product.translations['pt-BR'].name;
+          await sendUpsellConfirmation(order, upsellProductName, upsellAmount / 100);
+        }
+      } catch (emailErr) {
+        console.error('[upsell] Failed to send upsell confirmation email:', emailErr);
+      }
+    }
 
     res.json({
       status: paymentIntent.status,

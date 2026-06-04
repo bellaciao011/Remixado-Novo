@@ -1,5 +1,15 @@
 const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || '';
 
+export function utmifyEvent(event: string, params?: Record<string, unknown>) {
+  try {
+    // @ts-ignore
+    if (typeof window._pixel !== 'undefined' && typeof window._pixel.fire === 'function') {
+      // @ts-ignore
+      window._pixel.fire(event, params);
+    }
+  } catch { /* non-fatal */ }
+}
+
 export function fbq(event: string, params?: Record<string, unknown>) {
   if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
     (window as any).fbq('track', event, params);

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'wouter';
 import { loadStripe } from '@stripe/stripe-js';
+import { utmifyEvent, fbq } from '@/lib/tracking';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
@@ -227,6 +228,15 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    const value = totalPrice;
+    const contentIds = items.map(i => i.productId);
+    const numItems = items.reduce((s, i) => s + i.quantity, 0);
+    try {
+      utmifyEvent('InitiateCheckout', { value, currency: 'EUR', content_ids: contentIds, num_items: numItems });
+    } catch { /* non-fatal */ }
+    try {
+      fbq('InitiateCheckout', { value, currency: 'EUR', content_ids: contentIds, num_items: numItems });
+    } catch { /* non-fatal */ }
   }, []);
   const [stripePromise, setStripePromise] = useState<ReturnType<typeof loadStripe> | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);

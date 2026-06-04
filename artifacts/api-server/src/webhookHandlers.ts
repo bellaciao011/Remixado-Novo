@@ -226,6 +226,7 @@ export class WebhookHandlers {
         platform: 'other',
         paymentMethod,
         status: 'paid',
+        currency: (pi.currency || 'eur').toUpperCase(),
         createdAt: now,
         approvedDate: now,
         customer: {

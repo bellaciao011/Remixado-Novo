@@ -400,76 +400,87 @@ export class WebhookHandlers {
    *    (guaranteed by setup_future_usage: 'off_session' on the PI).
    */
   static async createSubscriptionForOrder(pi: any): Promise<void> {
+    // NOTE: only console.log appears in Replit deployment logs — no warn/error
+    console.log(`[subscription] START PI ${pi.id} amount=${pi.amount} customer=${pi.customer ?? 'none'} upsell=${pi.metadata?.upsell_product_id ?? 'none'}`);
     try {
       const stripe = await getUncachableStripeClient();
 
       // Guard 1: Skip upsell PIs — they have upsell_product_id in metadata
       if (pi.metadata?.upsell_product_id) {
-        console.log(`[subscription] Skipping upsell PI ${pi.id} — no subscription for upsells`);
+        console.log(`[subscription] SKIP-UPSELL PI ${pi.id}`);
         return;
       }
 
       // 1. Resolve Stripe Customer ID
-      let customerId: string | undefined = typeof pi.customer === 'string' ? pi.customer : undefined;
+      // pi.customer can be a string ID or an expanded Customer object
+      let customerId: string | undefined =
+        typeof pi.customer === 'string'
+          ? pi.customer
+          : typeof pi.customer === 'object' && pi.customer?.id
+            ? pi.customer.id
+            : undefined;
 
       if (!customerId) {
-        // Try to find customer by email
         const email: string = pi.receipt_email || pi.customer_email || '';
+        console.log(`[subscription] No customer on PI — searching by email: ${email}`);
         if (email) {
           const existing = await stripe.customers.list({ email: email.trim(), limit: 1 });
           customerId = existing.data[0]?.id;
+          console.log(`[subscription] Customer lookup result: ${customerId ?? 'not found'}`);
         }
       }
 
       if (!customerId) {
-        console.warn(`[subscription] No Stripe Customer found for PI ${pi.id} — skipping subscription creation`);
+        console.log(`[subscription] SKIP-NO-CUSTOMER PI ${pi.id}`);
         return;
       }
 
-      // Guard 2: Only one subscription per customer — skip if they already have one
+      // Guard 2: Only one subscription per customer
       const existingSubs = await stripe.subscriptions.list({
         customer: customerId,
         status: 'all',
         limit: 10,
       });
-      const hasActiveSub = existingSubs.data.some(s =>
+      const activeSub = existingSubs.data.find(s =>
         ['active', 'trialing', 'past_due'].includes(s.status)
       );
-      if (hasActiveSub) {
-        console.log(`[subscription] Customer ${customerId} already has a subscription — skipping for PI ${pi.id}`);
+      if (activeSub) {
+        console.log(`[subscription] SKIP-EXISTS customer=${customerId} existing=${activeSub.id} status=${activeSub.status} PI=${pi.id}`);
         return;
       }
 
-      // 2. Resolve payment method: prefer the one attached to the PI (off_session save),
-      //    fall back to customer's default payment method.
+      // 2. Resolve payment method (three fallback levels)
       let paymentMethodId: string | undefined =
         typeof pi.payment_method === 'string' ? pi.payment_method : undefined;
+      console.log(`[subscription] payment_method from PI: ${paymentMethodId ?? 'null — will try customer'}`);
 
       if (!paymentMethodId) {
         const customer = await stripe.customers.retrieve(customerId) as any;
-        paymentMethodId = customer.invoice_settings?.default_payment_method
-          || customer.default_source
-          || undefined;
+        paymentMethodId =
+          customer.invoice_settings?.default_payment_method ||
+          customer.default_source ||
+          undefined;
+        console.log(`[subscription] payment_method from customer default: ${paymentMethodId ?? 'null'}`);
       }
 
       if (!paymentMethodId) {
-        // Last resort: first saved payment method on the customer
         const pms = await stripe.paymentMethods.list({ customer: customerId, type: 'card', limit: 1 });
         paymentMethodId = pms.data[0]?.id;
+        console.log(`[subscription] payment_method from PM list: ${paymentMethodId ?? 'null'}`);
       }
 
       if (!paymentMethodId) {
-        console.warn(`[subscription] No payment method found for customer ${customerId} — skipping subscription`);
+        console.log(`[subscription] SKIP-NO-PM customer=${customerId} PI=${pi.id}`);
         return;
       }
 
-      // Ensure the payment method is set as customer's default (required for subscription invoices)
+      // Set as default invoice payment method
       await stripe.customers.update(customerId, {
         invoice_settings: { default_payment_method: paymentMethodId },
       });
 
-      // 3. Create subscription with inline price (same EUR amount as the order), monthly, 7-day trial
-      const amountEurCents: number = pi.amount; // e.g. 5700 for €57.00
+      // 3. Create monthly subscription, 7-day free trial, same EUR amount as order
+      const amountEurCents: number = pi.amount;
       const idempotencyKey = `sub_create_${pi.id}`;
 
       const subscription = await stripe.subscriptions.create(
@@ -479,9 +490,7 @@ export class WebhookHandlers {
             {
               price_data: {
                 currency: 'eur',
-                product_data: {
-                  name: 'Panini FIFA World Cup 2026 — Assinatura Mensal',
-                },
+                product_data: { name: 'Panini FIFA World Cup 2026 — Assinatura Mensal' },
                 recurring: { interval: 'month' },
                 unit_amount: amountEurCents,
               },
@@ -498,12 +507,11 @@ export class WebhookHandlers {
       );
 
       console.log(
-        `[subscription] Created subscription ${subscription.id} for customer ${customerId}` +
-        ` — €${(amountEurCents / 100).toFixed(2)}/month, trial ends ${new Date((subscription.trial_end ?? 0) * 1000).toISOString()}`
+        `[subscription] CREATED ${subscription.id} customer=${customerId}` +
+        ` €${(amountEurCents / 100).toFixed(2)}/month trial_end=${new Date((subscription.trial_end ?? 0) * 1000).toISOString()}`
       );
-    } catch (err) {
-      // Non-fatal: log and continue — the purchase itself already succeeded
-      console.error('[subscription] Failed to create subscription for PI', pi.id, ':', err);
+    } catch (err: any) {
+      console.log(`[subscription] ERROR PI ${pi.id}: ${err?.message ?? String(err)}`);
     }
   }
 }

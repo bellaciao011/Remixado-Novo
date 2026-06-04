@@ -4,12 +4,50 @@ import { sendOrderConfirmation, scheduleLogisticsSequence } from './email/emailS
 import type { OrderInfo } from './email/templates';
 import { resolveLocale } from './email/templates';
 import { createHash } from 'crypto';
+import { db } from '@workspace/db';
+import { sql } from 'drizzle-orm';
 
 const FB_PIXEL_ID = '1622885129012772';
 const FB_API_VERSION = 'v18.0';
 
 function sha256(value: string): string {
   return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
+}
+
+// Ensure idempotency table exists (runs once at module load)
+async function ensureIdempotencyTable(): Promise<void> {
+  try {
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS processed_webhook_events (
+        event_id TEXT PRIMARY KEY,
+        processed_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `);
+  } catch (err) {
+    console.warn('[webhook] Could not create idempotency table:', err);
+  }
+}
+ensureIdempotencyTable();
+
+async function isAlreadyProcessed(eventId: string): Promise<boolean> {
+  try {
+    const result = await db.execute(
+      sql`SELECT 1 FROM processed_webhook_events WHERE event_id = ${eventId} LIMIT 1`
+    );
+    return (result.rows?.length ?? 0) > 0;
+  } catch {
+    return false; // if DB check fails, allow processing (fail-open)
+  }
+}
+
+async function markAsProcessed(eventId: string): Promise<void> {
+  try {
+    await db.execute(
+      sql`INSERT INTO processed_webhook_events (event_id) VALUES (${eventId}) ON CONFLICT DO NOTHING`
+    );
+  } catch (err) {
+    console.warn('[webhook] Could not mark event as processed:', err);
+  }
 }
 
 export class WebhookHandlers {
@@ -34,6 +72,16 @@ export class WebhookHandlers {
 
     if (event.type === 'payment_intent.succeeded') {
       const pi = event.data.object as any;
+      const idempotencyKey = `pi_succeeded_${pi.id}`;
+
+      if (await isAlreadyProcessed(idempotencyKey)) {
+        console.log(`[webhook] Skipping duplicate event for PI ${pi.id} (already processed)`);
+        return;
+      }
+
+      // Mark BEFORE processing so concurrent retries are blocked immediately
+      await markAsProcessed(idempotencyKey);
+
       await Promise.all([
         WebhookHandlers.handlePaymentIntentSucceeded(pi),
         WebhookHandlers.firePurchaseCapi(pi),

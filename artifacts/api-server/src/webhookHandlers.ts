@@ -180,8 +180,9 @@ export class WebhookHandlers {
       // Fetch the balance_transaction from the latest charge to get the BRL amount.
       // The UTMify dashboard is configured in BRL, so we must send the Stripe-converted
       // BRL value (e.g. €57 EUR → R$336.08 BRL) rather than the raw EUR amount.
-      let totalBrlCents = orderValueEurCents; // fallback: use EUR amount as-is
-      let utmifyCurrency = (pi.currency || 'eur').toUpperCase();
+      let totalBrlCents = orderValueEurCents; // will be overwritten below
+      let utmifyCurrency = 'BRL'; // UTMify dashboard is always in BRL
+      let brlResolved = false;
 
       const stripe = await getUncachableStripeClient();
       if (pi.latest_charge) {
@@ -190,20 +191,42 @@ export class WebhookHandlers {
             expand: ['balance_transaction'],
           });
           const bt = charge.balance_transaction as any;
+
           if (bt && bt.currency === 'brl' && bt.amount > 0) {
-            // Primary: use the exact BRL amount Stripe settled for this transaction
+            // Level 1 (best): Stripe settled this charge in BRL — exact amount
             totalBrlCents = bt.amount;
-            utmifyCurrency = 'BRL';
-            console.log(`[webhook] UTMify BRL (exact): €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL`);
+            brlResolved = true;
+            console.log(`[webhook] UTMify BRL [L1-exact]: €${(orderValueEurCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
           } else if (bt && bt.exchange_rate > 0) {
-            // Fallback: Stripe provided an exchange_rate but not a BRL settlement —
-            // approximate by multiplying the EUR amount by the rate for this transaction.
+            // Level 2: Stripe settled in EUR but provided exchange_rate for this transaction
             totalBrlCents = Math.round(orderValueEurCents * bt.exchange_rate);
-            utmifyCurrency = 'BRL';
-            console.log(`[webhook] UTMify BRL (approx via rate ${bt.exchange_rate}): €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL`);
+            brlResolved = true;
+            console.log(`[webhook] UTMify BRL [L2-rate ${bt.exchange_rate}]: €${(orderValueEurCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
           }
         } catch (btErr) {
-          console.warn('[webhook] Could not fetch balance_transaction for BRL conversion:', btErr);
+          console.warn('[webhook] Could not fetch balance_transaction:', btErr);
+        }
+      }
+
+      if (!brlResolved) {
+        // Level 3 (last resort): Stripe account settles in EUR with no exchange_rate field —
+        // fetch current EUR/BRL spot rate from a free public API (no key required)
+        try {
+          const rateRes = await fetch('https://open.er-api.com/v6/latest/EUR');
+          if (rateRes.ok) {
+            const rateData = await rateRes.json() as { rates?: { BRL?: number } };
+            const eurBrl = rateData?.rates?.BRL;
+            if (eurBrl && eurBrl > 0) {
+              totalBrlCents = Math.round(orderValueEurCents * eurBrl);
+              console.log(`[webhook] UTMify BRL [L3-er-api rate ${eurBrl}]: €${(orderValueEurCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
+            } else {
+              console.warn('[webhook] UTMify BRL [L3]: no BRL rate in er-api response — sending EUR amount as fallback');
+            }
+          } else {
+            console.warn('[webhook] UTMify BRL [L3]: er-api returned', rateRes.status, '— sending EUR amount as fallback');
+          }
+        } catch (rateErr) {
+          console.warn('[webhook] UTMify BRL [L3]: rate fetch failed —', rateErr);
         }
       }
 

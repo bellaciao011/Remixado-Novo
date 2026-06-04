@@ -328,9 +328,20 @@ export default function CheckoutPage() {
           try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
           try { fbq('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
         },
-        onError: () => {
+        onError: (err: any) => {
           setIsProceedingToPayment(false);
-          setProceedError(t('checkout.paymentError'));
+          const apiMsg: string = err?.data?.error || err?.message || '';
+          if (/email/i.test(apiMsg)) {
+            setInvalidFields(prev => { const s = new Set(prev); s.add('email'); return s; });
+            setProceedError(t('checkout.errorInvalidEmail'));
+            shippingCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else if (/out of stock/i.test(apiMsg)) {
+            setProceedError(t('checkout.errorOutOfStock'));
+          } else if (/product/i.test(apiMsg)) {
+            setProceedError(t('checkout.errorProduct'));
+          } else {
+            setProceedError(t('checkout.paymentError'));
+          }
         },
       }
     );

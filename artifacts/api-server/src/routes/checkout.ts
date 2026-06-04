@@ -114,7 +114,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       amountTotal += product.price * item.quantity;
     }
 
-    const { locale } = req.body;
+    const { locale, utmSource, utmMedium, utmCampaign, utmContent, utmTerm } = req.body;
     const cartItems = (items as { productId: string; quantity: number }[]).map(i => ({
       productId: i.productId,
       quantity: i.quantity,
@@ -147,6 +147,12 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       metadata: {
         cart_items: JSON.stringify(cartItems),
         locale: typeof locale === 'string' ? locale : 'pt-BR',
+        // UTM parameters captured by UTMify's utms.js in the browser
+        utm_source: typeof utmSource === 'string' ? utmSource.slice(0, 500) : '',
+        utm_medium: typeof utmMedium === 'string' ? utmMedium.slice(0, 500) : '',
+        utm_campaign: typeof utmCampaign === 'string' ? utmCampaign.slice(0, 500) : '',
+        utm_content: typeof utmContent === 'string' ? utmContent.slice(0, 500) : '',
+        utm_term: typeof utmTerm === 'string' ? utmTerm.slice(0, 500) : '',
       },
     });
 

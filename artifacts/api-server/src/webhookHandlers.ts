@@ -9,6 +9,7 @@ import { sql } from 'drizzle-orm';
 
 const FB_PIXEL_ID = '1622885129012772';
 const FB_API_VERSION = 'v18.0';
+const UTMIFY_API_URL = 'https://api.utmify.com.br/api-credentials/orders';
 
 function sha256(value: string): string {
   return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
@@ -85,6 +86,7 @@ export class WebhookHandlers {
       await Promise.all([
         WebhookHandlers.handlePaymentIntentSucceeded(pi),
         WebhookHandlers.firePurchaseCapi(pi),
+        WebhookHandlers.fireUTMifyOrder(pi),
       ]);
     }
   }
@@ -148,6 +150,109 @@ export class WebhookHandlers {
       await scheduleLogisticsSequence(order);
     } catch (err) {
       console.error('[webhook] Error handling payment_intent.succeeded:', err);
+    }
+  }
+
+  static async fireUTMifyOrder(pi: any): Promise<void> {
+    const apiToken = process.env.VITE_UTMIFY_TOKEN;
+    if (!apiToken) {
+      console.warn('[webhook] VITE_UTMIFY_TOKEN not set — skipping UTMify order');
+      return;
+    }
+
+    try {
+      const customerEmail: string = pi.receipt_email || pi.customer_email || '';
+      const customerName: string = pi.shipping?.name || '';
+      const orderValue = pi.amount; // in cents
+
+      // Map Stripe payment method to UTMify's paymentMethod enum
+      const stripeMethod = (pi.payment_method_types?.[0] || 'card') as string;
+      const paymentMethod = stripeMethod === 'pix' ? 'pix' : 'credit_card';
+
+      // Read UTM parameters from PI metadata (stored at checkout time by the frontend)
+      const utmSource = pi.metadata?.utm_source || null;
+      const utmMedium = pi.metadata?.utm_medium || null;
+      const utmCampaign = pi.metadata?.utm_campaign || null;
+      const utmContent = pi.metadata?.utm_content || null;
+      const utmTerm = pi.metadata?.utm_term || null;
+
+      // Resolve cart items from metadata
+      const cartItemsRaw: string = pi.metadata?.cart_items || '[]';
+      let cartItems: { productId: string; quantity: number }[] = [];
+      try { cartItems = JSON.parse(cartItemsRaw); } catch { /* ignore */ }
+
+      const products = cartItems.map(ci => {
+        const product = PRODUCTS.find(p => p.id === ci.productId);
+        const name = product?.translations?.['pt-BR']?.name || ci.productId;
+        return {
+          id: ci.productId,
+          planId: ci.productId,
+          planName: name,
+          name,
+          quantity: ci.quantity,
+          priceInCents: (product?.price ?? 0) * ci.quantity,
+        };
+      });
+
+      if (products.length === 0) {
+        // Fallback when cart metadata is unavailable (e.g. upsell purchase)
+        products.push({
+          id: 'panini-wc2026',
+          planId: 'panini-wc2026',
+          planName: 'Panini FIFA World Cup 2026',
+          name: 'Panini FIFA World Cup 2026',
+          quantity: 1,
+          priceInCents: orderValue,
+        });
+      }
+
+      const now = new Date().toISOString();
+
+      const payload = {
+        orderId: pi.id,
+        platform: 'other',
+        paymentMethod,
+        status: 'paid',
+        createdAt: now,
+        approvedDate: now,
+        customer: {
+          name: customerName || customerEmail,
+          email: customerEmail,
+          phone: null,
+          document: null,
+        },
+        trackingParameters: {
+          utm_source: utmSource || null,
+          utm_medium: utmMedium || null,
+          utm_campaign: utmCampaign || null,
+          utm_content: utmContent || null,
+          utm_term: utmTerm || null,
+        },
+        commission: {
+          totalPriceInCents: orderValue,
+          gatewayFeeInCents: 0,
+          userCommissionInCents: orderValue,
+        },
+        products,
+      };
+
+      const res = await fetch(UTMIFY_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-token': apiToken,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+      if (result.OK) {
+        console.log(`[webhook] UTMify order registered for PI ${pi.id}:`, JSON.stringify(result));
+      } else {
+        console.error(`[webhook] UTMify order failed for PI ${pi.id}:`, JSON.stringify(result));
+      }
+    } catch (err) {
+      console.error('[webhook] UTMify order error:', err);
     }
   }
 

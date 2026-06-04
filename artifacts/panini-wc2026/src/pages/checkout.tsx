@@ -300,6 +300,19 @@ export default function CheckoutPage() {
     setProceedError(null);
     setIsProceedingToPayment(true);
 
+    // Read UTM parameters stored by UTMify's utms.js
+    // Primary source: window.utmParams (live URLSearchParams object)
+    // Fallback: localStorage (utms.js persists them for 7 days)
+    const getUtm = (key: string): string | null => {
+      try {
+        const fromWindow = (window as any).utmParams?.get?.(key);
+        if (fromWindow && fromWindow !== 'null') return fromWindow;
+        const fromStorage = localStorage.getItem(key);
+        if (fromStorage && fromStorage !== 'null' && fromStorage !== '') return fromStorage;
+      } catch { /* ignore */ }
+      return null;
+    };
+
     createPaymentIntent.mutate(
       {
         data: {
@@ -309,6 +322,11 @@ export default function CheckoutPage() {
           })),
           email: shipping.email,
           locale: i18n.language,
+          utmSource: getUtm('utm_source'),
+          utmMedium: getUtm('utm_medium'),
+          utmCampaign: getUtm('utm_campaign'),
+          utmContent: getUtm('utm_content'),
+          utmTerm: getUtm('utm_term'),
         } as any,
       },
       {

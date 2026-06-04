@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { fbq, gtagEvent, sendCapiEvent } from '@/lib/tracking';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
@@ -132,27 +133,66 @@ export default function OrderConfirmation() {
       clearCart();
       clearedRef.current = true;
 
-      // UTMify purchase event — fires once when order is confirmed
+      const orderValue = data.amountTotal ?? 0;
+      const contentIds = storedItems.map(i => i.name).filter(Boolean);
+      const numItems = storedItems.reduce((s, i) => s + i.quantity, 0);
+
+      // UTMify purchase event
       try {
-        const orderValue = data.amountTotal ?? 0;
-        // @ts-ignore — UTMify pixel global
+        // @ts-ignore
         if (typeof window._pixel !== 'undefined' && typeof window._pixel.fire === 'function') {
           // @ts-ignore
           window._pixel.fire('Purchase', { value: orderValue, currency: 'EUR' });
         }
-        // Fallback: data-layer style for UTMify advanced tracking
         // @ts-ignore
         window.dataLayer = window.dataLayer || [];
         // @ts-ignore
         window.dataLayer.push({
           event: 'purchase',
-          ecommerce: {
-            transaction_id: data.id ?? '',
-            value: orderValue,
-            currency: 'EUR',
-          },
+          ecommerce: { transaction_id: (data as any).id ?? '', value: orderValue, currency: 'EUR' },
         });
-      } catch { /* ignore tracking errors */ }
+      } catch { /* ignore */ }
+
+      // Facebook Pixel — Purchase
+      try {
+        fbq('Purchase', {
+          value: orderValue,
+          currency: 'EUR',
+          content_ids: contentIds,
+          num_items: numItems || 1,
+        });
+      } catch { /* ignore */ }
+
+      // Google Analytics — purchase event
+      try {
+        gtagEvent('purchase', {
+          transaction_id: (data as any).id ?? '',
+          value: orderValue,
+          currency: 'EUR',
+          items: storedItems.map(i => ({
+            item_name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+          })),
+        });
+      } catch { /* ignore */ }
+
+      // Facebook CAPI — server-side Purchase
+      const email = (data as any).customerEmail || storedShipping?.email || null;
+      const firstName = storedShipping?.firstName || null;
+      const lastName = storedShipping?.lastName || null;
+      const country = storedShipping?.country || (data as any).shipping?.address?.country || null;
+      sendCapiEvent('Purchase', {
+        email,
+        firstName,
+        lastName,
+        country,
+        value: orderValue,
+        currency: 'EUR',
+        contentIds,
+        numItems: numItems || 1,
+        eventSourceUrl: window.location.href,
+      });
     }
   }, [data?.status, clearCart]);
 

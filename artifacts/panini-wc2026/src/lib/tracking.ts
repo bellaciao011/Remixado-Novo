@@ -1,13 +1,18 @@
 const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || '';
 
+// Max 40 retries × 500ms = 20-second window
+// Guarantees tracking fires even on slow 3G where window.load can take 10s+
+const MAX_RETRIES = 40;
+const RETRY_INTERVAL_MS = 500;
+
 export function utmifyEvent(event: string, params?: Record<string, unknown>, _retries = 0) {
   try {
     // @ts-ignore
     if (typeof window._pixel !== 'undefined' && typeof window._pixel.fire === 'function') {
       // @ts-ignore
       window._pixel.fire(event, params);
-    } else if (_retries < 8) {
-      setTimeout(() => utmifyEvent(event, params, _retries + 1), 400);
+    } else if (_retries < MAX_RETRIES) {
+      setTimeout(() => utmifyEvent(event, params, _retries + 1), RETRY_INTERVAL_MS);
     }
   } catch { /* non-fatal */ }
 }
@@ -15,8 +20,8 @@ export function utmifyEvent(event: string, params?: Record<string, unknown>, _re
 export function fbq(event: string, params?: Record<string, unknown>, _retries = 0) {
   if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
     (window as any).fbq('track', event, params);
-  } else if (_retries < 8) {
-    setTimeout(() => fbq(event, params, _retries + 1), 400);
+  } else if (_retries < MAX_RETRIES) {
+    setTimeout(() => fbq(event, params, _retries + 1), RETRY_INTERVAL_MS);
   }
 }
 

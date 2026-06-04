@@ -47,22 +47,18 @@
       }
       #root { min-height: 100vh; display: flex; flex-direction: column; }
       img { display: block; max-width: 100%; height: auto; }
-      /* Hero section — immediate black background prevents white flash */
       .hero-section { width: 100%; background-color: #000000; }
-      /* Navbar placeholder height to prevent layout shift */
-      .navbar-placeholder { height: 56px; background: #fff; }
     </style>
-  </head>
-  <body>
-    <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=1622885129012772&ev=PageView&noscript=1" /></noscript>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Analytics loaded after page is interactive to avoid render-blocking -->
+    <!--
+      Analytics strategy:
+      - On confirmation page (/pedido/confirmado): load IMMEDIATELY so Purchase
+        events fire reliably before the React retry window expires.
+      - On all other pages: defer to window.load + 200ms to avoid blocking FCP/LCP.
+    -->
     <script>
-      window.addEventListener('load', function() {
-        setTimeout(function() {
+      (function() {
+        function initAnalytics() {
           // Google Analytics
           var ga = document.createElement('script');
           ga.async = true;
@@ -74,7 +70,7 @@
           gtag('js', new Date());
           gtag('config', 'G-XP7H71X8WT');
 
-          // Facebook Pixel stub (UTMify pixel.js handles init + PageView)
+          // Facebook Pixel stub (UTMify pixel.js handles init + PageView automatically)
           !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
           n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -100,8 +96,25 @@
           px.async = true;
           px.src = 'https://cdn.utmify.com.br/scripts/pixel/pixel.js';
           document.head.appendChild(px);
-        }, 200);
-      });
+        }
+
+        // On the order-confirmation page, analytics MUST load before React fires
+        // the Purchase event — do not defer, load immediately.
+        if (window.location.href.indexOf('pedido/confirmado') !== -1) {
+          initAnalytics();
+        } else {
+          // All other pages: defer to avoid blocking FCP/LCP rendering
+          window.addEventListener('load', function() {
+            setTimeout(initAnalytics, 200);
+          });
+        }
+      })();
     </script>
+  </head>
+  <body>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1622885129012772&ev=PageView&noscript=1" /></noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

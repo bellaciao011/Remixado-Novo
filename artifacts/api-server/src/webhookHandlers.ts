@@ -163,7 +163,7 @@ export class WebhookHandlers {
     try {
       const customerEmail: string = pi.receipt_email || pi.customer_email || '';
       const customerName: string = pi.shipping?.name || '';
-      const orderValue = pi.amount; // in cents
+      const orderValueEurCents = pi.amount; // in EUR cents (e.g. 5700 = €57.00)
 
       // Map Stripe payment method to UTMify's paymentMethod enum
       const stripeMethod = (pi.payment_method_types?.[0] || 'card') as string;
@@ -176,21 +176,51 @@ export class WebhookHandlers {
       const utmContent = pi.metadata?.utm_content || null;
       const utmTerm = pi.metadata?.utm_term || null;
 
+      // Fetch the balance_transaction from the latest charge to get the BRL amount.
+      // The UTMify dashboard is configured in BRL, so we must send the Stripe-converted
+      // BRL value (e.g. €57 EUR → R$336.08 BRL) rather than the raw EUR amount.
+      let totalBrlCents = orderValueEurCents; // fallback: use EUR amount as-is
+      let utmifyCurrency = (pi.currency || 'eur').toUpperCase();
+      let exchangeRate = 1;
+
+      const stripe = await getUncachableStripeClient();
+      if (pi.latest_charge) {
+        try {
+          const charge = await stripe.charges.retrieve(pi.latest_charge as string, {
+            expand: ['balance_transaction'],
+          });
+          const bt = charge.balance_transaction as any;
+          if (bt && bt.currency === 'brl' && bt.amount > 0) {
+            totalBrlCents = bt.amount; // already in BRL centavos
+            utmifyCurrency = 'BRL';
+            // exchange_rate: how many BRL per 1 EUR
+            exchangeRate = bt.exchange_rate || (bt.amount / orderValueEurCents);
+            console.log(`[webhook] UTMify BRL conversion: €${(orderValueEurCents/100).toFixed(2)} EUR → R$${(totalBrlCents/100).toFixed(2)} BRL (rate: ${exchangeRate})`);
+          }
+        } catch (btErr) {
+          console.warn('[webhook] Could not fetch balance_transaction for BRL conversion:', btErr);
+        }
+      }
+
       // Resolve cart items from metadata
       const cartItemsRaw: string = pi.metadata?.cart_items || '[]';
       let cartItems: { productId: string; quantity: number }[] = [];
       try { cartItems = JSON.parse(cartItemsRaw); } catch { /* ignore */ }
 
+      // Convert each product's EUR price to BRL using the exchange rate
+      const convertToBrl = (eurCents: number) => Math.round(eurCents * exchangeRate);
+
       const products = cartItems.map(ci => {
         const product = PRODUCTS.find(p => p.id === ci.productId);
         const name = product?.translations?.['pt-BR']?.name || ci.productId;
+        const eurCents = (product?.price ?? 0) * ci.quantity;
         return {
           id: ci.productId,
           planId: ci.productId,
           planName: name,
           name,
           quantity: ci.quantity,
-          priceInCents: (product?.price ?? 0) * ci.quantity,
+          priceInCents: convertToBrl(eurCents),
         };
       });
 
@@ -202,7 +232,7 @@ export class WebhookHandlers {
           planName: 'Panini FIFA World Cup 2026',
           name: 'Panini FIFA World Cup 2026',
           quantity: 1,
-          priceInCents: orderValue,
+          priceInCents: totalBrlCents,
         });
       }
 
@@ -215,7 +245,7 @@ export class WebhookHandlers {
           planName: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
           name: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
           quantity: 1,
-          priceInCents: ORDER_BUMP_PRODUCT.price,
+          priceInCents: convertToBrl(ORDER_BUMP_PRODUCT.price),
         });
       }
 
@@ -226,7 +256,7 @@ export class WebhookHandlers {
         platform: 'other',
         paymentMethod,
         status: 'paid',
-        currency: (pi.currency || 'eur').toUpperCase(),
+        currency: utmifyCurrency,
         createdAt: now,
         approvedDate: now,
         customer: {
@@ -243,9 +273,9 @@ export class WebhookHandlers {
           utm_term: utmTerm || null,
         },
         commission: {
-          totalPriceInCents: orderValue,
+          totalPriceInCents: totalBrlCents,
           gatewayFeeInCents: 0,
-          userCommissionInCents: orderValue,
+          userCommissionInCents: totalBrlCents,
         },
         products,
       };

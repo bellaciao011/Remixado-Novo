@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,11 +7,12 @@ import { CartProvider } from "@/contexts/CartContext";
 import { Layout } from "@/components/Layout";
 
 import Home from "@/pages/home";
-import Catalog from "@/pages/catalog";
-import ProductDetail from "@/pages/product";
-import CheckoutPage from "@/pages/checkout";
-import OrderConfirmation from "@/pages/order-confirmation";
-import NotFound from "@/pages/not-found";
+
+const Catalog = lazy(() => import("@/pages/catalog"));
+const ProductDetail = lazy(() => import("@/pages/product"));
+const CheckoutPage = lazy(() => import("@/pages/checkout"));
+const OrderConfirmation = lazy(() => import("@/pages/order-confirmation"));
+const NotFound = lazy(() => import("@/pages/not-found"));
 
 import "./i18n/index"; // initialize i18n
 
@@ -26,14 +28,16 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/produtos" component={Catalog} />
-        <Route path="/produtos/:id" component={ProductDetail} />
-        <Route path="/checkout" component={CheckoutPage} />
-        <Route path="/pedido/confirmado" component={OrderConfirmation} />
-        <Route component={NotFound} />
-      </Switch>
+      <Suspense fallback={null}>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/produtos" component={Catalog} />
+          <Route path="/produtos/:id" component={ProductDetail} />
+          <Route path="/checkout" component={CheckoutPage} />
+          <Route path="/pedido/confirmado" component={OrderConfirmation} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </Layout>
   );
 }

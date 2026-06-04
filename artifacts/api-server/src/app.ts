@@ -61,7 +61,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve product images from attached_assets at /assets
-app.use('/assets', express.static(path.resolve(import.meta.dirname, '..', '..', '..', 'attached_assets')));
+// 30-day cache for product images (no content-hash in filenames, so we avoid immutable)
+app.use('/assets', express.static(path.resolve(import.meta.dirname, '..', '..', '..', 'attached_assets'), {
+  maxAge: '30d',
+  setHeaders(res) {
+    res.setHeader('Cache-Control', 'public, max-age=2592000');
+  },
+}));
 
 app.use("/api", router);
 

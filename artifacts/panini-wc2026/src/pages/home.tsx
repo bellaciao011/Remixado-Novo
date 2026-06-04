@@ -19,6 +19,10 @@ export default function Home() {
           src={bannerImg}
           alt="FIFA World Cup 2026"
           className="w-full h-auto block mx-auto"
+          width="1920"
+          height="500"
+          fetchPriority="high"
+          decoding="sync"
         />
       </section>
 

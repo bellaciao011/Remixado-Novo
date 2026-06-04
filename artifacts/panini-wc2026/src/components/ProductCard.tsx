@@ -79,6 +79,10 @@ export function ProductCard({ product }: ProductCardProps) {
             src={product.images[0]}
             alt={translation.name}
             className="max-h-[200px] w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

@@ -114,6 +114,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       amountTotal += product.price * item.quantity;
     }
 
+    const { locale } = req.body;
     const cartItems = (items as { productId: string; quantity: number }[]).map(i => ({
       productId: i.productId,
       quantity: i.quantity,
@@ -123,11 +124,13 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
     let customerId: string | undefined;
     if (email && typeof email === 'string' && email.trim()) {
       try {
+        const resolvedLocale = typeof locale === 'string' ? locale : 'pt-BR';
         const existing = await stripe.customers.list({ email: email.trim(), limit: 1 });
         if (existing.data.length > 0) {
           customerId = existing.data[0].id;
+          await stripe.customers.update(customerId, { metadata: { locale: resolvedLocale } });
         } else {
-          const customer = await stripe.customers.create({ email: email.trim() });
+          const customer = await stripe.customers.create({ email: email.trim(), metadata: { locale: resolvedLocale } });
           customerId = customer.id;
         }
       } catch (custErr) {
@@ -143,6 +146,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       ...(email ? { receipt_email: email.trim() } : {}),
       metadata: {
         cart_items: JSON.stringify(cartItems),
+        locale: typeof locale === 'string' ? locale : 'pt-BR',
       },
     });
 
@@ -319,7 +323,10 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
       try {
         const customer = await stripe.customers.retrieve(customerId);
         const customerEmail = (customer as any).email || '';
+        const customerLocale = (customer as any).metadata?.locale || 'pt-BR';
         if (customerEmail) {
+          const localeKey = customerLocale as keyof typeof product.translations;
+          const upsellProductName = product.translations[localeKey]?.name || product.translations['pt-BR'].name;
           const order: OrderInfo = {
             customerEmail,
             customerName: (customer as any).name || undefined,
@@ -327,8 +334,8 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
             items: [],
             totalAmount: upsellAmount / 100,
             currency: 'eur',
+            locale: customerLocale,
           };
-          const upsellProductName = product.translations['pt-BR'].name;
           await sendUpsellConfirmation(order, upsellProductName, upsellAmount / 100);
         }
       } catch (emailErr) {

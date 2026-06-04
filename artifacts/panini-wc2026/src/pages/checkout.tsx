@@ -301,6 +301,7 @@ export default function CheckoutPage() {
             quantity: item.quantity,
           })),
           email: shipping.email,
+          locale: i18n.language,
         } as any,
       },
       {

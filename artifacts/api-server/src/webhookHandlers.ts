@@ -2,6 +2,7 @@ import { getUncachableStripeClient, getWebhookSecret } from './stripeClient';
 import { PRODUCTS } from './productData';
 import { sendOrderConfirmation, scheduleLogisticsSequence } from './email/emailService';
 import type { OrderInfo } from './email/templates';
+import { resolveLocale } from './email/templates';
 
 export class WebhookHandlers {
   static async processWebhook(payload: Buffer, signature: string): Promise<void> {
@@ -37,6 +38,8 @@ export class WebhookHandlers {
         return;
       }
 
+      const locale = resolveLocale(pi.metadata?.locale);
+
       const cartItemsRaw: string = pi.metadata?.cart_items || '[]';
       let cartItems: { productId: string; quantity: number }[] = [];
       try {
@@ -49,8 +52,10 @@ export class WebhookHandlers {
         .map(ci => {
           const product = PRODUCTS.find(p => p.id === ci.productId);
           if (!product) return null;
+          const localeKey = locale as keyof typeof product.translations;
+          const name = product.translations[localeKey]?.name || product.translations['pt-BR'].name;
           return {
-            name: product.translations['pt-BR'].name,
+            name,
             quantity: ci.quantity,
             price: product.price / 100,
           };
@@ -77,6 +82,7 @@ export class WebhookHandlers {
         totalAmount: pi.amount / 100,
         currency: pi.currency || 'eur',
         shippingAddress: shippingAddr,
+        locale,
       };
 
       await sendOrderConfirmation(order);

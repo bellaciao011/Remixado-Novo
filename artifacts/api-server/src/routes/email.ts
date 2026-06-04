@@ -5,7 +5,7 @@ const router = Router();
 
 if (process.env.NODE_ENV !== 'production') {
   router.get('/email/test', async (req: Request, res: Response): Promise<void> => {
-    const { email, template } = req.query;
+    const { email, template, locale } = req.query;
 
     if (!email || typeof email !== 'string') {
       res.status(400).json({ error: 'Query param "email" is required' });
@@ -18,15 +18,17 @@ if (process.env.NODE_ENV !== 'production') {
       return;
     }
 
+    const localeStr = typeof locale === 'string' ? locale : 'pt-BR';
+
     try {
-      await sendTestEmail(templateNum, email);
+      await sendTestEmail(templateNum, email, localeStr);
       res.json({
         ok: true,
-        message: `Template ${templateNum} sent to ${email}`,
+        message: `Template ${templateNum} sent to ${email} (locale: ${localeStr})`,
         templates: {
-          1: 'Confirmação de pedido',
-          2: 'Confirmação de upsell',
-          '3-16': 'E-mails de logística (steps 1-14)',
+          1: 'Order confirmation',
+          2: 'Upsell confirmation',
+          '3-16': 'Logistics emails (steps 1-14)',
         },
       });
     } catch (err: any) {

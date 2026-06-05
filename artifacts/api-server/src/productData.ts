@@ -22,6 +22,8 @@ export interface ProductData {
     'en': ProductTranslation;
     'es': ProductTranslation;
     'de': ProductTranslation;
+    'fr': ProductTranslation;
+    'it': ProductTranslation;
   };
 }
 
@@ -41,6 +43,8 @@ export interface OrderBumpProduct {
     'en': { name: string; shortDescription: string };
     'es': { name: string; shortDescription: string };
     'de': { name: string; shortDescription: string };
+    'fr': { name: string; shortDescription: string };
+    'it': { name: string; shortDescription: string };
   };
 }
 
@@ -67,6 +71,14 @@ export const ORDER_BUMP_PRODUCT: OrderBumpProduct = {
     'de': {
       name: 'Box mit 50 Tüten – 350 offizielle Sticker',
       shortDescription: '50 Tüten × 7 Sticker = 350 offizielle FIFA World Cup 2026™ Sticker',
+    },
+    'fr': {
+      name: 'Boite avec 50 pochettes – 350 stickers officiels',
+      shortDescription: '50 pochettes × 7 stickers = 350 stickers officiels FIFA World Cup 2026™',
+    },
+    'it': {
+      name: 'Scatola con 50 bustine – 350 figurine ufficiali',
+      shortDescription: '50 bustine × 7 figurine = 350 figurine ufficiali FIFA World Cup 2026™',
     },
   },
 };
@@ -196,6 +208,52 @@ Das erwartet dich in der großen Stickerkollektion zur FIFA WM 2026™:
 • Echtes WM-Feeling: Perfekt für gemeinsame Sammelmomente mit Freunden und Familie
 • Panini-Tradition: Hochwertige Kollektion für Fans jeden Alters`,
       },
+      'fr': {
+        name: 'Box-Bundle – Collection Officielle de Stickers FIFA World Cup 2026™',
+        shortDescription: 'Album softcover + boite de 50 pochettes (356 stickers au total)',
+        description: `Le Box-Bundle Panini pour la FIFA World Cup 2026™ comprend un album de stickers (avec 6 stickers) et une boite de 50 pochettes de 7 stickers chacune = 356 stickers au total pour un depart parfait dans votre collection.
+
+Contenu du Box-Bundle :
+• 1 Album softcover de 112 pages avec 6 stickers
+• 1 Boite de 50 pochettes de 7 stickers chacune (= 350 stickers)
+
+Vos avantages avec le Box-Bundle :
+• Depart parfait : Le classique parmi les bundles – ideal pour lancer votre collection
+• Pret a coller : 356 stickers album inclus – deballer et coller immediatement
+• Simple et pratique : Tout en un set – commande rapide et pret a l'emploi
+• Original Panini : Emballe avec soin et livre directement par le fabricant
+• Moins de doublons : Une boite offre de meilleures chances d'obtenir moins de stickers en double
+
+Ce qui vous attend dans la grande collection de la FIFA World Cup 2026™ :
+• Collection officiellement licenciee avec les 48 equipes nationales qualifiees
+• Joueurs et equipes : 18 joueurs par equipe, une photo d'equipe et le logo officiel de la federation
+• 980 stickers differents a collectionner, echanger et coller
+• Veritable ambiance Coupe du Monde : Parfait pour les moments de collection entre amis et famille
+• Tradition Panini : Collection de haute qualite pour les fans de tous ages`,
+      },
+      'it': {
+        name: 'Box-Bundle – Collezione Ufficiale di Figurine FIFA World Cup 2026™',
+        shortDescription: 'Album softcover + scatola con 50 bustine (356 figurine totali)',
+        description: `Il Box-Bundle Panini per la FIFA World Cup 2026™ include un album di figurine (con 6 figurine) e una scatola con 50 bustine da 7 figurine ciascuna = 356 figurine totali per un inizio perfetto della tua collezione.
+
+Contenuto del Box-Bundle:
+• 1 Album softcover di 112 pagine con 6 figurine
+• 1 Scatola con 50 bustine da 7 figurine ciascuna (= 350 figurine)
+
+I tuoi vantaggi con il Box-Bundle:
+• Inizio perfetto: Il classico tra i bundle – ideale per avviare la tua collezione
+• Pronto per incollare: 356 figurine incluso l'album – apri e inizia subito
+• Semplice e pratico: Tutto in un set – ordinato rapidamente e subito pronto
+• Originale Panini: Imballato con cura e consegnato direttamente dal produttore
+• Meno doppioni: Una scatola offre maggiori probabilita di ottenere meno figurine duplicate
+
+Cosa ti aspetta nella grande collezione della FIFA World Cup 2026™:
+• Collezione ufficialmente licenziata con tutte le 48 nazionali qualificate
+• Giocatori e squadre: 18 giocatori per squadra, una foto di squadra e il logo ufficiale della federazione
+• 980 figurine diverse da collezionare, scambiare e incollare
+• Vera atmosfera Mondiale: Perfetto per i momenti di raccolta con amici e famiglia
+• Tradizione Panini: Collezione di alta qualita per i tifosi di tutte le eta`,
+      },
     },
   },
   {
@@ -305,6 +363,48 @@ Was dich in der größten Fußball-Stickerkollektion des Jahres 2026 zur FIFA Fu
 • Für jedes Team erwarten dich 18 Spieler, ein Mannschaftsfoto und das offizielle Verbandslogo.
 • Hol dir Leidenschaft und WM-Feeling für Zuhause in einer einzigartigen Kollektion der Traditionsmarke Panini – ideal zum Sammeln, Tauschen und Mitfiebern mit Freunden und Familie.`,
       },
+      'fr': {
+        name: 'Big Box-Bundle – Collection Officielle de Stickers FIFA World Cup 2026™',
+        shortDescription: 'Album softcover + boite de 100 pochettes (706 stickers au total)',
+        description: `Le Big Box-Bundle pour la FIFA World Cup 2026™ vous offre au total 706 stickers en plus de l'album. L'entree parfaite dans votre collection Panini, que vous soyez collectionneur experimente ou debutant.
+
+Contenu du Big Box-Bundle :
+• 1 Album softcover de 112 pages avec 6 stickers
+• 1 Boite de 100 pochettes de 7 stickers chacune (= 700 stickers au total)
+
+Vos avantages avec le Big Box-Bundle :
+• Des tonnes de plaisir : 706 stickers album inclus pour commencer a coller immediatement
+• Sans tracas : Ajoutez le bundle au panier en un seul clic
+• Sur et direct : Les produits sont livres en emballage d'origine directement par Panini
+• Moins de doublons : Statistiquement, une boite offre moins de doublons que des pochettes individuelles
+
+Ce qui vous attend dans la plus grande collection 2026 pour la FIFA World Cup 2026™ :
+• Collection officiellement licenciee avec les 48 equipes nationales qualifiees et leurs meilleurs joueurs
+• 980 stickers differents a decouvrir et coller
+• Pour chaque equipe : 18 joueurs, une photo d'equipe et le logo officiel de la federation
+• Ramenez la passion et l'ambiance de la Coupe du Monde chez vous avec la marque Panini`,
+      },
+      'it': {
+        name: 'Big Box-Bundle – Collezione Ufficiale di Figurine FIFA World Cup 2026™',
+        shortDescription: 'Album softcover + scatola con 100 bustine (706 figurine totali)',
+        description: `Il Big Box-Bundle per la FIFA World Cup 2026™ ti offre un totale di 706 figurine oltre all'album. L'entrata perfetta nella tua collezione Panini, che tu sia un collezionista esperto o alle prime armi.
+
+Contenuto del Big Box-Bundle:
+• 1 Album softcover di 112 pagine con 6 figurine
+• 1 Scatola con 100 bustine da 7 figurine ciascuna (= 700 figurine totali)
+
+I tuoi vantaggi con il Big Box-Bundle:
+• Tanto divertimento: 706 figurine incluso l'album per iniziare subito a incollare
+• Senza complicazioni: Aggiungi il bundle al carrello con un solo clic
+• Sicuro e diretto: I prodotti vengono consegnati in confezione originale direttamente da Panini
+• Meno doppioni: Statisticamente, una scatola offre meno probabilita di doppioni rispetto alle bustine singole
+
+Cosa ti aspetta nella piu grande collezione 2026 per la FIFA World Cup 2026™:
+• Collezione ufficialmente licenziata con tutte le 48 nazionali qualificate e i loro migliori giocatori
+• 980 figurine diverse da scoprire e incollare
+• Per ogni squadra: 18 giocatori, una foto di squadra e il logo ufficiale della federazione
+• Porta a casa la passione e l'atmosfera dei Mondiali con il marchio Panini`,
+      },
     },
   },
   {
@@ -411,6 +511,48 @@ Das erwartet dich in der FIFA World Cup 2026™ Stickerkollektion:
 • Fußball zum Erleben: Jeder der insgesamt 980 Sticker bringt dich näher ans Turniergeschehen
 • Stars hautnah: Entdecke die besten Spieler jeder Nation
 • Sammeln, Kleben und Tauschen mit Freunden und Familie`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Boite avec 50 Pochettes',
+        shortDescription: '50 pochettes de 7 stickers chacune (350 stickers au total)',
+        description: `Avec chaque boite, vous recevez 350 stickers repartis dans 50 pochettes de 7 stickers chacune.
+
+La boite de 50 pochettes constitue une base solide pour completer votre album etape par etape.
+
+Contenu de la boite :
+• 50 pochettes de 7 stickers chacune (= 350 stickers au total)
+
+Les avantages de la boite de 50 pochettes :
+• Base solide : 350 stickers pour un veritable essor de votre collection
+• Utilisation flexible : Ideal pour commencer ou pour completer a tout moment
+• Bonne quantite : Facile a trier et coller – parfait pour ceux qui veulent collectionner pas a pas
+
+Ce qui vous attend dans la collection FIFA World Cup 2026™ :
+• La Coupe du Monde a collectionner : Les 48 equipes qualifiees pour la Coupe 2026
+• Football a vivre : Chacun des 980 stickers vous rapproche de l'action du tournoi
+• Stars en gros plan : Decouvrez les meilleurs joueurs de chaque nation
+• Collectionner, coller et echanger avec amis et famille`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Scatola con 50 Bustine',
+        shortDescription: '50 bustine con 7 figurine ciascuna (350 figurine totali)',
+        description: `Con ogni scatola ricevi 350 figurine distribuite in 50 bustine da 7 figurine ciascuna.
+
+La scatola con 50 bustine forma una base solida per costruire il tuo album passo dopo passo.
+
+Contenuto della scatola:
+• 50 bustine da 7 figurine ciascuna (= 350 figurine totali)
+
+I vantaggi della scatola con 50 bustine:
+• Base solida: 350 figurine per un notevole incremento della tua collezione
+• Uso flessibile: Ideale per iniziare o per integrare in qualsiasi momento
+• Quantita giusta: Facile da organizzare e incollare – perfetto per chi vuole collezionare passo dopo passo
+
+Cosa ti aspetta nella collezione FIFA World Cup 2026™:
+• Il Mondiale da collezionare: Le 48 squadre qualificate per la Coppa 2026
+• Calcio da vivere: Ciascuna delle 980 figurine ti avvicina all'azione del torneo
+• Star da vicino: Scopri i migliori giocatori di ogni nazione
+• Colleziona, incolla e scambia con amici e famiglia`,
       },
     },
   },
@@ -522,6 +664,50 @@ Das erwartet dich in der Stickerkollektion zur FIFA Fußball-Weltmeisterschaft 2
 • Spannende Herausforderung: Insgesamt 980 verschiedene Sticker zum Sammeln
 • Mittendrin statt nur dabei: Erlebe das Turnier Sticker für Sticker
 • Sammeln, tauschen, mitfiebern: Der perfekte Begleiter für das größte Event des Sommers 2026`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Boite avec 100 Pochettes',
+        shortDescription: '100 pochettes de 7 stickers chacune (700 stickers au total)',
+        description: `Avec chaque boite, vous recevez 700 stickers repartis dans 100 pochettes de 7 stickers chacune.
+
+La boite de 100 pochettes vous aide a avancer significativement dans votre album et a travailler systematiquement sur les stickers manquants.
+
+Contenu de la boite :
+• 100 pochettes de 7 stickers chacune (= 700 stickers au total)
+
+Les avantages de la boite de 100 pochettes :
+• Grand elan de collection : 700 stickers pour un progres sensible dans l'album
+• Grande variete : Plus de nouveaux motifs lors de l'ouverture des pochettes
+• Plaisir de collectionner : Ideal pour les longues sessions de stickers
+• Sur et direct : Livre en emballage d'origine par le fabricant
+
+Ce qui vous attend dans la collection FIFA World Cup 2026™ :
+• Collection officielle du tournoi : Avec les 48 equipes nationales du Mondial 2026
+• Defi passionnant : 980 stickers differents au total a collectionner
+• Au coeur de l'action : Vivez le tournoi sticker par sticker
+• Collectionner, echanger, supporter : Le compagnon parfait pour le plus grand evenement de 2026`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Scatola con 100 Bustine',
+        shortDescription: '100 bustine con 7 figurine ciascuna (700 figurine totali)',
+        description: `Con ogni scatola ricevi 700 figurine distribuite in 100 bustine da 7 figurine ciascuna.
+
+La scatola con 100 bustine ti aiuta ad avanzare significativamente nell'album e a lavorare sistematicamente sulle figurine mancanti.
+
+Contenuto della scatola:
+• 100 bustine da 7 figurine ciascuna (= 700 figurine totali)
+
+I vantaggi della scatola con 100 bustine:
+• Grande impulso alla collezione: 700 figurine per un notevole progresso nell'album
+• Grande varieta: Piu motivi nuovi all'apertura delle bustine
+• Piacere di collezionare: Ideale per lunghe sessioni di figurine
+• Sicuro e diretto: Consegnato in confezione originale dal produttore
+
+Cosa ti aspetta nella collezione FIFA World Cup 2026™:
+• Collezione ufficiale del torneo: Con tutte le 48 nazionali del Mondiale 2026
+• Sfida appassionante: 980 figurine diverse in totale da collezionare
+• Nel cuore dell'azione: Vivi il torneo figurina per figurina
+• Colleziona, scambia, fai il tifo: Il compagno perfetto per il piu grande evento del 2026`,
       },
     },
   },
@@ -643,6 +829,54 @@ Das bietet dir die Stickerkollektion zur WM 2026:
 • Alles zur WM im Überblick: Entdecke alle Teilnehmer des Turniers in den USA, Mexiko und Kanada
 • Teams & Stars: Für jede Mannschaft gibt es 18 Spieler-Sticker, ein Teamfoto sowie das offizielle Verbandswappen
 • WM-Atmosphäre für zuhause: Nutze dein Album als Nachschlagewerk vor und während des Turniers`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Hardcover Big Box-Bundle',
+        shortDescription: '1 Album Hardcover + 1 Boite de 100 Pochettes (700 stickers)',
+        description: `Chaque Hardcover Big Box-Bundle pour la FIFA World Cup 2026™ contient 1 Album Hardcover et 700 stickers.
+
+Le Hardcover Big Box-Bundle est parfait si vous voulez vous lancer dans la collection en grand et presenter votre collection dans un album hardcover premium.
+
+Contenu du Hardcover Big Box-Bundle :
+• 1 Album Hardcover de 112 pages
+• 1 Boite de 100 pochettes de 7 stickers chacune (= 700 stickers)
+
+Vos avantages avec le Hardcover Big Box-Bundle :
+• Depart en fanfare : Set attractif avec album Hardcover premium et boite de 100 pochettes
+• Presentation premium : L'album Hardcover donne a votre collection un look de qualite
+• Plaisir de collection etendu : Avec plus de 700 stickers, vous pouvez completer une grande partie de l'album
+• Direct du fabricant : Emballe avec soin et expedie directement par Panini
+
+Ce qu'offre la collection de stickers FIFA World Cup 2026 :
+• Officiellement licence : Comprend les 48 equipes nationales qualifiees
+• 980 stickers a collectionner : Chassez tous les stickers et completez votre album
+• Vue d'ensemble du Mondial : Decouvrez tous les participants du tournoi aux USA, Mexique et Canada
+• Equipes et Stars : Pour chaque equipe, 18 stickers de joueurs, une photo d'equipe et l'ecusson officiel
+• Ambiance Coupe du Monde : Utilisez votre album comme guide avant et pendant le tournoi`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Hardcover Big Box-Bundle',
+        shortDescription: '1 Album Hardcover + 1 Scatola con 100 Bustine (700 figurine)',
+        description: `Ogni Hardcover Big Box-Bundle per la FIFA World Cup 2026™ contiene 1 Album Hardcover e 700 figurine.
+
+L'Hardcover Big Box-Bundle e perfetto per chi vuole tuffarsi nella collezione in grande stile e presentare la propria raccolta in un album hardcover premium.
+
+Contenuto dell'Hardcover Big Box-Bundle:
+• 1 Album Hardcover di 112 pagine
+• 1 Scatola con 100 bustine da 7 figurine ciascuna (= 700 figurine)
+
+I tuoi vantaggi con l'Hardcover Big Box-Bundle:
+• Partenza in grande: Set attraente con album Hardcover premium e scatola da 100 bustine
+• Presentazione premium: L'album Hardcover da alla tua collezione un aspetto di qualita
+• Ampio divertimento: Con piu di 700 figurine, puoi completare gran parte dell'album
+• Diretto dal produttore: Imballato con cura e spedito direttamente da Panini
+
+Cosa offre la collezione di figurine FIFA World Cup 2026:
+• Ufficialmente licenziato: Include tutte le 48 nazionali qualificate
+• 980 figurine da collezionare: Vai a caccia di tutte le figurine e completa il tuo album
+• Panoramica completa del Mondiale: Scopri tutti i partecipanti del torneo in USA, Messico e Canada
+• Squadre e Star: Per ogni squadra, 18 figurine di giocatori, una foto e lo stemma ufficiale
+• Atmosfera Mondiale a casa: Usa il tuo album come guida prima e durante il torneo`,
       },
     },
   },
@@ -774,6 +1008,58 @@ Das erwartet dich in der ultimativen Stickerkollektion zur WM 2026™:
 
 *Panini EXTRA-Sticker sind nicht Teil der Hauptkollektion und werden durchschnittlich jeder 100. Tüte zufällig beigelegt`,
       },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Big Collector\'s Bundle',
+        shortDescription: '1 Album + Big Collector\'s Box de 143 pochettes (1 007 stickers) + 3 Panini EXTRA-Stickers',
+        description: `Avec le Big Collector's Bundle exclusif en ligne, vous obtenez un album, 1 007 stickers + 3 des rares Panini EXTRA-Stickers pour la FIFA World Cup 2026™.
+
+Notre plus grand bundle est fait pour vous si vous voulez vous lancer a fond dans votre collection !
+
+Contenu du Big Collector's Bundle :
+• 1 Album de 112 pages et 6 stickers
+• 1 Big Collector's Box exclusivement en ligne avec 143 pochettes de 7 stickers chacune (= 1 001 stickers au total) + 3 Panini EXTRA-Stickers aleatoires
+
+Vos avantages avec le Big Collector's Bundle :
+• Enorme plaisir de stickers : 1 007 stickers plus album – commencez a coller et completez avec un peu de chance
+• Achat facile : Ajoutez le bundle au panier en un seul clic
+• Direct du fabricant : Produits Panini originaux livres
+• Moins de doublons : La Big Collector's Box exclusive vous donne les meilleures chances de completer votre album
+• Bonus : Seulement dans la Big Collector's Box, vous recevez 3 des 20 Panini EXTRA-Stickers* en exclusivite
+
+Ce qui vous attend dans la collection FIFA World Cup 2026™ :
+• Collection completement licenciee avec les 48 equipes nationales qualifiees
+• Chaque equipe avec ses meilleurs joueurs, photo d'equipe et logo officiel de la federation
+• 980 stickers differents a collectionner et coller
+• Apporte la veritable ambiance Coupe du Monde a la maison
+
+*Les Panini EXTRA-Stickers ne font pas partie de la collection principale et sont inclus en moyenne toutes les 100 pochettes`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Big Collector\'s Bundle',
+        shortDescription: '1 Album + Big Collector\'s Box con 143 bustine (1.007 figurine) + 3 Panini EXTRA-Stickers',
+        description: `Con il Big Collector's Bundle esclusivo online, ottieni un album, 1.007 figurine + 3 dei rari Panini EXTRA-Stickers per la FIFA World Cup 2026™.
+
+Il nostro bundle piu grande e perfetto per chi vuole tuffarsi nella collezione a piena velocita!
+
+Contenuto del Big Collector's Bundle:
+• 1 Album di 112 pagine con 6 figurine
+• 1 Big Collector's Box esclusiva online con 143 bustine da 7 figurine ciascuna (= 1.001 figurine totali) + 3 Panini EXTRA-Stickers casuali
+
+I tuoi vantaggi con il Big Collector's Bundle:
+• Enorme divertimento: 1.007 figurine piu album – inizia subito a incollare e completa con un po' di fortuna
+• Acquisto facile: Aggiungi il bundle al carrello con un solo clic
+• Diretto dal produttore: Prodotti originali Panini consegnati
+• Meno doppioni: La Big Collector's Box esclusiva ti da le migliori possibilita di completare l'album
+• Bonus: Solo nella Big Collector's Box ricevi 3 dei 20 Panini EXTRA-Stickers* in esclusiva
+
+Cosa ti aspetta nella collezione FIFA World Cup 2026™:
+• Collezione completamente licenziata con tutte le 48 nazionali qualificate
+• Ogni squadra con i suoi migliori giocatori, foto e logo ufficiale della federazione
+• 980 figurine diverse da collezionare e incollare
+• Porta la vera atmosfera Mondiale a casa
+
+*I Panini EXTRA-Stickers non fanno parte della collezione principale e vengono inclusi in media ogni 100 bustine`,
+      },
     },
   },
   {
@@ -868,6 +1154,40 @@ Enthalten sind:
 
 Die volle Faszination der FIFA Fußball-Weltmeisterschaft™ Adrenalyn XL™ – exklusiv online`,
       },
+      'fr': {
+        name: 'FIFA Coupe du Monde 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Collection complete numerotee individuellement (1/2026 a 2026/2026) – 630 cartes + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Plongez dans l'experience ultime de la FIFA Coupe du Monde™ avec le set officiel Panini FIFA Coupe du Monde 2026™ Adrenalyn XL™ Omni Set.
+
+Pour la toute premiere fois, Panini presente une Complete Collection exclusive dans une Deluxe Box – pour les vrais collectionneurs et amateurs de football.
+Chaque boite est numerotee individuellement – de 1/2026 a 2026/2026.
+
+Contenu :
+• Les 630 cartes officielles, incluant les 9 Golden Ballers exclusifs
+• Le seul set avec les 3 Momentum Cards exclusives : Bellingham, Dembele et Pulisic
+• Classeur Deluxe de collectionneur en qualite premium – pour proteger et presenter votre collection
+• Code de jeu en ligne pour debloquer les cartes dans le jeu digital officiel
+• Checklist complete pour suivre chaque carte de la collection
+
+La fascination complete de la FIFA Coupe du Monde™ Adrenalyn XL™ – exclusivement en ligne`,
+      },
+      'it': {
+        name: 'FIFA Coppa del Mondo 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Collezione completa numerata individualmente (1/2026 a 2026/2026) – 630 carte + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Immergiti nell'esperienza definitiva della FIFA Coppa del Mondo™ con il set ufficiale Panini FIFA Coppa del Mondo 2026™ Adrenalyn XL™ Omni Set.
+
+Per la prima volta in assoluto, Panini presenta una Complete Collection esclusiva in una Deluxe Box – per i veri collezionisti e appassionati di calcio.
+Ogni scatola e numerata individualmente – da 1/2026 a 2026/2026.
+
+Contenuto:
+• Tutte le 630 carte ufficiali, inclusi i 9 Golden Ballers esclusivi
+• L'unico set con le 3 Momentum Cards esclusive: Bellingham, Dembele e Pulisic
+• Raccoglitore Deluxe da collezionista in qualita premium – per proteggere e presentare la tua collezione
+• Codice di gioco online per sbloccare le carte nel gioco digitale ufficiale
+• Checklist completa per seguire ogni carta della collezione
+
+L'affascinante esperienza completa della FIFA Coppa del Mondo™ Adrenalyn XL™ – esclusivamente online`,
+      },
     },
   },
   {
@@ -929,6 +1249,28 @@ In dieser limitierten Box:
 • 1 Exklusives Hardcover-Album — elegant, robust und nur in dieser Box erhältlich. Ein Ehrenplatz für deine Sammlung, nicht einzeln käuflich
 • 100 Stickertüten mit insgesamt 700 Stickern — 100-mal das einzigartige Geräusch des Aufreißens, 100-mal die Chance, deine Stars zu finden, und 100-mal die Vorfreude auf den nächsten Tausch
 • 16 Exklusive Poster der Austragungsstädte — bringe die Atmosphäre aller WM-Stadien direkt an deine Wände. Diese künstlerischen Poster der Austragungsstädte der WM 2026 sind einzigartige Stücke, ausschließlich in dieser Treasure Box erhältlich`,
+      },
+      'fr': {
+        name: 'FIFA World Cup 2026™ – Treasure Box United Edition Panini',
+        shortDescription: 'Edition limitee numerotee (1/5000 a 5000/5000) – Album Hardcover exclusif + 100 pochettes + 16 affiches',
+        description: `Treasure Box United Edition : creee pour les collectionneurs qui recherchent quelque chose de vraiment special.
+Chaque boite est numerotee individuellement, de 1/5000 a 5000/5000.
+
+Dans cette boite limitee :
+• 1 Album Hardcover exclusif — elegant, solide et disponible uniquement dans cette boite. Un lieu d'honneur pour votre collection, non vendu separement
+• 100 pochettes de stickers, soit 700 stickers au total — 100 fois le son unique du dechirage, 100 fois la chance de trouver vos stars, et 100 fois l'anticipation du prochain echange
+• 16 Affiches exclusives des villes hotes — portez l'atmosphere de tous les stades de la Coupe du Monde directement sur vos murs. Ces affiches artistiques des villes hotes de la Coupe du Monde 2026 sont des pieces uniques, disponibles exclusivement dans cette Treasure Box`,
+      },
+      'it': {
+        name: 'FIFA World Cup 2026™ – Treasure Box United Edition Panini',
+        shortDescription: 'Edizione limitata numerata individualmente (1/5000 a 5000/5000) – Album Hardcover esclusivo + 100 bustine + 16 poster',
+        description: `Treasure Box United Edition: creata per i collezionisti che cercano qualcosa di davvero speciale.
+Ogni scatola e numerata individualmente, da 1/5000 a 5000/5000.
+
+In questa scatola limitata:
+• 1 Album Hardcover esclusivo — elegante, robusto e disponibile solo in questa scatola. Un posto d'onore per la tua collezione, non venduto separatamente
+• 100 bustine di figurine, per un totale di 700 figurine — 100 volte il suono unico dello strappo, 100 volte la possibilita di trovare le tue star, e 100 volte l'attesa del prossimo scambio
+• 16 Poster esclusivi delle citta ospitanti — porta l'atmosfera di tutti gli stadi Mondiali direttamente sulle tue pareti. Questi poster artistici delle citta ospitanti della Coppa del Mondo 2026 sono pezzi unici, disponibili esclusivamente in questa Treasure Box`,
       },
     },
   },
@@ -993,6 +1335,28 @@ Das Album umfasst 112 Seiten mit insgesamt 980 Stickern, darunter 68 Sonder-Stic
 Diese Treasure Box enthält:
 • 24 Tüten mit je 7 Stickern
 • 1 Hardcover-Album`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Treasure Box Panini',
+        shortDescription: '24 pochettes de 7 stickers + Album Hardcover officiel',
+        description: `Decouvrez la Collection Officielle de Stickers Panini FIFA World Cup 2026™, consacree a la FIFA Coupe du Monde 2026™ : le premier tournoi avec 48 equipes, organise en Amerique du Nord. Un voyage parmi les plus grandes stars du football et les nouveaux talents dans l'une des collections les plus completes de tous les temps.
+
+L'album compte 112 pages avec 980 stickers au total, dont 68 stickers speciaux sur materiau premium.
+
+Cette Treasure Box contient :
+• 24 pochettes de 7 stickers chacune
+• 1 Album Hardcover`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Treasure Box Panini',
+        shortDescription: '24 bustine da 7 figurine + Album Hardcover ufficiale',
+        description: `Scopri la Collezione Ufficiale di Figurine Panini FIFA World Cup 2026™, dedicata alla FIFA Coppa del Mondo 2026™: il primo torneo con 48 squadre, ospitato in Nord America. Un viaggio tra le piu grandi star del calcio e i nuovi talenti in una delle collezioni piu complete di sempre.
+
+L'album conta 112 pagine con 980 figurine in totale, incluse 68 figurine speciali su materiale premium.
+
+Questa Treasure Box contiene:
+• 24 bustine da 7 figurine ciascuna
+• 1 Album Hardcover`,
       },
     },
   },
@@ -1066,6 +1430,32 @@ Dieses Bundle enthält:
 Jede Tüte enthält 7 Sticker.
 
 Das ideale Bundle für alle, die einen großen Sprung in ihrer Sammlung machen und alles im hochwertigen Hardcover-Album aufbewahren möchten.`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – 3 Boites de 50 Pochettes + Album Hardcover',
+        shortDescription: '3 Boites de 50 pochettes + 1 Album Hardcover. Chaque pochette contient 7 stickers.',
+        description: `La collection officielle de stickers Panini FIFA World Cup 2026™ est arrivee !
+
+Ce bundle comprend :
+• 3 Boites de 50 pochettes (= 1 050 stickers au total)
+• 1 Album Hardcover officiel
+
+Chaque pochette contient 7 stickers.
+
+Le bundle ideal pour ceux qui veulent faire un grand bond dans leur collection et tout ranger dans un album hardcover premium.`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – 3 Scatole da 50 Bustine + Album Hardcover',
+        shortDescription: '3 Scatole da 50 bustine + 1 Album Hardcover. Ogni bustina contiene 7 figurine.',
+        description: `La collezione ufficiale di figurine Panini FIFA World Cup 2026™ e arrivata!
+
+Questo bundle include:
+• 3 Scatole da 50 bustine (= 1.050 figurine totali)
+• 1 Album Hardcover ufficiale
+
+Ogni bustina contiene 7 figurine.
+
+Il bundle ideale per chi vuole fare un grande salto nella propria collezione e conservare tutto in un album hardcover premium.`,
       },
     },
   },
@@ -1144,6 +1534,34 @@ Dieses exklusive Bundle enthält:
 Jede Tüte enthält 7 Sticker.
 
 Die Pocket Tins und Classic Tins werden in zufälligen Designs versendet – eine zusätzliche Überraschung für alle Fans der Kollektion!`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Boite de 50 Pochettes + Pocket Tin + Classic Tin',
+        shortDescription: 'Boite de 50 pochettes + 1 Pocket Tin (8 pochettes) + 1 Classic Tin (16 pochettes)',
+        description: `La collection officielle de stickers Panini FIFA World Cup 2026™ est arrivee !
+
+Ce bundle exclusif comprend :
+• 1 Boite de 50 pochettes
+• 1 Pocket Tin aleatoire avec 8 pochettes
+• 1 Classic Tin aleatoire avec 16 pochettes
+
+Chaque pochette contient 7 stickers.
+
+Les Pocket Tins et Classic Tins sont envoyees dans des designs aleatoires – une surprise supplementaire pour les fans de la collection !`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Scatola da 50 Bustine + Pocket Tin + Classic Tin',
+        shortDescription: 'Scatola da 50 bustine + 1 Pocket Tin (8 bustine) + 1 Classic Tin (16 bustine)',
+        description: `La collezione ufficiale di figurine Panini FIFA World Cup 2026™ e arrivata!
+
+Questo bundle esclusivo include:
+• 1 Scatola da 50 bustine
+• 1 Pocket Tin casuale con 8 bustine
+• 1 Classic Tin casuale con 16 bustine
+
+Ogni bustina contiene 7 figurine.
+
+Le Pocket Tins e Classic Tins vengono spedite in design casuali – una sorpresa in piu per i fan della collezione!`,
       },
     },
   },
@@ -1233,6 +1651,40 @@ Inhalt der Super Premium Box:
 • 980 Sticker im Album, davon 68 Spezialsticker
 • 48 teilnehmende Nationalmannschaften bei der WM 2026
 • Perfekt, um deine Sammlung zu starten oder exklusive Stücke hinzuzufügen`,
+      },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Super Premium Box avec 60 Pochettes',
+        shortDescription: 'Album Hardcover Or + 60 pochettes avec 420 stickers officiels',
+        description: `Cette Super Premium Box Exclusive comprend 1 Album Hardcover Or, 60 pochettes contenant 420 stickers officiels pour vous aider a completer votre album avec des joueurs, des ecusson d'equipes nationales et des moments inoubliables du tournoi. Ouvrir chaque pochette, c'est revivre l'excitation de la Coupe du Monde et partager votre passion pour le football avec famille et amis.
+
+FIFA World Cup 2026™ – Livre Illustre Officiel
+Les emotions du plus grand spectacle sportif du monde immortalisees dans le plus grand album de stickers de tous les temps ! Une collection complete avec toutes les equipes nationales qualifiees, des stickers speciaux et tous les details pour suivre de pres la bataille pour le trophee de la FIFA World Cup 2026™ !
+
+L'album compte 980 stickers dont 68 speciaux, couvrant les 48 equipes nationales participant a la Coupe du Monde 2026, organisee entre juin et juillet au Mexique, aux Etats-Unis et au Canada.
+
+Contenu de la Super Premium Box :
+• 1 Album Hardcover Or – FIFA World Cup 2026™ Livre Illustre Officiel
+• 60 pochettes de 7 stickers chacune (420 stickers au total)
+• 980 stickers dans l'album dont 68 speciaux
+• 48 equipes nationales participantes au Mondial 2026
+• Parfait pour commencer votre collection ou ajouter des pieces exclusives`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Super Premium Box con 60 Bustine',
+        shortDescription: 'Album Hardcover Oro + 60 bustine con 420 figurine ufficiali',
+        description: `Questa esclusiva Super Premium Box include 1 Album Hardcover Oro, 60 bustine contenenti 420 figurine ufficiali per aiutarti a completare il tuo album con giocatori, stemmi delle nazionali e momenti indimenticabili del torneo. Aprire ogni bustina e come rivivere l'emozione della Coppa del Mondo e condividere la tua passione per il calcio con famiglia e amici.
+
+FIFA World Cup 2026™ – Libro Illustrato Ufficiale
+Le emozioni del piu grande spettacolo sportivo del mondo immortalate nel piu grande album di figurine di tutti i tempi! Una collezione completa con tutte le nazionali qualificate, figurine speciali e ogni dettaglio per seguire da vicino la battaglia per il trofeo della FIFA World Cup 2026™!
+
+L'album conta 980 figurine di cui 68 speciali, coprendo tutte le 48 nazionali che partecipano al Mondiale 2026, che si tiene tra giugno e luglio in Messico, negli Stati Uniti e in Canada.
+
+Contenuto della Super Premium Box:
+• 1 Album Hardcover Oro – FIFA World Cup 2026™ Libro Illustrato Ufficiale
+• 60 bustine da 7 figurine ciascuna (420 figurine totali)
+• 980 figurine nell'album di cui 68 speciali
+• 48 nazionali partecipanti al Mondiale 2026
+• Perfetto per iniziare la tua collezione o aggiungere pezzi esclusivi`,
       },
     },
   },
@@ -1329,6 +1781,42 @@ Inhalt des Exklusiven Stadion-Kits:
 • Limitierte und nummerierte Auflage
 • Offiziell von der FIFA lizenziertes Produkt`,
       },
+      'fr': {
+        name: 'Collection Officielle FIFA World Cup 2026™ – Kit Exclusif Stade Numerote avec 150 Pochettes',
+        shortDescription: 'Album Hardcover Or Numerote + 150 pochettes + Bon de 50 stickers manquants',
+        description: `Kit Exclusif — Pour les passionnes de collection, le Super Kit Special Stade PANINI FIFA World Cup 2026 est une edition speciale concue pour rendre l'experience de collection encore plus memorable.
+
+Ce kit exclusif en quantite limitee contient 1 Album Hardcover Or Numerote et 150 pochettes, avec un total de 1 050 stickers officiels reunissant joueurs, ecusson des equipes nationales et moments marquants du tournoi.
+
+En plus, le kit comprend un bon exclusif de stickers manquants, donnant droit a 50 stickers de votre choix sur le site Panini – ideal pour la derniere ligne droite de la collection.
+
+Parfait pour ceux qui souhaitent commencer leur collection avec un article de prestige ou s'assurer une edition speciale.
+
+Contenu du Kit Exclusif Stade :
+• 1 Album Hardcover Or Numerote – FIFA World Cup 2026™
+• 150 pochettes de 7 stickers chacune (1 050 stickers au total)
+• 1 Bon exclusif de stickers manquants (50 stickers au choix)
+• Edition limitee et numerotee
+• Produit officiellement licence par la FIFA`,
+      },
+      'it': {
+        name: 'Collezione Ufficiale FIFA World Cup 2026™ – Kit Esclusivo Stadio Numerato con 150 Bustine',
+        shortDescription: 'Album Hardcover Oro Numerato + 150 bustine + Voucher 50 figurine mancanti',
+        description: `Kit Esclusivo — Per i collezionisti appassionati, il Super Kit Speciale Stadio PANINI FIFA World Cup 2026 e un'edizione speciale progettata per rendere l'esperienza di raccolta ancora piu memorabile.
+
+Questo kit esclusivo in quantita limitata contiene 1 Album Hardcover Oro Numerato e 150 bustine, con un totale di 1.050 figurine ufficiali che riuniscono giocatori, stemmi delle nazionali e momenti salienti del torneo.
+
+Inoltre, il kit include un voucher esclusivo di figurine mancanti, con diritto a 50 figurine a scelta sul sito Panini – ideale per la fase finale della collezione.
+
+Perfetto per chi desidera iniziare la propria collezione con un articolo di prestigio o assicurarsi un'edizione speciale.
+
+Contenuto del Kit Esclusivo Stadio:
+• 1 Album Hardcover Oro Numerato – FIFA World Cup 2026™
+• 150 bustine da 7 figurine ciascuna (1.050 figurine totali)
+• 1 Voucher esclusivo di figurine mancanti (50 figurine a scelta)
+• Edizione limitata e numerata
+• Prodotto ufficialmente licenziato dalla FIFA`,
+      },
     },
   },
   {
@@ -1413,6 +1901,38 @@ Inhalt der Box:
 • 7 Sticker pro Tüte
 • Offiziell von der FIFA lizenziert
 • Hergestellt von Panini`,
+      },
+      'fr': {
+        name: 'Boite Stadium Collection de Stickers FIFA World Cup 2026 de Panini',
+        shortDescription: 'Boite scellee avec 280 stickers de toutes les nations participantes',
+        description: `La Boite Stadium Collection de Stickers de la Coupe du Monde FIFA 2026 de Panini est une boite scellee contenant 280 stickers avec toutes les nations participant a la Coupe du Monde FIFA. Officiellement licenciee par la FIFA, cette collection originale inclut des stickers de diverses equipes nationales et athletes.
+
+Chaque sticker est fabrique par Panini, ce qui en fait un incontournable pour les fans de football et les collectionneurs souhaitant commemorer le tournoi de la Coupe du Monde 2026.
+
+Cette collection offre un apercu complet du sport le plus populaire du monde a travers une serie de stickers passionnants et detailles.
+
+Contenu de la boite :
+• 280 stickers officiels
+• Stickers de toutes les nations participant a la Coupe du Monde FIFA 2026
+• 7 stickers par pochette
+• Officiellement licence par la FIFA
+• Fabrique par Panini`,
+      },
+      'it': {
+        name: 'Scatola Stadium Collection di Figurine FIFA World Cup 2026 Panini',
+        shortDescription: 'Scatola sigillata con 280 figurine di tutte le nazioni partecipanti',
+        description: `La Scatola Stadium Collection di Figurine della Coppa del Mondo FIFA 2026 Panini e una scatola sigillata contenente 280 figurine con tutte le nazioni che partecipano alla Coppa del Mondo FIFA. Ufficialmente licenziata dalla FIFA, questa collezione originale include figurine di varie squadre nazionali e atleti.
+
+Ogni figurina e prodotta da Panini, rendendola un must per i tifosi di calcio e i collezionisti che desiderano commemorare il torneo della Coppa del Mondo 2026.
+
+Questa collezione offre una panoramica completa dello sport piu popolare del mondo attraverso una serie di figurine entusiasmanti e dettagliate.
+
+Contenuto della scatola:
+• 280 figurine ufficiali
+• Figurine di tutte le nazioni partecipanti alla Coppa del Mondo FIFA 2026
+• 7 figurine per bustina
+• Ufficialmente licenziato dalla FIFA
+• Prodotto da Panini`,
       },
     },
   },

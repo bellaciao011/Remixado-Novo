@@ -1,4 +1,4 @@
-export type SupportedLocale = 'pt-BR' | 'en' | 'es' | 'de';
+export type SupportedLocale = 'pt-BR' | 'en' | 'es' | 'de' | 'fr' | 'it';
 
 export interface OrderInfo {
   customerEmail: string;
@@ -17,11 +17,19 @@ export function resolveLocale(raw?: string): SupportedLocale {
   if (raw.startsWith('en')) return 'en';
   if (raw.startsWith('es')) return 'es';
   if (raw.startsWith('de')) return 'de';
+  if (raw.startsWith('fr')) return 'fr';
+  if (raw.startsWith('it')) return 'it';
   return 'pt-BR';
 }
 
 function formatCurrency(amount: number, currency: string, locale: SupportedLocale): string {
-  const numLocale = locale === 'pt-BR' ? 'pt-BR' : locale === 'de' ? 'de-DE' : locale === 'es' ? 'es-ES' : 'en-US';
+  const numLocale =
+    locale === 'pt-BR' ? 'pt-BR' :
+    locale === 'de' ? 'de-DE' :
+    locale === 'es' ? 'es-ES' :
+    locale === 'fr' ? 'fr-FR' :
+    locale === 'it' ? 'it-IT' :
+    'en-US';
   return new Intl.NumberFormat(numLocale, { style: 'currency', currency: currency.toUpperCase() }).format(amount);
 }
 
@@ -86,6 +94,30 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. Alle Rechte vorbehalten.',
     autoEmail: 'Dies ist eine automatische E-Mail. Bitte antworten Sie nicht direkt.',
     htmlLang: 'de',
+  },
+  fr: {
+    greeting: (n) => n ? `Bonjour, ${n} !` : 'Bonjour !',
+    orderLabel: 'Commande No.',
+    deliveryLabel: 'Adresse de livraison',
+    totalLabel: 'Total',
+    productCol: 'Produit',
+    qtyCol: 'Qte.',
+    priceCol: 'Prix',
+    copyright: '© 2026 Panini. Tous droits reserves.',
+    autoEmail: 'Ceci est un e-mail automatique. Merci de ne pas repondre directement.',
+    htmlLang: 'fr',
+  },
+  it: {
+    greeting: (n) => n ? `Ciao, ${n}!` : 'Ciao!',
+    orderLabel: 'Ordine No.',
+    deliveryLabel: 'Indirizzo di consegna',
+    totalLabel: 'Totale',
+    productCol: 'Prodotto',
+    qtyCol: 'Qta.',
+    priceCol: 'Prezzo',
+    copyright: '© 2026 Panini. Tutti i diritti riservati.',
+    autoEmail: 'Questa e una e-mail automatica. Si prega di non rispondere direttamente.',
+    htmlLang: 'it',
   },
 };
 
@@ -190,6 +222,20 @@ const ORDER_CONFIRMATION_COPY: Record<SupportedLocale, { subject: string; body: 
       <p style="font-size:15px;color:#333;line-height:1.6;">Du wirst bald Versandaktualisierungen erhalten. Achte auf die naechsten E-Mails.</p>
     `,
   },
+  fr: {
+    subject: 'Commande Confirmee - Panini FIFA World Cup 2026',
+    body: `
+      <p style="font-size:15px;color:#333;line-height:1.6;">Votre commande a ete confirmee avec succes ! Nous preparons votre collection officielle Panini FIFA World Cup 2026 avec le plus grand soin.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Vous recevrez bientot des mises a jour sur l'expedition. Guettez les prochains e-mails !</p>
+    `,
+  },
+  it: {
+    subject: 'Ordine Confermato - Panini FIFA World Cup 2026',
+    body: `
+      <p style="font-size:15px;color:#333;line-height:1.6;">Il tuo ordine e stato confermato con successo! Stiamo preparando con cura la tua collezione ufficiale Panini FIFA World Cup 2026.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Riceverai presto aggiornamenti sulla spedizione. Tieni d'occhio le prossime e-mail!</p>
+    `,
+  },
 };
 
 export function buildOrderConfirmationEmail(order: OrderInfo, logoUrl: string): { subject: string; html: string } {
@@ -230,6 +276,20 @@ const UPSELL_COPY: Record<SupportedLocale, {
     body: (productName, amount) => `
       <p style="font-size:15px;color:#333;line-height:1.6;">Dein zusaetzlicher Kauf von <strong>${productName}</strong> wurde erfolgreich fuer ${amount} verarbeitet.</p>
       <p style="font-size:15px;color:#333;line-height:1.6;">Dieser Artikel wird zusammen mit deiner Hauptbestellung versandt, um die Lieferung zu optimieren.</p>
+    `,
+  },
+  fr: {
+    subject: 'Achat Supplementaire Confirme - Panini FIFA World Cup 2026',
+    body: (productName, amount) => `
+      <p style="font-size:15px;color:#333;line-height:1.6;">Votre achat supplementaire de <strong>${productName}</strong> a ete traite avec succes pour ${amount}.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Cet article sera expedie avec votre commande principale pour optimiser la livraison.</p>
+    `,
+  },
+  it: {
+    subject: 'Acquisto Aggiuntivo Confermato - Panini FIFA World Cup 2026',
+    body: (productName, amount) => `
+      <p style="font-size:15px;color:#333;line-height:1.6;">Il tuo acquisto aggiuntivo di <strong>${productName}</strong> e stato elaborato con successo per ${amount}.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Questo articolo verra spedito insieme al tuo ordine principale per ottimizzare la consegna.</p>
     `,
   },
 };
@@ -532,6 +592,150 @@ const LOGISTICS_COPY: Record<SupportedLocale, LogisticsStep[]> = {
       subject: 'Danke, dass du Teil der Sammlung bist - Panini FIFA World Cup 2026',
       body: `<p style="font-size:15px;color:#333;line-height:1.6;">Ein Monat ist seit deiner Bestellung vergangen und wir moechten dir danken, dass du Panini fuer deine FIFA World Cup 2026 Sammlung vertraust.</p>
       <p style="font-size:15px;color:#333;line-height:1.6;">Wir hoffen, dass du jeden Sticker geniesst und die Leidenschaft fuer Fussball mit deinen Liebsten teilst.</p>`,
+    },
+  ],
+  fr: [
+    {
+      subject: 'Votre commande Panini FIFA World Cup 2026 est en cours de traitement',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Bonne nouvelle ! Votre commande a ete recue et est maintenant en cours de traitement dans notre entrepot.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Vous recevrez une confirmation d'expedition avec les informations de suivi des que votre colis sera en route.</p>`,
+    },
+    {
+      subject: 'Votre commande Panini FIFA World Cup 2026 a ete transmise a la logistique',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre commande a ete transmise a notre equipe logistique et est en cours de preparation pour l'expedition.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Nous nous occupons de tout avec soin pour que votre collection arrive en parfait etat.</p>`,
+    },
+    {
+      subject: 'Votre expedition Panini FIFA World Cup 2026 est preparee',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre colis est maintenant emballe et pret a etre remis au transporteur.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Vos stickers officiels FIFA World Cup 2026™ sont sur le point de prendre la route vers chez vous !</p>`,
+    },
+    {
+      subject: 'Votre commande Panini FIFA World Cup 2026 a ete remise au transporteur',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre colis a ete remis au transporteur et est officiellement en route !</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Vous recevrez bientot un email avec les informations de suivi pour suivre votre livraison en temps reel.</p>`,
+    },
+    {
+      subject: 'Votre commande Panini est en transit - FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre colis est actuellement en transit et avance vers sa destination finale.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;"><strong>Statut :</strong> En transit – En route vers votre pays.</p>`,
+    },
+    {
+      subject: 'Votre commande est en dedouanement - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre colis est actuellement en cours de dedouanement. C'est une etape normale du processus de livraison internationale.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Ne vous inquietez pas, nous surveillons constamment votre colis et vous informerons des que le dedouanement sera complete.</p>`,
+    },
+    {
+      subject: 'Votre commande est en cours de livraison - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Excellente nouvelle ! Votre colis est en cours de livraison dans votre pays.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Vos stickers officiels FIFA World Cup 2026™ vont bientot atterrir dans votre boite aux lettres. Plus qu'un peu de patience !</p>`,
+    },
+    {
+      subject: 'Votre commande est pres de chez vous - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre colis a ete transfere au centre de distribution pres de chez vous.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Assurez-vous que quelqu'un sera present a l'adresse de livraison pour recevoir le colis. Sinon, le livreur laissera un avis de passage.</p>`,
+    },
+    {
+      subject: 'Livraison prevue aujourd\'hui - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Votre commande est en cours de livraison et devrait arriver a l'adresse indiquee avant la fin de la journee.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Assurez-vous que quelqu'un soit present a l'adresse de livraison.</p>`,
+    },
+    {
+      subject: 'Mise a jour de livraison - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Nous verifions le statut de votre commande. Il arrive parfois qu'il y ait de petits retards de la part du transporteur. Ne vous inquietez pas, votre colis est constamment surveille.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;"><strong>Statut :</strong> Surveille par le transporteur.</p>`,
+    },
+    {
+      subject: 'Votre collection Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Nous esperons que vous profitez deja de votre collection de stickers du Mondial !</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Partagez votre collection avec vos amis et votre famille. La Coupe du Monde est encore plus amusante quand tout le monde collectionne ensemble !</p>`,
+    },
+    {
+      subject: 'Conseil pour completer votre album - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Saviez-vous qu'un album FIFA World Cup 2026 complet contient <strong>980 stickers differents</strong> ?</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Conseil de collectionneur : Organisez vos stickers en double pour les echanger avec vos amis et votre famille. C'est la facon la plus rapide et la plus amusante de completer l'album !</p>`,
+    },
+    {
+      subject: 'Plus que quelques jours avant le Mondial - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Le compte a rebours avant la FIFA World Cup 2026 est lance ! Tandis que le tournoi approche, votre collection Panini capture chaque moment historique.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Avec <strong>48 equipes nationales</strong> et des joueurs du monde entier, votre album est le compagnon ultime pour la Coupe du Monde.</p>`,
+    },
+    {
+      subject: 'Merci de faire partie de la collection - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Un mois s'est ecoule depuis votre commande et nous souhaitons vous remercier de faire confiance a Panini pour votre collection FIFA World Cup 2026.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Nous esperons que vous profitez de chaque sticker et que vous partagez votre passion pour le football avec vos proches.</p>`,
+    },
+  ],
+  it: [
+    {
+      subject: 'Il tuo ordine Panini FIFA World Cup 2026 e in elaborazione',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Buone notizie! Il tuo ordine e stato ricevuto ed e ora in elaborazione nel nostro magazzino.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Riceverai una conferma di spedizione con le informazioni di tracciamento non appena il tuo pacco sara in viaggio.</p>`,
+    },
+    {
+      subject: 'Il tuo ordine Panini FIFA World Cup 2026 e stato trasmesso alla logistica',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo ordine e stato trasmesso al nostro team logistico ed e in fase di preparazione per la spedizione.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Ci prendiamo cura di tutto con attenzione per garantire che la tua collezione arrivi in perfette condizioni.</p>`,
+    },
+    {
+      subject: 'La tua spedizione Panini FIFA World Cup 2026 e pronta',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo pacco e ora imballato e pronto per essere consegnato al corriere.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Le tue figurine ufficiali FIFA World Cup 2026™ stanno per mettersi in viaggio verso di te!</p>`,
+    },
+    {
+      subject: 'Il tuo ordine Panini FIFA World Cup 2026 e stato consegnato al corriere',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo pacco e stato consegnato al corriere ed e ufficialmente in viaggio!</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Riceverai presto un'email con le informazioni di tracciamento per seguire la tua consegna in tempo reale.</p>`,
+    },
+    {
+      subject: 'Il tuo ordine Panini e in transito - FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo pacco e attualmente in transito e sta avanzando verso la sua destinazione finale.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;"><strong>Stato:</strong> In transito – In viaggio verso il tuo paese.</p>`,
+    },
+    {
+      subject: 'Il tuo ordine e in sdoganamento - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo pacco e attualmente in fase di sdoganamento. E una fase normale del processo di consegna internazionale.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Non preoccuparti, stiamo monitorando costantemente il tuo pacco e ti aggiorneremo non appena lo sdoganamento sara completato.</p>`,
+    },
+    {
+      subject: 'Il tuo ordine e in consegna - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Notizia fantastica! Il tuo pacco e in consegna nel tuo paese.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Le tue figurine ufficiali FIFA World Cup 2026™ stanno per arrivare nella tua cassetta delle lettere. Ancora un po' di pazienza!</p>`,
+    },
+    {
+      subject: 'Il tuo ordine e vicino a te - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo pacco e stato trasferito al centro di distribuzione vicino a te.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Assicurati che qualcuno sia presente all'indirizzo di consegna per ricevere il pacco. In caso contrario, il corriere lascera un avviso.</p>`,
+    },
+    {
+      subject: 'Consegna prevista oggi - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il tuo ordine e in consegna e dovrebbe arrivare all'indirizzo indicato entro la fine della giornata.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Assicurati che qualcuno sia presente all'indirizzo di consegna.</p>`,
+    },
+    {
+      subject: 'Aggiornamento sulla consegna - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Stiamo verificando lo stato del tuo ordine. A volte ci sono piccoli ritardi da parte del corriere. Non preoccuparti, il tuo pacco e costantemente monitorato.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;"><strong>Stato:</strong> Monitorato dal corriere.</p>`,
+    },
+    {
+      subject: 'La tua collezione Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Speriamo che tu stia gia godendo della tua collezione di figurine del Mondiale!</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Condividi la tua collezione con amici e famiglia. Il Mondiale e ancora piu divertente quando tutti collezionano insieme!</p>`,
+    },
+    {
+      subject: 'Consiglio per completare il tuo album - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Lo sapevi che un album FIFA World Cup 2026 completo ha <strong>980 figurine diverse</strong>?</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Consiglio da collezionista: Organizza le tue figurine doppie per scambiarle con amici e famiglia. E il modo piu veloce e divertente per completare l'album!</p>`,
+    },
+    {
+      subject: 'Mancano pochi giorni al Mondiale - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">Il conto alla rovescia per la FIFA World Cup 2026 e iniziato! Mentre il torneo si avvicina, la tua collezione Panini cattura ogni momento storico.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Con <strong>48 nazionali</strong> e giocatori da tutto il mondo, il tuo album e il compagno definitivo per la Coppa del Mondo.</p>`,
+    },
+    {
+      subject: 'Grazie per far parte della collezione - Panini FIFA World Cup 2026',
+      body: `<p style="font-size:15px;color:#333;line-height:1.6;">E passato un mese dal tuo ordine e vogliamo ringraziarti per aver scelto Panini per la tua collezione FIFA World Cup 2026.</p>
+      <p style="font-size:15px;color:#333;line-height:1.6;">Speriamo che tu stia godendo di ogni figurina e che tu stia condividendo la tua passione per il calcio con le persone care.</p>`,
     },
   ],
 };

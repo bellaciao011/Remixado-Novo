@@ -5,16 +5,20 @@ import ptBR from './locales/pt-BR.json';
 import en from './locales/en.json';
 import es from './locales/es.json';
 import de from './locales/de.json';
+import fr from './locales/fr.json';
+import it from './locales/it.json';
 
 const resources = {
   'pt-BR': { translation: ptBR },
   en: { translation: en },
   es: { translation: es },
-  de: { translation: de }
+  de: { translation: de },
+  fr: { translation: fr },
+  it: { translation: it },
 };
 
-type SupportedLang = 'pt-BR' | 'en' | 'es' | 'de';
-const SUPPORTED: SupportedLang[] = ['pt-BR', 'en', 'es', 'de'];
+type SupportedLang = 'pt-BR' | 'en' | 'es' | 'de' | 'fr' | 'it';
+const SUPPORTED: SupportedLang[] = ['pt-BR', 'en', 'es', 'de', 'fr', 'it'];
 
 const STORAGE_KEY = '_panini_lng';
 
@@ -52,11 +56,17 @@ function pickLanguage(candidates: readonly string[]): { lang: SupportedLang; con
 const COUNTRY_LANG: Record<string, SupportedLang> = {
   BR: 'pt-BR', PT: 'pt-BR', AO: 'pt-BR', MZ: 'pt-BR', CV: 'pt-BR',
   ST: 'pt-BR', GW: 'pt-BR', TL: 'pt-BR',
-  DE: 'de', AT: 'de', CH: 'de', LI: 'de', LU: 'de',
+  DE: 'de', AT: 'de', LI: 'de',
   ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es',
   VE: 'es', EC: 'es', BO: 'es', PY: 'es', UY: 'es', CU: 'es',
   DO: 'es', GT: 'es', HN: 'es', SV: 'es', NI: 'es', CR: 'es',
   PA: 'es', PR: 'es', GQ: 'es',
+  FR: 'fr', BE: 'fr', LU: 'fr', MC: 'fr', CI: 'fr', SN: 'fr',
+  CM: 'fr', MA: 'fr', DZ: 'fr', TN: 'fr', BF: 'fr', ML: 'fr',
+  NE: 'fr', TD: 'fr', CG: 'fr', CD: 'fr', MG: 'fr', BJ: 'fr',
+  GA: 'fr', TG: 'fr', GN: 'fr', RW: 'fr', BI: 'fr', DJ: 'fr',
+  KM: 'fr', CF: 'fr', HT: 'fr',
+  IT: 'it', SM: 'it', VA: 'it',
 };
 
 /** Read saved language from localStorage (user preference persists across sessions). */

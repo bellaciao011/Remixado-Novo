@@ -52,7 +52,17 @@ export const ListProductsResponseItem = zod.object({
   "name": zod.string(),
   "description": zod.string(),
   "shortDescription": zod.string()
-})
+}),
+  "fr": zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "shortDescription": zod.string()
+}).optional(),
+  "it": zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "shortDescription": zod.string()
+}).optional()
 })
 })
 export const ListProductsResponse = zod.array(ListProductsResponseItem)
@@ -96,7 +106,17 @@ export const GetProductResponse = zod.object({
   "name": zod.string(),
   "description": zod.string(),
   "shortDescription": zod.string()
-})
+}),
+  "fr": zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "shortDescription": zod.string()
+}).optional(),
+  "it": zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "shortDescription": zod.string()
+}).optional()
 })
 })
 
@@ -136,7 +156,17 @@ export const GetFeaturedProductsResponseItem = zod.object({
   "name": zod.string(),
   "description": zod.string(),
   "shortDescription": zod.string()
-})
+}),
+  "fr": zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "shortDescription": zod.string()
+}).optional(),
+  "it": zod.object({
+  "name": zod.string(),
+  "description": zod.string(),
+  "shortDescription": zod.string()
+}).optional()
 })
 })
 export const GetFeaturedProductsResponse = zod.array(GetFeaturedProductsResponseItem)

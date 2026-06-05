@@ -16,7 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const { toast } = useToast();
 
   const locale = i18n.language as keyof Product['translations'];
-  const translation = product.translations[locale] || product.translations['pt-BR'];
+  const translation = product.translations[locale] || product.translations['en'] || product.translations['pt-BR'];
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();

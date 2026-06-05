@@ -32,12 +32,21 @@ const ORDER_BUMP = {
       name: 'Box mit 50 Tüten – 350 offizielle Sticker',
       shortDescription: '50 Tüten × 7 Sticker = 350 offizielle FIFA World Cup 2026™ Sticker',
     },
-  },
+    'fr': {
+      name: 'Boite avec 50 Pochettes – 350 Stickers Officiels',
+      shortDescription: '50 pochettes × 7 stickers = 350 stickers officiels FIFA World Cup 2026™',
+    },
+    'it': {
+      name: 'Scatola con 50 Bustine – 350 Figurine Ufficiali',
+      shortDescription: '50 bustine × 7 figurine = 350 figurine ufficiali FIFA World Cup 2026™',
+    },
+  } as Record<string, { name: string; shortDescription: string }>,
 };
 
 const getItemName = (item: CartItem, lang: string): string => {
   if (item.translations) {
     return item.translations[lang]?.name
+      || item.translations['en']?.name
       || item.translations['pt-BR']?.name
       || item.name;
   }
@@ -117,7 +126,7 @@ interface PaymentFormProps {
 }
 
 function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: PaymentFormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
   const [, navigate] = useLocation();
@@ -145,7 +154,7 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
         ? [
             ...baseOrderItems,
             {
-              name: ORDER_BUMP.translations['pt-BR'].name,
+              name: ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['en']?.name || ORDER_BUMP.translations['pt-BR'].name,
               translations: ORDER_BUMP.translations,
               quantity: 1,
               price: ORDER_BUMP.price / 100,

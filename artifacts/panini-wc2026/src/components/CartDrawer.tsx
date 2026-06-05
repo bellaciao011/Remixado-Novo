@@ -16,6 +16,7 @@ const formatPrice = (price: number, currency = 'eur') => {
 const getItemName = (item: CartItem, lang: string): string => {
   if (item.translations) {
     return item.translations[lang]?.name
+      || item.translations['en']?.name
       || item.translations['pt-BR']?.name
       || item.name;
   }

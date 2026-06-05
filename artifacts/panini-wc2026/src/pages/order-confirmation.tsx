@@ -190,6 +190,7 @@ export default function OrderConfirmation() {
   const getItemName = (item: typeof storedItems[0]) => {
     if (item.translations) {
       return item.translations[i18n.language]?.name
+        || item.translations['en']?.name
         || item.translations['pt-BR']?.name
         || item.name;
     }
@@ -199,8 +200,8 @@ export default function OrderConfirmation() {
   const getProductName = (product: Product) => {
     const lang = i18n.language as keyof typeof product.translations;
     return product.translations[lang]?.name
-      || product.translations['pt-BR']?.name
       || product.translations['en']?.name
+      || product.translations['pt-BR']?.name
       || '';
   };
 

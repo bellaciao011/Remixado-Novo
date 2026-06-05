@@ -20,6 +20,8 @@ export type ProductTranslations = {
   en: ProductTranslation;
   es: ProductTranslation;
   de: ProductTranslation;
+  fr?: ProductTranslation;
+  it?: ProductTranslation;
 };
 
 export interface Product {

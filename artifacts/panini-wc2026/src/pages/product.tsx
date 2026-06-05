@@ -30,7 +30,7 @@ export default function ProductDetail() {
   useEffect(() => {
     if (!product) return;
     const locale = i18n.language as keyof typeof product.translations;
-    const tr = product.translations[locale] || product.translations['pt-BR'];
+    const tr = product.translations[locale] || product.translations['en'] || product.translations['pt-BR'];
     const price = product.price / 100;
     fbq('ViewContent', {
       content_ids: [product.id],
@@ -74,7 +74,7 @@ export default function ProductDetail() {
     : [];
 
   const locale = i18n.language as keyof typeof product.translations;
-  const translation = product.translations[locale] || product.translations['pt-BR'];
+  const translation = product.translations[locale] || product.translations['en'] || product.translations['pt-BR'];
 
   const price = product.price / 100;
   const originalPrice = product.originalPrice ? product.originalPrice / 100 : null;

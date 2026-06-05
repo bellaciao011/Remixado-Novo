@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
-import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID } from '../productData';
+import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID, ORDER_BUMP_2_PRICE, ORDER_BUMP_2_ID } from '../productData';
 import { sendUpsellConfirmation } from '../email/emailService';
 import type { OrderInfo } from '../email/templates';
 
@@ -189,7 +189,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
 router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { addOrderBump } = req.body as { addOrderBump: boolean };
+    const { addOrderBump1, addOrderBump2 } = req.body as { addOrderBump1?: boolean; addOrderBump2?: boolean };
 
     const stripe = await getUncachableStripeClient();
 
@@ -216,15 +216,15 @@ router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): 
       amountTotal += product.price * item.quantity;
     }
 
-    if (addOrderBump) {
-      amountTotal += ORDER_BUMP_PRICE;
-    }
+    if (addOrderBump1) amountTotal += ORDER_BUMP_PRICE;
+    if (addOrderBump2) amountTotal += ORDER_BUMP_2_PRICE;
 
     await stripe.paymentIntents.update(id, {
       amount: amountTotal,
       metadata: {
         ...pi.metadata,
-        order_bump: addOrderBump ? ORDER_BUMP_ID : '',
+        order_bump: addOrderBump1 ? ORDER_BUMP_ID : '',
+        order_bump_2: addOrderBump2 ? ORDER_BUMP_2_ID : '',
       },
     });
 

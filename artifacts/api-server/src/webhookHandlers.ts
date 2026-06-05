@@ -1,5 +1,5 @@
 import { getUncachableStripeClient, getWebhookSecret } from './stripeClient';
-import { PRODUCTS, ORDER_BUMP_PRODUCT, ORDER_BUMP_ID } from './productData';
+import { PRODUCTS, ORDER_BUMP_PRODUCT, ORDER_BUMP_ID, ORDER_BUMP_2_PRODUCT, ORDER_BUMP_2_ID } from './productData';
 import { sendOrderConfirmation, scheduleLogisticsSequence } from './email/emailService';
 import type { OrderInfo } from './email/templates';
 import { resolveLocale } from './email/templates';
@@ -142,6 +142,23 @@ export class WebhookHandlers {
         })
         .filter((i): i is { name: string; quantity: number; price: number } => i !== null);
 
+      if (pi.metadata?.order_bump === ORDER_BUMP_ID) {
+        const localeKey = locale as keyof typeof ORDER_BUMP_PRODUCT.translations;
+        resolvedItems.push({
+          name: ORDER_BUMP_PRODUCT.translations[localeKey]?.name || ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
+          quantity: 1,
+          price: ORDER_BUMP_PRODUCT.price / 100,
+        });
+      }
+      if (pi.metadata?.order_bump_2 === ORDER_BUMP_2_ID) {
+        const localeKey = locale as keyof typeof ORDER_BUMP_2_PRODUCT.translations;
+        resolvedItems.push({
+          name: ORDER_BUMP_2_PRODUCT.translations[localeKey]?.name || ORDER_BUMP_2_PRODUCT.translations['pt-BR'].name,
+          quantity: 1,
+          price: ORDER_BUMP_2_PRODUCT.price / 100,
+        });
+      }
+
       const shippingAddr = pi.shipping
         ? [
             pi.shipping.address?.line1,
@@ -261,7 +278,10 @@ export class WebhookHandlers {
         return sum + (product?.price ?? 0) * ci.quantity;
       }, 0);
       const orderBumpId = pi.metadata?.order_bump || '';
-      const totalEurWithBump = totalEurCents + (orderBumpId === ORDER_BUMP_ID ? ORDER_BUMP_PRODUCT.price : 0);
+      const orderBump2Id = pi.metadata?.order_bump_2 || '';
+      const totalEurWithBump = totalEurCents
+        + (orderBumpId === ORDER_BUMP_ID ? ORDER_BUMP_PRODUCT.price : 0)
+        + (orderBump2Id === ORDER_BUMP_2_ID ? ORDER_BUMP_2_PRODUCT.price : 0);
       const totalEurBase = totalEurWithBump > 0 ? totalEurWithBump : orderValueEurCents;
 
       // Proportional conversion: product_brl = round(totalBrl * product_eur / total_eur)
@@ -294,7 +314,6 @@ export class WebhookHandlers {
         });
       }
 
-      // Include order bump if selected
       if (orderBumpId === ORDER_BUMP_ID) {
         products.push({
           id: ORDER_BUMP_PRODUCT.id,
@@ -303,6 +322,16 @@ export class WebhookHandlers {
           name: ORDER_BUMP_PRODUCT.translations['pt-BR'].name,
           quantity: 1,
           priceInCents: toBrl(ORDER_BUMP_PRODUCT.price),
+        });
+      }
+      if (orderBump2Id === ORDER_BUMP_2_ID) {
+        products.push({
+          id: ORDER_BUMP_2_PRODUCT.id,
+          planId: ORDER_BUMP_2_PRODUCT.id,
+          planName: ORDER_BUMP_2_PRODUCT.translations['pt-BR'].name,
+          name: ORDER_BUMP_2_PRODUCT.translations['pt-BR'].name,
+          quantity: 1,
+          priceInCents: toBrl(ORDER_BUMP_2_PRODUCT.price),
         });
       }
 

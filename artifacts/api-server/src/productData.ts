@@ -83,6 +83,45 @@ export const ORDER_BUMP_PRODUCT: OrderBumpProduct = {
   },
 };
 
+export const ORDER_BUMP_2_PRICE = 4700;
+export const ORDER_BUMP_2_ORIGINAL_PRICE = 9400;
+export const ORDER_BUMP_2_ID = 'order-bump-100packs';
+
+export const ORDER_BUMP_2_PRODUCT: OrderBumpProduct = {
+  id: ORDER_BUMP_2_ID,
+  price: ORDER_BUMP_2_PRICE,
+  originalPrice: ORDER_BUMP_2_ORIGINAL_PRICE,
+  currency: 'eur',
+  image: '/assets/100packs_1780519884607.webp',
+  stripeProductName: 'Box 100 Packs FIFA World Cup 2026 – Order Bump',
+  translations: {
+    'pt-BR': {
+      name: 'Caixa com 100 Envelopes – 700 Figurinhas Oficiais',
+      shortDescription: '100 envelopes × 7 figurinhas = 700 figurinhas oficiais FIFA World Cup 2026™',
+    },
+    'en': {
+      name: 'Box with 100 Packs – 700 Official Stickers',
+      shortDescription: '100 packs × 7 stickers = 700 official FIFA World Cup 2026™ stickers',
+    },
+    'es': {
+      name: 'Caja con 100 Sobres – 700 Cromos Oficiales',
+      shortDescription: '100 sobres × 7 cromos = 700 cromos oficiales Copa Mundial FIFA 2026™',
+    },
+    'de': {
+      name: 'Box mit 100 Tüten – 700 offizielle Sticker',
+      shortDescription: '100 Tüten × 7 Sticker = 700 offizielle FIFA World Cup 2026™ Sticker',
+    },
+    'fr': {
+      name: 'Boite avec 100 Pochettes – 700 Stickers Officiels',
+      shortDescription: '100 pochettes × 7 stickers = 700 stickers officiels FIFA World Cup 2026™',
+    },
+    'it': {
+      name: 'Scatola con 100 Bustine – 700 Figurine Ufficiali',
+      shortDescription: '100 bustine × 7 figurine = 700 figurine ufficiali FIFA World Cup 2026™',
+    },
+  },
+};
+
 export const PRODUCTS: ProductData[] = [
   {
     id: 'box-100-packs',
@@ -98,7 +137,7 @@ export const PRODUCTS: ProductData[] = [
       '/assets/de2-boxbundle-008_1780429019744.webp',
       '/assets/de2-boxbundle-009_1780429019741.webp',
     ],
-    price: 3600,
+    price: 6700,
     originalPrice: 7900,
     currency: 'eur',
     priceId: '',

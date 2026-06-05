@@ -43,6 +43,39 @@ const ORDER_BUMP = {
   } as Record<string, { name: string; shortDescription: string }>,
 };
 
+const ORDER_BUMP_2 = {
+  id: 'order-bump-100packs',
+  price: 4700,
+  originalPrice: 9400,
+  image: '/assets/100packs_1780519884607.webp',
+  translations: {
+    'pt-BR': {
+      name: 'Caixa com 100 Envelopes – 700 Figurinhas Oficiais',
+      shortDescription: '100 envelopes × 7 figurinhas = 700 figurinhas oficiais FIFA World Cup 2026™',
+    },
+    'en': {
+      name: 'Box with 100 Packs – 700 Official Stickers',
+      shortDescription: '100 packs × 7 stickers = 700 official FIFA World Cup 2026™ stickers',
+    },
+    'es': {
+      name: 'Caja con 100 Sobres – 700 Cromos Oficiales',
+      shortDescription: '100 sobres × 7 cromos = 700 cromos oficiales Copa Mundial FIFA 2026™',
+    },
+    'de': {
+      name: 'Box mit 100 Tüten – 700 offizielle Sticker',
+      shortDescription: '100 Tüten × 7 Sticker = 700 offizielle FIFA World Cup 2026™ Sticker',
+    },
+    'fr': {
+      name: 'Boite avec 100 Pochettes – 700 Stickers Officiels',
+      shortDescription: '100 pochettes × 7 stickers = 700 stickers officiels FIFA World Cup 2026™',
+    },
+    'it': {
+      name: 'Scatola con 100 Bustine – 700 Figurine Ufficiali',
+      shortDescription: '100 bustine × 7 figurine = 700 figurine ufficiali FIFA World Cup 2026™',
+    },
+  } as Record<string, { name: string; shortDescription: string }>,
+};
+
 const getItemName = (item: CartItem, lang: string): string => {
   if (item.translations) {
     return item.translations[lang]?.name
@@ -121,11 +154,12 @@ interface PaymentFormProps {
   amountTotal: number;
   shipping: ShippingData;
   items: CartItem[];
-  orderBumpSelected: boolean;
+  orderBump1Selected: boolean;
+  orderBump2Selected: boolean;
   paymentIntentId: string;
 }
 
-function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: PaymentFormProps) {
+function PaymentForm({ shipping, items, orderBump1Selected, orderBump2Selected, paymentIntentId }: PaymentFormProps) {
   const { t, i18n } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
@@ -150,23 +184,30 @@ function PaymentForm({ shipping, items, orderBumpSelected, paymentIntentId }: Pa
         currency: item.currency,
         image: item.image,
       }));
-      const allOrderItems = orderBumpSelected
-        ? [
-            ...baseOrderItems,
-            {
-              name: ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['en']?.name || ORDER_BUMP.translations['pt-BR'].name,
-              translations: ORDER_BUMP.translations,
-              quantity: 1,
-              price: ORDER_BUMP.price / 100,
-              originalPrice: ORDER_BUMP.originalPrice / 100,
-              currency: 'eur',
-              image: ORDER_BUMP.image,
-            },
-          ]
-        : baseOrderItems;
+      const allOrderItems = [
+        ...baseOrderItems,
+        ...(orderBump2Selected ? [{
+          name: ORDER_BUMP_2.translations[i18n.language]?.name || ORDER_BUMP_2.translations['en']?.name || ORDER_BUMP_2.translations['pt-BR'].name,
+          translations: ORDER_BUMP_2.translations,
+          quantity: 1,
+          price: ORDER_BUMP_2.price / 100,
+          originalPrice: ORDER_BUMP_2.originalPrice / 100,
+          currency: 'eur',
+          image: ORDER_BUMP_2.image,
+        }] : []),
+        ...(orderBump1Selected ? [{
+          name: ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['en']?.name || ORDER_BUMP.translations['pt-BR'].name,
+          translations: ORDER_BUMP.translations,
+          quantity: 1,
+          price: ORDER_BUMP.price / 100,
+          originalPrice: ORDER_BUMP.originalPrice / 100,
+          currency: 'eur',
+          image: ORDER_BUMP.image,
+        }] : []),
+      ];
       sessionStorage.setItem('panini_order_items', JSON.stringify(allOrderItems));
       sessionStorage.setItem('panini_order_shipping', JSON.stringify(shipping));
-      sessionStorage.setItem('panini_order_bump', JSON.stringify(orderBumpSelected));
+      sessionStorage.setItem('panini_order_bump', JSON.stringify(orderBump1Selected));
       if (paymentIntentId) {
         sessionStorage.setItem('panini_payment_intent_id', paymentIntentId);
       }
@@ -245,8 +286,10 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [isProceedingToPayment, setIsProceedingToPayment] = useState(false);
   const [proceedError, setProceedError] = useState<string | null>(null);
-  const [orderBumpSelected, setOrderBumpSelected] = useState(false);
-  const [isUpdatingBump, setIsUpdatingBump] = useState(false);
+  const [orderBump1Selected, setOrderBump1Selected] = useState(false);
+  const [orderBump2Selected, setOrderBump2Selected] = useState(false);
+  const [isUpdatingBump1, setIsUpdatingBump1] = useState(false);
+  const [isUpdatingBump2, setIsUpdatingBump2] = useState(false);
   const [detectedCountry, setDetectedCountry] = useState<string>('DE');
   const [shipping, setShipping] = useState<ShippingData>({
     email: '',
@@ -345,7 +388,8 @@ export default function CheckoutPage() {
           setClientSecret(data.clientSecret);
           setAmountTotal(data.amountTotal);
           setPaymentIntentId(data.paymentIntentId || '');
-          setOrderBumpSelected(false);
+          setOrderBump1Selected(false);
+          setOrderBump2Selected(false);
           setStep('payment');
           setIsProceedingToPayment(false);
           setProceedError(null);
@@ -376,24 +420,44 @@ export default function CheckoutPage() {
     );
   };
 
-  const handleToggleOrderBump = async () => {
-    if (!paymentIntentId || isUpdatingBump) return;
-    const nextSelected = !orderBumpSelected;
-    setIsUpdatingBump(true);
+  const handleToggleBump1 = async () => {
+    if (!paymentIntentId || isUpdatingBump1 || isUpdatingBump2) return;
+    const next1 = !orderBump1Selected;
+    setIsUpdatingBump1(true);
     try {
       const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || '';
       const res = await fetch(`${apiBase}/api/checkout/payment-intent/${paymentIntentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ addOrderBump: nextSelected }),
+        body: JSON.stringify({ addOrderBump1: next1, addOrderBump2: orderBump2Selected }),
       });
       if (res.ok) {
         const data = await res.json();
         setAmountTotal(data.amountTotal);
-        setOrderBumpSelected(nextSelected);
+        setOrderBump1Selected(next1);
       }
     } catch {}
-    setIsUpdatingBump(false);
+    setIsUpdatingBump1(false);
+  };
+
+  const handleToggleBump2 = async () => {
+    if (!paymentIntentId || isUpdatingBump1 || isUpdatingBump2) return;
+    const next2 = !orderBump2Selected;
+    setIsUpdatingBump2(true);
+    try {
+      const apiBase = (import.meta as any).env?.VITE_API_BASE_URL || '';
+      const res = await fetch(`${apiBase}/api/checkout/payment-intent/${paymentIntentId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ addOrderBump1: orderBump1Selected, addOrderBump2: next2 }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAmountTotal(data.amountTotal);
+        setOrderBump2Selected(next2);
+      }
+    } catch {}
+    setIsUpdatingBump2(false);
   };
 
   if (items.length === 0) {
@@ -490,14 +554,30 @@ export default function CheckoutPage() {
                   </div>
                 ))}
 
-                {/* Order bump line in summary when selected */}
-                {step === 'payment' && orderBumpSelected && (
+                {step === 'payment' && orderBump2Selected && (
                   <div className="flex items-center gap-4 py-3 border-b last:border-0">
                     <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                      <img src={ORDER_BUMP.image} alt={t('orderBump.title')} className="h-full w-full object-cover" />
+                      <img src={ORDER_BUMP_2.image} alt={ORDER_BUMP_2.translations[i18n.language]?.name || ORDER_BUMP_2.translations['pt-BR'].name} className="h-full w-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold">{t('orderBump.title')}</p>
+                      <p className="font-semibold">{ORDER_BUMP_2.translations[i18n.language]?.name || ORDER_BUMP_2.translations['pt-BR'].name}</p>
+                      <p className="text-sm text-muted-foreground">{t('checkout.quantity')}: 1</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[12px] text-[#999] line-through leading-none">
+                        {formatPrice(ORDER_BUMP_2.originalPrice / 100)}
+                      </p>
+                      <p className="font-bold text-primary">{formatPrice(ORDER_BUMP_2.price / 100)}</p>
+                    </div>
+                  </div>
+                )}
+                {step === 'payment' && orderBump1Selected && (
+                  <div className="flex items-center gap-4 py-3 border-b last:border-0">
+                    <div className="h-16 w-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                      <img src={ORDER_BUMP.image} alt={ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['pt-BR'].name} className="h-full w-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold">{ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['pt-BR'].name}</p>
                       <p className="text-sm text-muted-foreground">{t('checkout.quantity')}: 1</p>
                     </div>
                     <div className="text-right">
@@ -513,7 +593,8 @@ export default function CheckoutPage() {
                 {(() => {
                   const totalOriginal = items.reduce((sum, item) =>
                     sum + ((item.originalPrice ?? item.price) * item.quantity), 0)
-                    + (step === 'payment' && orderBumpSelected ? ORDER_BUMP.originalPrice / 100 : 0);
+                    + (step === 'payment' && orderBump2Selected ? ORDER_BUMP_2.originalPrice / 100 : 0)
+                    + (step === 'payment' && orderBump1Selected ? ORDER_BUMP.originalPrice / 100 : 0);
                   const savings = totalOriginal - effectiveTotal;
                   const hasDiscount = savings > 0.001;
                   return (
@@ -737,62 +818,56 @@ export default function CheckoutPage() {
             </div>
           </Card>
 
-          {/* Order Bump card — shown only after shipping step */}
+          {/* Order Bump 2 (100 packs) — shown first, only after shipping step */}
           {step === 'payment' && (
             <Card
               className="shadow-sm overflow-hidden border-2"
               style={{
-                borderColor: orderBumpSelected ? '#FFD600' : '#e5e7eb',
-                background: orderBumpSelected ? 'rgba(255,214,0,0.04)' : undefined,
+                borderColor: orderBump2Selected ? '#FFD600' : '#e5e7eb',
+                background: orderBump2Selected ? 'rgba(255,214,0,0.04)' : undefined,
                 transition: 'border-color 250ms ease, background 250ms ease',
               }}
             >
               <CardContent className="p-0">
-                {/* Header banner */}
                 <div className="flex items-center gap-2 px-5 py-3 border-b" style={{ background: '#FFD600' }}>
                   <Tag className="h-4 w-4 text-[#1a1a1a]" />
                   <span className="text-sm font-black uppercase tracking-widest text-[#1a1a1a]">
                     {t('orderBump.exclusiveOffer')}
                   </span>
                 </div>
-
                 <div className="flex gap-4 p-5">
-                  {/* Image */}
                   <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-muted">
                     <img
-                      src={ORDER_BUMP.image}
-                      alt={t('orderBump.title')}
+                      src={ORDER_BUMP_2.image}
+                      alt={ORDER_BUMP_2.translations[i18n.language]?.name || ORDER_BUMP_2.translations['pt-BR'].name}
                       className="w-full h-full object-cover"
                     />
                   </div>
-
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
-                    {/* Badge */}
                     <span
                       className="inline-block text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded mb-1"
                       style={{ background: '#e00', color: '#fff' }}
                     >
                       {t('orderBump.badge')}
                     </span>
-                    <p className="font-bold text-sm leading-snug mb-1">{t('orderBump.title')}</p>
-                    <p className="text-xs text-muted-foreground leading-snug mb-2">{t('orderBump.shortDesc')}</p>
-
-                    {/* Pricing */}
+                    <p className="font-bold text-sm leading-snug mb-1">
+                      {ORDER_BUMP_2.translations[i18n.language]?.name || ORDER_BUMP_2.translations['pt-BR'].name}
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-snug mb-2">
+                      {ORDER_BUMP_2.translations[i18n.language]?.shortDescription || ORDER_BUMP_2.translations['pt-BR'].shortDescription}
+                    </p>
                     <div className="flex items-baseline gap-2">
                       <span className="text-sm text-[#999] line-through">
-                        {formatPrice(ORDER_BUMP.originalPrice / 100)}
+                        {formatPrice(ORDER_BUMP_2.originalPrice / 100)}
                       </span>
                       <span className="text-xl font-black text-primary">
-                        {formatPrice(ORDER_BUMP.price / 100)}
+                        {formatPrice(ORDER_BUMP_2.price / 100)}
                       </span>
                     </div>
                   </div>
                 </div>
-
-                {/* Add/Added button */}
                 <div className="px-5 pb-5">
-                  {orderBumpSelected ? (
+                  {orderBump2Selected ? (
                     <div
                       className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 opacity-60 cursor-default"
                       style={{ background: '#22c55e', color: '#fff', border: '1.5px solid #22c55e' }}
@@ -803,12 +878,85 @@ export default function CheckoutPage() {
                   ) : (
                     <button
                       type="button"
-                      onClick={handleToggleOrderBump}
-                      disabled={isUpdatingBump}
+                      onClick={handleToggleBump2}
+                      disabled={isUpdatingBump1 || isUpdatingBump2}
                       className="btn-pulse w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                       style={{ background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }}
                     >
-                      {isUpdatingBump ? t('general.loading') : t('orderBump.addButton')}
+                      {isUpdatingBump2 ? t('general.loading') : t('orderBump.addButton')}
+                    </button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Order Bump 1 (50 packs) — shown second */}
+          {step === 'payment' && (
+            <Card
+              className="shadow-sm overflow-hidden border-2"
+              style={{
+                borderColor: orderBump1Selected ? '#FFD600' : '#e5e7eb',
+                background: orderBump1Selected ? 'rgba(255,214,0,0.04)' : undefined,
+                transition: 'border-color 250ms ease, background 250ms ease',
+              }}
+            >
+              <CardContent className="p-0">
+                <div className="flex items-center gap-2 px-5 py-3 border-b" style={{ background: '#FFD600' }}>
+                  <Tag className="h-4 w-4 text-[#1a1a1a]" />
+                  <span className="text-sm font-black uppercase tracking-widest text-[#1a1a1a]">
+                    {t('orderBump.exclusiveOffer')}
+                  </span>
+                </div>
+                <div className="flex gap-4 p-5">
+                  <div className="flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-muted">
+                    <img
+                      src={ORDER_BUMP.image}
+                      alt={ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['pt-BR'].name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span
+                      className="inline-block text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded mb-1"
+                      style={{ background: '#e00', color: '#fff' }}
+                    >
+                      {t('orderBump.badge')}
+                    </span>
+                    <p className="font-bold text-sm leading-snug mb-1">
+                      {ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['pt-BR'].name}
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-snug mb-2">
+                      {ORDER_BUMP.translations[i18n.language]?.shortDescription || ORDER_BUMP.translations['pt-BR'].shortDescription}
+                    </p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-sm text-[#999] line-through">
+                        {formatPrice(ORDER_BUMP.originalPrice / 100)}
+                      </span>
+                      <span className="text-xl font-black text-primary">
+                        {formatPrice(ORDER_BUMP.price / 100)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="px-5 pb-5">
+                  {orderBump1Selected ? (
+                    <div
+                      className="w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 opacity-60 cursor-default"
+                      style={{ background: '#22c55e', color: '#fff', border: '1.5px solid #22c55e' }}
+                    >
+                      <Check className="h-4 w-4" />
+                      {t('orderBump.addedButton')}
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleToggleBump1}
+                      disabled={isUpdatingBump1 || isUpdatingBump2}
+                      className="btn-pulse w-full h-12 rounded-md font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      style={{ background: '#FFD600', color: '#1a1a1a', border: '1.5px solid #FFD600' }}
+                    >
+                      {isUpdatingBump1 ? t('general.loading') : t('orderBump.addButton')}
                     </button>
                   )}
                 </div>
@@ -850,7 +998,8 @@ export default function CheckoutPage() {
                     amountTotal={amountTotal}
                     shipping={shipping}
                     items={items}
-                    orderBumpSelected={orderBumpSelected}
+                    orderBump1Selected={orderBump1Selected}
+                    orderBump2Selected={orderBump2Selected}
                     paymentIntentId={paymentIntentId}
                   />
                 </Elements>

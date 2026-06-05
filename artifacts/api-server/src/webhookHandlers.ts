@@ -5,7 +5,64 @@ import type { OrderInfo } from './email/templates';
 import { resolveLocale } from './email/templates';
 import { createHash } from 'crypto';
 import { db } from '@workspace/db';
+import { paymentsTable } from '@workspace/db';
 import { sql } from 'drizzle-orm';
+
+async function upsertPayment(pi: any): Promise<void> {
+  try {
+    let cartItems = null;
+    try { cartItems = JSON.parse(pi.metadata?.cart_items || 'null'); } catch {}
+    const row = {
+      id: pi.id,
+      amount: pi.amount,
+      amountReceived: pi.amount_received ?? null,
+      currency: pi.currency || 'eur',
+      status: pi.status,
+      livemode: pi.livemode ?? false,
+      createdAt: new Date(pi.created * 1000),
+      customerId: typeof pi.customer === 'string' ? pi.customer : (pi.customer?.id ?? null),
+      customerEmail: pi.metadata?.customer_real_email || null,
+      customerName: pi.shipping?.name || null,
+      receiptEmail: pi.receipt_email || null,
+      cartItems,
+      orderBump: pi.metadata?.order_bump || null,
+      orderBump2: pi.metadata?.order_bump_2 || null,
+      utmSource: pi.metadata?.utm_source || null,
+      utmMedium: pi.metadata?.utm_medium || null,
+      utmCampaign: pi.metadata?.utm_campaign || null,
+      utmContent: pi.metadata?.utm_content || null,
+      utmTerm: pi.metadata?.utm_term || null,
+      locale: pi.metadata?.locale || null,
+      lastPaymentError: pi.last_payment_error?.message || null,
+      shipping: pi.shipping || null,
+      paymentMethod: typeof pi.payment_method === 'string' ? pi.payment_method : (pi.payment_method?.id ?? null),
+      syncedAt: new Date(),
+    };
+    await db
+      .insert(paymentsTable)
+      .values(row)
+      .onConflictDoUpdate({
+        target: paymentsTable.id,
+        set: {
+          amount: sql`excluded.amount`,
+          amountReceived: sql`excluded.amount_received`,
+          status: sql`excluded.status`,
+          customerEmail: sql`excluded.customer_email`,
+          customerName: sql`excluded.customer_name`,
+          receiptEmail: sql`excluded.receipt_email`,
+          cartItems: sql`excluded.cart_items`,
+          orderBump: sql`excluded.order_bump`,
+          orderBump2: sql`excluded.order_bump_2`,
+          lastPaymentError: sql`excluded.last_payment_error`,
+          shipping: sql`excluded.shipping`,
+          paymentMethod: sql`excluded.payment_method`,
+          syncedAt: sql`excluded.synced_at`,
+        },
+      });
+  } catch (err) {
+    console.error('[webhook] upsertPayment error:', err);
+  }
+}
 
 const FB_PIXEL_ID = '1622885129012772';
 const FB_API_VERSION = 'v18.0';
@@ -74,6 +131,9 @@ export class WebhookHandlers {
     if (event.type === 'payment_intent.succeeded') {
       const pi = event.data.object as any;
 
+      // Always upsert payment record regardless of idempotency (status may update)
+      await upsertPayment(pi);
+
       // Two independent idempotency keys so subscription can still be created
       // even if the main processing (email/CAPI/UTMify) was done by an older
       // deployment that didn't have subscription logic yet.
@@ -105,6 +165,14 @@ export class WebhookHandlers {
         await markAsProcessed(subKey);
         await WebhookHandlers.createSubscriptionForOrder(pi);
       }
+    } else if (
+      event.type === 'payment_intent.payment_failed' ||
+      event.type === 'payment_intent.canceled' ||
+      event.type === 'payment_intent.created' ||
+      event.type === 'payment_intent.processing'
+    ) {
+      const pi = event.data.object as any;
+      await upsertPayment(pi);
     }
   }
 

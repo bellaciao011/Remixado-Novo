@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import logo from '@assets/Panini-logo_1780421261996.webp';
+import { saveExplicitLang } from '../i18n';
 
 const languages = [
   { code: 'pt-BR', label: 'Português', flag: '🇧🇷' },
@@ -66,7 +67,7 @@ export function Header() {
               {languages.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
-                  onClick={() => i18n.changeLanguage(lang.code)}
+                  onClick={() => { saveExplicitLang(lang.code); i18n.changeLanguage(lang.code); }}
                   className="cursor-pointer flex items-center gap-2 font-medium"
                 >
                   <span className="text-lg w-6">{lang.flag}</span>

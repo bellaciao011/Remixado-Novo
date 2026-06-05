@@ -20,7 +20,12 @@ const resources = {
 type SupportedLang = 'pt-BR' | 'en' | 'es' | 'de' | 'fr' | 'it';
 const SUPPORTED: SupportedLang[] = ['pt-BR', 'en', 'es', 'de', 'fr', 'it'];
 
-const STORAGE_KEY = '_panini_lng';
+/**
+ * Key for EXPLICIT user choices (clicking the language selector).
+ * Separate from old auto-saved key to avoid stale 'en' fallbacks
+ * from before French/Italian were added to the supported list.
+ */
+const MANUAL_KEY = '_panini_lng_manual';
 
 /**
  * Resolves a raw BCP-47 tag to a supported language using:
@@ -56,7 +61,7 @@ function pickLanguage(candidates: readonly string[]): { lang: SupportedLang; con
 const COUNTRY_LANG: Record<string, SupportedLang> = {
   BR: 'pt-BR', PT: 'pt-BR', AO: 'pt-BR', MZ: 'pt-BR', CV: 'pt-BR',
   ST: 'pt-BR', GW: 'pt-BR', TL: 'pt-BR',
-  DE: 'de', AT: 'de', LI: 'de',
+  DE: 'de', AT: 'de', LI: 'de', CH: 'de',
   ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es',
   VE: 'es', EC: 'es', BO: 'es', PY: 'es', UY: 'es', CU: 'es',
   DO: 'es', GT: 'es', HN: 'es', SV: 'es', NI: 'es', CR: 'es',
@@ -69,17 +74,25 @@ const COUNTRY_LANG: Record<string, SupportedLang> = {
   IT: 'it', SM: 'it', VA: 'it',
 };
 
-/** Read saved language from localStorage (user preference persists across sessions). */
-function loadSaved(): SupportedLang | null {
+/**
+ * Load explicit manual language choice saved by the language selector.
+ * Ignores the legacy auto-saved key (_panini_lng) which could have been
+ * set to 'en' as a fallback for FR/IT users before those languages existed.
+ */
+function loadManual(): SupportedLang | null {
   try {
-    const v = localStorage.getItem(STORAGE_KEY);
+    const v = localStorage.getItem(MANUAL_KEY);
     return v && SUPPORTED.includes(v as SupportedLang) ? (v as SupportedLang) : null;
   } catch { return null; }
 }
 
-/** Persist language choice so the selector remembers it on next visit. */
-function saveLang(lang: string): void {
-  try { localStorage.setItem(STORAGE_KEY, lang); } catch { /* blocked */ }
+/**
+ * Persist an EXPLICIT user choice (only called from the language selector).
+ * This is the only place we write to storage — auto-detected languages are
+ * never persisted so they don't block future correct browser detection.
+ */
+export function saveExplicitLang(lang: string): void {
+  try { localStorage.setItem(MANUAL_KEY, lang); } catch { /* blocked */ }
 }
 
 /**
@@ -114,7 +127,7 @@ async function detectByIP(): Promise<SupportedLang | null> {
 }
 
 // ─── Language resolution order ────────────────────────────────────────────────
-// 1. Saved user preference (localStorage) — always wins
+// 1. Explicit manual choice (localStorage MANUAL_KEY) — always wins
 // 2. Browser navigator.languages (synchronous, no network)
 // 3. IP geolocation (async, only when browser detection was inconclusive)
 // 4. English as universal fallback
@@ -124,11 +137,11 @@ const browserLangs: readonly string[] =
     ? (navigator.languages?.length ? [...navigator.languages] : [navigator.language ?? 'en'])
     : ['en'];
 
-const saved = loadSaved();
+const manual = loadManual();
 const { lang: browserLang, confident } = pickLanguage(browserLangs);
 
-// Saved preference takes priority; otherwise use browser-detected language
-const initialLang: SupportedLang = saved ?? browserLang;
+// Manual explicit choice wins; otherwise use what the browser reports
+const initialLang: SupportedLang = manual ?? browserLang;
 
 i18n
   .use(initReactI18next)
@@ -139,15 +152,10 @@ i18n
     interpolation: { escapeValue: false }
   });
 
-// Persist every language change (manual selector or programmatic)
-i18n.on('languageChanged', (lng: string) => {
-  saveLang(lng);
-});
-
 // ─── Async IP refinement ──────────────────────────────────────────────────────
-// Only fires when there is no saved preference AND the browser provided no
+// Only fires when there is no manual preference AND the browser provided no
 // recognisable language (e.g. user in Japan with browser set to 'ja').
-if (!saved && !confident) {
+if (!manual && !confident) {
   detectByIP().then(lang => {
     if (lang && lang !== i18n.language) {
       i18n.changeLanguage(lang);

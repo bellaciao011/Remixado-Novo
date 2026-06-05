@@ -5,7 +5,7 @@ import { useCart, CartItem } from '../contexts/CartContext';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from './ui/sheet';
 import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
-import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft, X } from 'lucide-react';
 
 const formatPrice = (price: number, currency = 'eur') => {
   const cur = currency.toUpperCase();
@@ -37,9 +37,18 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-      <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
-        <SheetHeader className="p-6 border-b">
-          <SheetTitle className="text-2xl font-bold">{t('cart.title')}</SheetTitle>
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0 h-[100dvh] [&>button:first-child]:hidden">
+        <SheetHeader className="flex-shrink-0 p-4 border-b">
+          <div className="flex items-center justify-between">
+            <SheetTitle className="text-xl font-bold">{t('cart.title')}</SheetTitle>
+            <button
+              onClick={() => setIsCartOpen(false)}
+              className="flex items-center justify-center h-10 w-10 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+              aria-label="Fechar carrinho"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
           <SheetDescription className="sr-only">{t('cart.title')}</SheetDescription>
         </SheetHeader>
 

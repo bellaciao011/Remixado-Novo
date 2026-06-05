@@ -219,6 +219,8 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, orderBu
       }
     } catch {}
 
+    await elements.fetchUpdates().catch(() => {});
+
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: 'if_required',

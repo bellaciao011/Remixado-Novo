@@ -244,7 +244,7 @@ function PaymentForm({ shipping, items, orderBump1Selected, orderBump2Selected, 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <PaymentElement options={{ terms: { card: 'never' } }} />
+      <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' } }} />
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">

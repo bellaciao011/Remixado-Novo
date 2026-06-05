@@ -47,7 +47,7 @@ const ORDER_BUMP_2 = {
   id: 'order-bump-100packs',
   price: 4700,
   originalPrice: 9400,
-  image: '/assets/100packs_1780519884607.webp',
+  image: '/assets/figurinhas_1780497538703.webp',
   translations: {
     'pt-BR': {
       name: 'Caixa com 100 Envelopes – 700 Figurinhas Oficiais',

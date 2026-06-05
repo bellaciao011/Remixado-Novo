@@ -159,13 +159,19 @@ interface PaymentFormProps {
   paymentIntentId: string;
 }
 
-function PaymentForm({ shipping, items, orderBump1Selected, orderBump2Selected, paymentIntentId }: PaymentFormProps) {
+function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, orderBump2Selected, paymentIntentId }: PaymentFormProps) {
   const { t, i18n } = useTranslation();
   const stripe = useStripe();
   const elements = useElements();
   const [, navigate] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [stripeError, setStripeError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (elements) {
+      elements.fetchUpdates().catch(() => {});
+    }
+  }, [amountTotal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

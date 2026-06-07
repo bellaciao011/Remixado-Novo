@@ -32,12 +32,6 @@ export function fbq(event: string, params?: Record<string, unknown>, _retries = 
   }
 }
 
-export function gtagEvent(eventName: string, params?: Record<string, unknown>) {
-  if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
-    (window as any).gtag('event', eventName, params);
-  }
-}
-
 export async function sendCapiEvent(eventName: string, data: {
   email?: string | null;
   firstName?: string | null;

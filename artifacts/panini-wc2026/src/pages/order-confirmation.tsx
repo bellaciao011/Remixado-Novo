@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fbq, utmifyEvent, gtagEvent } from '@/lib/tracking';
+import { fbq, utmifyEvent } from '@/lib/tracking';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
@@ -142,22 +142,6 @@ export default function OrderConfirmation() {
       // UTMify — Purchase (with retry if pixel not yet loaded)
       try {
         utmifyEvent('Purchase', { value: orderValue, currency: 'EUR' });
-      } catch { /* ignore */ }
-
-      // Google Analytics — purchase event
-      try {
-        // @ts-ignore
-        window.dataLayer = window.dataLayer || [];
-        gtagEvent('purchase', {
-          transaction_id: paymentIntentRef,
-          value: orderValue,
-          currency: 'EUR',
-          items: storedItems.map(i => ({
-            item_name: i.name,
-            quantity: i.quantity,
-            price: i.price,
-          })),
-        });
       } catch { /* ignore */ }
 
       // Facebook Pixel — Purchase (event_id for deduplication with CAPI)

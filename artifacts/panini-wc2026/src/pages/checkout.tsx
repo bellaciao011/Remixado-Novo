@@ -746,10 +746,12 @@ export default function CheckoutPage() {
             </div>
           </Card>
 
+          {/* Order Bump anchor — scroll target */}
+          <div ref={orderBumpRef} style={{ scrollMarginTop: '16px' }} />
+
           {/* Order Bump (50 packs) */}
           {step === 'payment' && (
             <Card
-              ref={orderBumpRef as React.RefObject<HTMLDivElement>}
               className="shadow-sm overflow-hidden border-2"
               style={{
                 borderColor: orderBump1Selected ? '#FFD600' : '#e5e7eb',

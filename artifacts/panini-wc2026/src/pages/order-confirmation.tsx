@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-
+import { fbq, utmifyEvent, gtagEvent } from '@/lib/tracking';
 import { useSearch } from 'wouter';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
@@ -133,6 +133,47 @@ export default function OrderConfirmation() {
       clearCart();
       clearedRef.current = true;
 
+      const orderValue = data.amountTotal ?? 0;
+      const contentIds = storedItems.map(i => i.name).filter(Boolean);
+      const numItems = storedItems.reduce((s, i) => s + i.quantity, 0);
+      const paymentIntentRef = (data as any).paymentIntentId || paymentIntentId || '';
+      const eventId = `purchase_${paymentIntentRef || Date.now()}`;
+
+      // UTMify — Purchase (with retry if pixel not yet loaded)
+      try {
+        utmifyEvent('Purchase', { value: orderValue, currency: 'EUR' });
+      } catch { /* ignore */ }
+
+      // Google Analytics — purchase event
+      try {
+        // @ts-ignore
+        window.dataLayer = window.dataLayer || [];
+        gtagEvent('purchase', {
+          transaction_id: paymentIntentRef,
+          value: orderValue,
+          currency: 'EUR',
+          items: storedItems.map(i => ({
+            item_name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+          })),
+        });
+      } catch { /* ignore */ }
+
+      // Facebook Pixel — Purchase (event_id for deduplication with CAPI)
+      try {
+        fbq('Purchase', {
+          value: orderValue,
+          currency: 'EUR',
+          content_ids: contentIds,
+          num_items: numItems || 1,
+          eventID: eventId,
+        });
+      } catch { /* ignore */ }
+
+      // Facebook CAPI is handled server-side by the Stripe webhook (firePurchaseCapi).
+      // Firing CAPI here from the browser as well would create a second event
+      // with the same event_id — unreliable deduplication depending on network timing.
     }
   }, [data?.status, clearCart]);
 

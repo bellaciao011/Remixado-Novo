@@ -20,6 +20,8 @@
     <!-- Preconnect to critical third-party origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://connect.facebook.net" />
+    <link rel="dns-prefetch" href="https://cdn.utmify.com.br" />
 
     <!-- Google Fonts — non-blocking via preload + onload swap -->
     <link rel="preload" as="style"
@@ -46,8 +48,61 @@
       .hero-section { width: 100%; background-color: #000000; }
     </style>
 
+    <!--
+      Analytics loading strategy:
+      ─────────────────────────────────────────────────────────────────────
+      Set VITE_FB_PIXEL_ID and VITE_UTMIFY_PIXEL_ID in environment variables
+      to enable tracking. If either is missing, initAnalytics() exits silently.
+
+      CONFIRMATION PAGE (/pedido/confirmado):
+        Analytics are loaded IMMEDIATELY so fbq and window._pixel exist
+        before React mounts and fires the Purchase event.
+
+      ALL OTHER PAGES:
+        Deferred to window.load + 200 ms to avoid blocking FCP/LCP.
+      ─────────────────────────────────────────────────────────────────────
+    -->
+    <script>
+      var FB_PIXEL_ID = '%VITE_FB_PIXEL_ID%';
+      var UTMIFY_PIXEL_ID = '%VITE_UTMIFY_PIXEL_ID%';
+
+      function initAnalytics() {
+        if (!FB_PIXEL_ID || !UTMIFY_PIXEL_ID) return;
+
+        // ── 1. Facebook Pixel ─────────────────────────────────────────
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', FB_PIXEL_ID);
+        fbq('track', 'PageView');
+
+        // ── 2. UTMify ─────────────────────────────────────────────────
+        var utms = document.createElement('script');
+        utms.async = true;
+        utms.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
+        document.head.appendChild(utms);
+
+        window.pixelId = UTMIFY_PIXEL_ID;
+        var px = document.createElement('script');
+        px.async = true;
+        px.src = 'https://cdn.utmify.com.br/scripts/pixel/pixel.js';
+        document.head.appendChild(px);
+      }
+
+      if (window.location.href.indexOf('pedido/confirmado') !== -1) {
+        initAnalytics();
+      } else {
+        window.addEventListener('load', function() {
+          setTimeout(initAnalytics, 200);
+        });
+      }
+    </script>
   </head>
   <body>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=%VITE_FB_PIXEL_ID%&ev=PageView&noscript=1" /></noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

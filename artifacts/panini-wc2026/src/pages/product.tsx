@@ -8,7 +8,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { ShoppingCart, Minus, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-
+import { fbq, sendCapiEvent } from '@/lib/tracking';
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +29,21 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (!product) return;
+    const locale = i18n.language as keyof typeof product.translations;
+    const tr = product.translations[locale] || product.translations['en'] || product.translations['pt-BR'];
+    const price = product.price / 100;
+    fbq('ViewContent', {
+      content_ids: [product.id],
+      content_name: tr.name,
+      value: price,
+      currency: 'EUR',
+    });
+    sendCapiEvent('ViewContent', {
+      contentIds: [product.id],
+      value: price,
+      currency: 'EUR',
+      eventSourceUrl: window.location.href,
+    });
   }, [product?.id]);
 
   if (isLoading) {

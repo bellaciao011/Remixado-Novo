@@ -9,7 +9,9 @@ Loja online para venda de produtos oficiais Panini da Copa do Mundo FIFA 2026, c
 **Este projeto requer suas próprias chaves da Stripe para funcionar.**
 As chaves do proprietário anterior foram removidas. Você precisa configurar as suas antes de usar.
 
-### Secrets obrigatórios (configurar em Secrets → + New Secret)
+### Secrets e variáveis de ambiente (configurar em Secrets → + New Secret)
+
+#### Stripe (obrigatório para pagamentos)
 
 | Secret | Onde obter |
 |--------|-----------|
@@ -17,6 +19,33 @@ As chaves do proprietário anterior foram removidas. Você precisa configurar as
 | `STRIPE_PUBLISHABLE_KEY` | [Dashboard Stripe](https://dashboard.stripe.com/apikeys) → Publishable key (`pk_live_...` ou `pk_test_...`) |
 | `STRIPE_WEBHOOK_SECRET` | Criado automaticamente na primeira inicialização do servidor — **deixe em branco por enquanto**. Após o servidor iniciar, copie o valor que aparece nos logs e salve aqui para evitar recriação a cada restart. |
 | `SESSION_SECRET` | Qualquer string aleatória longa (ex: gere com `openssl rand -hex 32`) |
+
+#### Tracking — Facebook Pixel + CAPI (opcional)
+
+| Variável | Tipo | Onde obter |
+|----------|------|-----------|
+| `VITE_FB_PIXEL_ID` | Env var | [Meta Events Manager](https://business.facebook.com/events_manager) → Seu Pixel → ID |
+| `FB_CAPI_ACCESS_TOKEN` | Secret | Meta Events Manager → Configurações → Conversions API → Gerar token de acesso |
+| `FB_PIXEL_ID` | Secret | Mesmo valor que `VITE_FB_PIXEL_ID` — usado pelo backend (CAPI + webhooks) |
+
+> **Nota:** Se essas variáveis não forem configuradas, o tracking é silenciosamente ignorado. A loja funciona normalmente sem elas.
+
+#### Tracking — UTMify (opcional)
+
+| Variável | Tipo | Onde obter |
+|----------|------|-----------|
+| `VITE_UTMIFY_PIXEL_ID` | Env var | [UTMify](https://app.utmify.com.br) → Pixels → ID do pixel |
+| `VITE_UTMIFY_TOKEN` | Secret | UTMify → Integrações → API → Token |
+
+> **Nota:** `VITE_*` são variáveis de ambiente (não secrets) — adicione em **Secrets** mesmo assim, o Replit as trata igual. O Vite injeta automaticamente no build do frontend.
+
+#### Email transacional — Resend (opcional)
+
+| Secret | Onde obter |
+|--------|-----------|
+| `RESEND_API_KEY` | [Resend](https://resend.com) → API Keys → Create API Key |
+
+> **Nota:** Sem `RESEND_API_KEY`, emails de confirmação e sequência logística não são enviados. A loja funciona normalmente.
 
 ### Passos para configurar
 

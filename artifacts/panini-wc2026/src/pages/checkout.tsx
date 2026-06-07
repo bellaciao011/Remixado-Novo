@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'wouter';
 import { loadStripe } from '@stripe/stripe-js';
+import { fbq, utmifyEvent, sendCapiEvent } from '@/lib/tracking';
 
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart, CartItem } from '@/contexts/CartContext';
@@ -369,6 +370,9 @@ export default function CheckoutPage() {
           const icContentIds = items.map(i => i.productId);
           const icNumItems = items.reduce((s, i) => s + i.quantity, 0);
 
+          try { fbq('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* ignore */ }
+          try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'EUR' }); } catch { /* ignore */ }
+          sendCapiEvent('InitiateCheckout', { value: icValue, currency: 'EUR', contentIds: icContentIds, numItems: icNumItems, eventSourceUrl: window.location.href });
         },
         onError: (err: any) => {
           setIsProceedingToPayment(false);

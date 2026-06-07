@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
 import { getUncachableStripeClient, setWebhookSecret } from "./stripeClient";
+import { ensureScheduledEmailsTable, startEmailWorker } from "./email/emailScheduler";
 
 async function initStripe() {
   try {
@@ -50,6 +51,10 @@ const port = Number(rawPort);
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
+
+// Create scheduled_emails table if it doesn't exist, then start email worker
+await ensureScheduledEmailsTable();
+startEmailWorker(60_000);
 
 await initStripe();
 

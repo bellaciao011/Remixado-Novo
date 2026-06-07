@@ -1,45 +1,70 @@
-# [Project name]
+# Panini FIFA World Cup 2026 Store
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Loja online para venda de produtos oficiais Panini da Copa do Mundo FIFA 2026, com checkout via Stripe, suporte a múltiplos idiomas e painel administrativo.
+
+---
+
+## ⚠️ CONFIGURAÇÃO OBRIGATÓRIA — CHAVES STRIPE
+
+**Este projeto requer suas próprias chaves da Stripe para funcionar.**
+As chaves do proprietário anterior foram removidas. Você precisa configurar as suas antes de usar.
+
+### Secrets obrigatórios (configurar em Secrets → + New Secret)
+
+| Secret | Onde obter |
+|--------|-----------|
+| `STRIPE_SECRET_KEY` | [Dashboard Stripe](https://dashboard.stripe.com/apikeys) → Secret key (`sk_live_...` ou `sk_test_...`) |
+| `STRIPE_PUBLISHABLE_KEY` | [Dashboard Stripe](https://dashboard.stripe.com/apikeys) → Publishable key (`pk_live_...` ou `pk_test_...`) |
+| `STRIPE_WEBHOOK_SECRET` | Criado automaticamente na primeira inicialização do servidor — **deixe em branco por enquanto**. Após o servidor iniciar, copie o valor que aparece nos logs e salve aqui para evitar recriação a cada restart. |
+| `SESSION_SECRET` | Qualquer string aleatória longa (ex: gere com `openssl rand -hex 32`) |
+
+### Passos para configurar
+
+1. Abra a aba **Secrets** no painel lateral do Replit (ícone de cadeado 🔒)
+2. Adicione os secrets `STRIPE_SECRET_KEY` e `STRIPE_PUBLISHABLE_KEY` com suas chaves
+3. Adicione `SESSION_SECRET` com uma string aleatória
+4. Clique em **Run** — o servidor vai iniciar e criar automaticamente o webhook na Stripe
+5. Nos logs do servidor, procure a linha com `TIP: Set STRIPE_WEBHOOK_SECRET` — copie o valor e salve como secret `STRIPE_WEBHOOK_SECRET`
+
+> **Nota:** O `STRIPE_WEBHOOK_SECRET` é opcional mas recomendado para produção. Sem ele, um novo webhook é criado na Stripe a cada reinício do servidor.
+
+---
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Servidor API: inicia automaticamente com o workflow configurado
+- `pnpm run typecheck` — typecheck completo
+- `pnpm --filter @workspace/db run push` — aplicar mudanças de schema no banco (só dev)
+- `pnpm --filter @workspace/api-spec run codegen` — regenerar hooks da API a partir do spec OpenAPI
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
+- Frontend: React + Vite, Wouter, i18next (pt-BR, en, de, fr, it, es)
 - API: Express 5
 - DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Pagamentos: Stripe (Payment Intents)
+- Build: esbuild
 
-## Where things live
+## Estrutura do projeto
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+```
+artifacts/
+  panini-wc2026/     # Frontend React (loja)
+  api-server/        # Backend Express (API + webhooks Stripe)
+lib/
+  db/                # Schema Drizzle + cliente PostgreSQL
+  api-spec/          # Spec OpenAPI + hooks gerados (Orval)
+```
 
-## Architecture decisions
+## Arquitetura
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
-
-## Product
-
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Preços armazenados em **centavos** (inteiro) em `productData.ts`; frontend divide por 100 para exibir
+- Payment Intent criado no step 2 do checkout (após validação de envio)
+- Webhook Stripe registrado automaticamente no startup via API; segredo armazenado em memória (ou em `STRIPE_WEBHOOK_SECRET`)
+- Imagens de produtos em `attached_assets/` servidas via `/assets` pelo Express
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
-## Gotchas
-
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Não usar emojis desnecessários no código
+- Manter estrutura de arquivos existente

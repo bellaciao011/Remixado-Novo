@@ -359,8 +359,12 @@ export default function CheckoutPage() {
           setProceedError(null);
           sessionStorage.setItem('panini_order_product_ids', JSON.stringify(items.map(i => i.productId)));
           setTimeout(() => {
-            orderBumpRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 120);
+            if (orderBumpRef.current) {
+              const rect = orderBumpRef.current.getBoundingClientRect();
+              const y = rect.top + window.scrollY - 80;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+          }, 400);
           const icValue = data.amountTotal;
           const icContentIds = items.map(i => i.productId);
           const icNumItems = items.reduce((s, i) => s + i.quantity, 0);

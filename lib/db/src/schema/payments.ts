@@ -1,4 +1,4 @@
-import { pgTable, text, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, boolean, timestamp, jsonb, index } from "drizzle-orm/pg-core";
 
 export const paymentsTable = pgTable("payments", {
   id: text("id").primaryKey(),
@@ -25,7 +25,9 @@ export const paymentsTable = pgTable("payments", {
   shipping: jsonb("shipping"),
   paymentMethod: text("payment_method"),
   syncedAt: timestamp("synced_at", { withTimezone: true }).defaultNow(),
-});
+}, (table) => [
+  index("payments_created_at_idx").on(table.createdAt),
+]);
 
 export type Payment = typeof paymentsTable.$inferSelect;
 export type InsertPayment = typeof paymentsTable.$inferInsert;

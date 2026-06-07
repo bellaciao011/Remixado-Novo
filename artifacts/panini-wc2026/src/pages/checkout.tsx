@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'wouter';
 import { loadStripe } from '@stripe/stripe-js';
-import { utmifyEvent, fbq } from '@/lib/tracking';
+
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
@@ -368,8 +368,7 @@ export default function CheckoutPage() {
           const icValue = data.amountTotal;
           const icContentIds = items.map(i => i.productId);
           const icNumItems = items.reduce((s, i) => s + i.quantity, 0);
-          try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
-          try { fbq('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* non-fatal */ }
+
         },
         onError: (err: any) => {
           setIsProceedingToPayment(false);

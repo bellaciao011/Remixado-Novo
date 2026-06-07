@@ -1,8 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { getUncachableStripeClient, getStripePublishableKey } from '../stripeClient';
 import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID } from '../productData';
-import { sendUpsellConfirmation } from '../email/emailService';
-import type { OrderInfo } from '../email/templates';
 
 const router = Router();
 
@@ -156,7 +154,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       amount: amountTotal,
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
-      ...(customerId ? { customer: customerId, setup_future_usage: 'off_session' } : {}),
+      ...(customerId ? { customer: customerId } : {}),
       // receipt_email uses the masked address — real email is in metadata only
       ...(stripeEmail ? { receipt_email: stripeEmail } : {}),
       metadata: {
@@ -346,30 +344,6 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
         cart_items: JSON.stringify([{ productId, quantity: 1 }]),
       },
     });
-
-    if (paymentIntent.status === 'succeeded') {
-      try {
-        const customer = await stripe.customers.retrieve(customerId);
-        const customerEmail = (customer as any).email || '';
-        const customerLocale = (customer as any).metadata?.locale || 'pt-BR';
-        if (customerEmail) {
-          const localeKey = customerLocale as keyof typeof product.translations;
-          const upsellProductName = product.translations[localeKey]?.name || product.translations['pt-BR'].name;
-          const order: OrderInfo = {
-            customerEmail,
-            customerName: (customer as any).name || undefined,
-            orderId: paymentIntent.id,
-            items: [],
-            totalAmount: upsellAmount / 100,
-            currency: 'eur',
-            locale: customerLocale,
-          };
-          await sendUpsellConfirmation(order, upsellProductName, upsellAmount / 100);
-        }
-      } catch (emailErr) {
-        console.error('[upsell] Failed to send upsell confirmation email:', emailErr);
-      }
-    }
 
     res.json({
       status: paymentIntent.status,

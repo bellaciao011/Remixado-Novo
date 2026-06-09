@@ -79,8 +79,8 @@ if (process.env.NODE_ENV === 'production') {
     immutable: true,
     index: false,
   }));
-  // SPA catch-all — serve index.html for any non-API route
-  app.get('*', (_req, res) => {
+  // SPA catch-all — serve index.html for any non-API route (Express 5 syntax)
+  app.get('/{*splat}', (_req, res) => {
     res.sendFile(path.join(frontendDist, 'index.html'));
   });
 }

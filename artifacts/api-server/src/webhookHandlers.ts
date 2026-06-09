@@ -71,8 +71,8 @@ function sha256(value: string): string {
   return createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
 }
 
-// Ensure idempotency table exists (runs once at module load)
-async function ensureIdempotencyTable(): Promise<void> {
+// Ensure idempotency table exists — called lazily on first webhook, not at module load
+export async function ensureIdempotencyTable(): Promise<void> {
   try {
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS processed_webhook_events (
@@ -84,7 +84,6 @@ async function ensureIdempotencyTable(): Promise<void> {
     console.warn('[webhook] Could not create idempotency table:', err);
   }
 }
-ensureIdempotencyTable();
 
 async function isAlreadyProcessed(eventId: string): Promise<boolean> {
   try {

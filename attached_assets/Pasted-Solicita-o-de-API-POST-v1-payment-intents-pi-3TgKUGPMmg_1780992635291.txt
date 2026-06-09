@@ -1,0 +1,82 @@
+Solicitação de API
+POST
+/v1/payment_intents/pi_3TgKUGPMmgUDduuq1vAWgk1p/confirm
+Status​​
+402 ERR
+ID da solicitação
+req_ZYtNHqA5ave6Md
+Horário
+9 de jun. de 2026, 04:54:24 -03
+Endereço IP
+45.233.229.34
+Versão da API
+2026-03-25.dahlia
+Origem
+https://js.stripe.com/
+Chave de idempotência
+Principal — 1e4fa08f-24e6-4ae8-851e-d27c320064cb
+Agente de usuário
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36
+Chave de API
+pk_live_...FHXLH3
+Publicável
+Insight sobre erro
+Your card is not supported for this currency. You can only charge Brazilian cards in BRL in Brazil.
+Esses detalhes foram úteis para você?
+Sim
+Não
+Corpo da resposta
+{
+"error"
+:
+{… 10 itens}
+,
+}
+Solicitar corpo do POST
+{
+"_stripe_version": 
+"2026-03-25.dahlia",
+"client_attribution_metadata"
+:
+{… 9 itens}
+,
+"client_secret": 
+"************************************************************",
+"expected_payment_method_type": 
+"card",
+"key": 
+"pk_live_*********************************************************************************************FHXLH3",
+"payment_method_data"
+:
+{… 11 itens}
+,
+"radar_options"
+: {
+"hcaptcha_token": 
+"P1_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZCI6MCwiZXhwIjoxNzgwOTkxNzgwLCJjZGF0YSI6ImxoNDVKZm85dWtoNVpLclFaeXNlTEhOamZTcC84WHR5QmdTWlordVZhdU5uSnFydTdaczdzZVZ1S0lnbjY2V202QlYxMEQ1RmdYL3lpYTRTNmxIY2FNS0N5Y0h0SXRxclRNUk0xYjBYVVBLc0FEYW1LK21jNmNFV2lYdlFPc1hZMlNibHNuU0VmRDhFN3NhaDNmSzNNazNvNDE3Y094MGxlS2s5R1A3SzhMRjVlcmkzWFpEczVSR0J6dk45TGEvTGhPSWtVbU5TU0ZwQ0k4LzFsckVxN3plWDJ2YWhqb2JuU2FzUk1leHlaTVBKWU1CK2o2MEpWeGlxcWFtM2FicGZ2c0NYYzVTcmVFb3ZhdnRKS2ttNFBjVEhhY1RkTElqMm96SlJVQ295TG1wV0NXNjhjVVFWRmJJcldNM2JHampTbWhOVVZhMDlNL2tXZFVOcFc2dVpTVTZ0ZTdQb0x1V21takxoZnQ3SVE3Zz1hdlQ0dHluMWVRcnNxMGRjIiwicGFzc2tleSI6IlNsa0crMVZ4SXFHbWxuVDFsYUptM2JjWk9ld2JReGhqazhrVEFJYWRSUVJmakR1YW54S2pNdmlKMzVISnRWT3Qvc0ZZT1BZMWV4cEtpcnI5Qks3dHNIL0d3T2lweE01anhWT3RkMTR0YlQxNnNoZlhaV2Y0U0ZicXMwZFc1TmtEL3RNMlF0ZHFURU9RM3pRaktVY1RmR1lGUHFkU0JOd2lXK1pOWk9xWW1ZOURzZHZmTHkva2JKSDNpR3BRR2E4dXFlWmhCMFJpQ1hldE0wT1ZGS0dPT3l0MlRXQkNEdnFoQ1JtazlIdW5OcFRUTGh1VEZkeFNBM0NKMmRWTExjVGFxWnUxRzR5dHZsblNkRnZqaFlGb1AzbGREemJYVlJISlFIc1luYkt4K2wyWUZlZlU1elUvZkVVdDlQU0pBYzd5czd3M21paW1WY0s0THd3YzdSUGdwUXlSRDVDUjE5MDZQVHExWURuMnM3Rkt2L3JmR3VKOG0zWDgrN0YwdnhJektKRTNMd3JDdnpneVc2K0JVUFU0M2NUQ2hreHlrT2tzTFlFM1hrNExpSy9QQ09yaXlsNVBrMFc2S1BVeXpOeWYxdXJPRWtYVEFxU3BxQXU5K3JMZjQ4OXg3dXd5c1gxK0ZqYTVrTTJKTXhlS21GSVhsMUZiWUhMSFBlQUlGL0xXcmd6WXV1aGZOaGNaYjBEaGtCdnRYTVJnL0Y4YmJFMVdGUlNIbU04eVE2ZjRYeTZCZG9oM3JtNzF5VDErbjcvL2o4U0pLQ29GN0hKUy9RbnN5YWVmblF0SFl6eUJ0ZXlJc3FSZUlSd1VETjR2SWx1N05tUVlmTWx4UEYwb3pOT0Nwb0h0TG5USjZyNWVyR1ZhYi96djR5ZW1OM1J5WThyZ2U5YmR6ZUFka0Y5Smg4RzBOODQwUEE3Z0kxYW5tdDZYUU1lemM0VktQUnVEa3ZBODhxS2NHcFJqMis3bmtacEh0SXhRL0F6eWMrSlhLQnlxdzVvUXNEa2cyd0dPWnBIZlVrS2JKT1QxMGlNRWltMFg0ejl3M3d3LzN3VGpRaUdCejhFK0pUaHdmbUJ2ZGxleW92N0RBUDBSa3BDU1hxUnQwUE13QUlvdUZFMVNsTDJ3ZWlNNzhCSXhXQnZBVUNqdWRpbGFRaDhqVVVKK0tRcGJtalU4Z21PbjdZbjc1N3MzQTFuaEg3YXdVZWovM2lDV283SXMzK3k0NXIxbm1nQXdYVHl5U081NTVKencrRU02aTJydk5DU1RCOXJnODAvckFtNjJZL0MxMndNTWpNWm1MNHJzRHJBZTZob24raTR1TjZveWQ5QjlwNWtOMFVmZVpCNUJwYnR4bTRGOHZxbnlTbnhXMlhxM3VkY21yK3dXbzlyd1FjV2c4TkZZWEJXV085ZTRZbUNqT09WS2tWalA1M3ltVjQ2QkgyeVFLakZiWkpNV2dzUVVvaHU1TXl0bm5wNGtjaGVzNXVtZnhKeXI1OXRvN3V1Z1Z1Ym5Bc1dGSk1tZitFamxsMFJsTWJBVWJhQ3ZuWnRsWjFhVlVCa0ZrZWhpWmNabXZkWTdaL2oyZUxDYWFGV2plWlVhVUQ1dmlobG5jRWpuL2RKV2draW81Zit3QWEzOE13eFZzTlV6WkVIRjdxOC8zM05tRzd3S0J6U2dxNXpOaEFpWm5MUU1jMjVnMUpoSFJsbXhoMGpiUkl5MTMzUkxUUGlTTXNoNmw0a0E2OWduUngxbVF2MW1iaTB5U1o1azZWYXZYcFk3RkFIY09MVlhyRkY5clpDaEJLak9XVVJmbWY1c2U5RlZpYWF3dDUzejVVYnBKdmtuNTFpZWxTZEw5ZWlVMWZGKzdhYkh6RVJ4WU1jS28yczZmOUhpSTBCaFlVTng4THZBekxpbG1hSytmb0xTYU4rNzN2cHg3U0RUQjRGaHBzb2dpQkM2V2VDRmlYQWlhK1hVaUFJYnlTeHlmYk5RbkxWOW9CSnJ1Uy9lZ2FLSmJ4TkxHN2JSdW96TE9HUzViSVdvUkFLclFrdDJKMnR5WDMvaU8yYmxhdkxRUXd1OUtxQXY2dnhINDNOS1hIRWdQYlN0K0c3dmI0eVROdlMzWVBVMnk4TDlPRUhySFIvL1RUck5JU2djU3NpTW5EL2UzdThiczNON0NiSUdha2J0aHhRcG8vZnk0MGEvM0tORFp1N0w0YUhwOTErZ1JiejNKRThSZG9WREg5V2h6WTQ5cVY5QTJjYUFoMVowaDJ4aExFYjd2bWsvVFNoWG1ZVUhKMmE2Z1Z0aXJCQmsvejFWZ2tFOVpMdHVKMy9OZnVTR0ZpK1NWUjJIYUpOaTFEUDFwODlnTDFlWVpmWVhYbFFnWWZ4Z0llMkJLNFVqM25kSFlWTVVBZXNML1BkaGFmUFNEcGVDM1F4MkhTOG1OdlpLY3J2ZmZ5WE1UUWpmM1AydUNSUlRyb3JTWDNGY1V4bUllU2JsZllkYzJMZUNnQ2ZaTUN2cHF6SyszZllrdGEyK2p4cnJTTFdVODcyT2llSHVxaHllVHJVTEt1UzV4eWZ4NjVSU1phdDRrNEY4R3BZSmttZ3lZMGFPaTdqVXZwdTZPczdhdFhQbFhzTkkzdm5BL1h5T0Niay9xWVpTS2RkdGJ6eFZkMWVnVFlKS3BMd3JwbjdMMjl0NGJkYmxPWjJlMVpRNXZjTEV5eis2QStaY09nQjMwMWg4bERPZlZkVVNTNVhXMlp5cm1tYWkzeU9GOEt2STJDcy9paHhaLzZqbms2SUtCOXo1aXNlejc4cmNzbi9zS2ZWaXFkbWo0MXE0aWdqalpsOWowUmFwRVNLTlJHcFdNQT09Iiwia3IiOiI2NjY0M2QxIiwic2hhcmRfaWQiOjcxNzcxNTM3fQ.C8Ho2OmOD90Qiip94h-0HOx8gv69LTu3ZYQBjsJBtxs",
+},
+"receipt_email": 
+"juanpablom.rocha@gmail.com",
+"return_url": 
+"https://woldcupfranca.com/pedido/confirmado",
+"shipping"
+: {
+"address"
+: {
+"city": 
+"SALVADOR",
+"country": 
+"BR",
+"line1": 
+"AV TANCREDO NEVES",
+"postal_code": 
+"41820021",
+"state": 
+"Bahia",
+},
+"name": 
+"Help Raiam",
+},
+"use_stripe_sdk": 
+"true",
+}

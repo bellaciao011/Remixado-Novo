@@ -1,0 +1,366 @@
+payment_intent.payment_failed
+ID do evento
+evt_3TgKUGPMmgUDduuq1ofUT7wR
+Data de origem
+9 de jun. de 2026, 04:54:26 -03
+Origem
+API
+Ver logs
+Descrição
+Uma tentativa de efetuar o pagamento pi_3TgKUGPMmgUDduuq1vAWgk1p no valor de EUR 72,00 falhou
+Entregas para endpoints de webhook
+Tentativas de enviar este evento para seus endpoints de webhook nos últimos 15 dias.
+Todas
+Concluídas
+Malsucedidas
+
+405 ERR
+https://woldcupfrance.com/api/stripe/webhook
+Próxima tentativa em em 45 minutos
+Reenviar
+405 ERR
+Method Not Allowed
+Repetida manualmente
+9 de jun. de 2026, 05:09:31
+405 ERR
+Method Not Allowed
+9 de jun. de 2026, 04:54:26
+Entregas para plataformas conectadas
+Tentativas de enviar este evento para endpoints de plataformas conectadas nos últimos 15 dias.
+Todas
+Concluídas
+Malsucedidas
+Nenhuma tentativa de entrega recente
+Entregas para os ouvintes locais
+Tentativas de enviar este evento para seus ouvintes locais de CLI nos últimos 7 dias.
+Todas
+Concluídas
+Malsucedidas
+Nenhuma tentativa de entrega recente
+Dados do evento
+{
+"object"
+: {
+"id": 
+"pi_3TgKUGPMmgUDduuq1vAWgk1p",
+"object": 
+"payment_intent",
+"amount": 
+7200,
+"amount_capturable": 
+0,
+"amount_details"
+: {
+"tip"
+:
+{}
+,
+},
+"amount_received": 
+0,
+"application": 
+null,
+"application_fee_amount": 
+null,
+"automatic_payment_methods"
+: {
+"allow_redirects": 
+"always",
+"enabled": 
+true,
+},
+"canceled_at": 
+null,
+"cancellation_reason": 
+null,
+"capture_method": 
+"automatic_async",
+"client_secret": 
+"pi_3TgKUGPMmgUDduuq1vAWgk1p_secret_Npt3sRX0QbQ124Yh9DqyzzD8z",
+"confirmation_method": 
+"automatic",
+"created": 
+1780991656,
+"currency": 
+"eur",
+"customer": 
+null,
+"customer_account": 
+null,
+"description": 
+"Leitfaden zur Künstlichen Intelligenz",
+"excluded_payment_method_types": 
+null,
+"last_payment_error"
+: {
+"charge": 
+"ch_3TgKUGPMmgUDduuq17isj9Mz",
+"code": 
+"card_declined",
+"decline_code": 
+"currency_not_supported",
+"doc_url": 
+"https://stripe.com/docs/error-codes/card-declined",
+"message": 
+"Your card is not supported for this currency. You can only charge Brazilian cards in BRL in Brazil.",
+"param": 
+"number",
+"payment_method"
+: {
+"id": 
+"pm_1TgKUOPMmgUDduuqzZDIK8Zj",
+"object": 
+"payment_method",
+"allow_redisplay": 
+"unspecified",
+"billing_details"
+: {
+"address"
+: {
+"city": 
+null,
+"country": 
+"BR",
+"line1": 
+null,
+"line2": 
+null,
+"postal_code": 
+null,
+"state": 
+null,
+},
+"email": 
+null,
+"name": 
+null,
+"phone": 
+null,
+"tax_id": 
+null,
+},
+"card"
+: {
+"brand": 
+"mastercard",
+"checks"
+: {
+"address_line1_check": 
+null,
+"address_postal_code_check": 
+null,
+"cvc_check": 
+"unchecked",
+},
+"country": 
+"BR",
+"display_brand": 
+"mastercard",
+"exp_month": 
+5,
+"exp_year": 
+2031,
+"fingerprint": 
+"uiD3umdNHNH4Hhjn",
+"funding": 
+"credit",
+"generated_from": 
+null,
+"last4": 
+"2004",
+"networks"
+: {
+"available"
+: [
+"mastercard",
+],
+"preferred": 
+null,
+},
+"regulated_status": 
+"unregulated",
+"three_d_secure_usage"
+: {
+"supported": 
+true,
+},
+"wallet": 
+null,
+},
+"created": 
+1780991664,
+"customer": 
+null,
+"customer_account": 
+null,
+"livemode": 
+true,
+"metadata"
+:
+{}
+,
+"shared_payment_granted_token": 
+null,
+"type": 
+"card",
+},
+"type": 
+"card_error",
+},
+"latest_charge": 
+"ch_3TgKUGPMmgUDduuq17isj9Mz",
+"livemode": 
+true,
+"managed_payments"
+: {
+"enabled": 
+false,
+},
+"metadata"
+: {
+"cart_items": 
+"[{"productId":"box-100-packs","quantity":2}]",
+"customer_email": 
+"juanpablom.rocha@gmail.com",
+"customer_name": 
+"Help Raiam",
+"locale": 
+"de",
+"tracking_code": 
+"PANGGGR7M",
+"utm_campaign": 
+"",
+"utm_content": 
+"",
+"utm_medium": 
+"",
+"utm_source": 
+"organic",
+"utm_term": 
+"",
+},
+"next_action": 
+null,
+"on_behalf_of": 
+null,
+"payment_method": 
+null,
+"payment_method_configuration_details"
+: {
+"id": 
+"pmc_1TZG3SPMmgUDduuqso4Pmg7n",
+"parent": 
+null,
+},
+"payment_method_options"
+: {
+"card"
+: {
+"installments": 
+null,
+"mandate_options": 
+null,
+"network": 
+null,
+"request_three_d_secure": 
+"automatic",
+},
+},
+"payment_method_types"
+: [
+"card",
+],
+"processing": 
+null,
+"receipt_email": 
+"juanpablom.rocha@gmail.com",
+"review": 
+null,
+"setup_future_usage": 
+null,
+"shared_payment_granted_token": 
+null,
+"shipping"
+: {
+"address"
+: {
+"city": 
+"SALVADOR",
+"country": 
+"BR",
+"line1": 
+"AV TANCREDO NEVES",
+"line2": 
+null,
+"postal_code": 
+"41820021",
+"state": 
+"Bahia",
+},
+"carrier": 
+null,
+"name": 
+"Help Raiam",
+"phone": 
+null,
+"tracking_number": 
+null,
+},
+"source": 
+null,
+"statement_descriptor": 
+null,
+"statement_descriptor_suffix": 
+null,
+"status": 
+"requires_payment_method",
+"transfer_data": 
+null,
+"transfer_group": 
+null,
+},
+"previous_attributes": 
+null,
+}
+Eventos
+evt_3TgKUGPMmgUDduuq1ofUT7wR
+wc_1TgKj1PMmgUDduuqYodDAOKW
+Tentativa de entrega
+9 de jun. de 2026, 05:09:31
+405 ERR
+Ver entrega na exibição de destino de evento
+Insight sobre erro
+Saiba como resolver problemas de códigos de status HTTP que começam com 4xx ou 5xx
+Resposta corpo
+"<html> <head><title>405 Not Allowed</title></head> <body> <center><h1>405 Not Allowed</h1></center> <hr><center>nginx/1.28.3 (Ubuntu)</center> </body> </html>"
+Solicitação corpo
+{
+"id": 
+"evt_3TgKUGPMmgUDduuq1ofUT7wR",
+"object": 
+"event",
+"api_version": 
+"2026-04-22.dahlia",
+"created": 
+1780991665,
+"data"
+: {
+"object"
+:
+{… 43 itens}
+,
+},
+"livemode": 
+true,
+"pending_webhooks": 
+1,
+"request"
+: {
+"id": 
+"req_ZYtNHqA5ave6Md",
+"idempotency_key": 
+"1e4fa08f-24e6-4ae8-851e-d27c320064cb",
+},
+"type": 
+"payment_intent.payment_failed",
+}

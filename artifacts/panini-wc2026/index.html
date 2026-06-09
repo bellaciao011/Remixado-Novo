@@ -68,12 +68,12 @@
     <!--
       Analytics loading strategy:
       ─────────────────────────────────────────────────────────────────────
-      Set VITE_FB_PIXEL_ID and VITE_UTMIFY_PIXEL_ID in environment variables
-      to enable tracking. If either is missing, initAnalytics() exits silently.
+      Set VITE_FB_PIXEL_ID in environment variables to enable Facebook Pixel.
+      UTMify is loaded statically above (hardcoded pixel ID).
 
       CONFIRMATION PAGE (/pedido/confirmado):
-        Analytics are loaded IMMEDIATELY so fbq and window._pixel exist
-        before React mounts and fires the Purchase event.
+        Analytics are loaded IMMEDIATELY so fbq exists before React mounts
+        and fires the Purchase event.
 
       ALL OTHER PAGES:
         Deferred to window.load + 200 ms to avoid blocking FCP/LCP.
@@ -81,10 +81,9 @@
     -->
     <script>
       var FB_PIXEL_ID = '%VITE_FB_PIXEL_ID%';
-      var UTMIFY_PIXEL_ID = '%VITE_UTMIFY_PIXEL_ID%';
 
       function initAnalytics() {
-        if (!FB_PIXEL_ID) return;
+        if (!FB_PIXEL_ID || FB_PIXEL_ID === '%VITE_FB_PIXEL_ID%') return;
 
         // ── Facebook Pixel ────────────────────────────────────────────
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?

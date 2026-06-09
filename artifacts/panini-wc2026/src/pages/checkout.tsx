@@ -385,8 +385,10 @@ export default function CheckoutPage() {
     };
 
   useEffect(() => {
-    if (configData?.publishableKey) {
-      setStripePromise(loadStripe(configData.publishableKey));
+    // Prefer build-time env var so Stripe loads even if /api/checkout/config fails
+    const key = (import.meta as any).env?.VITE_STRIPE_PUBLIC_KEY || configData?.publishableKey;
+    if (key) {
+      setStripePromise(loadStripe(key));
     }
   }, [configData?.publishableKey]);
 

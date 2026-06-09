@@ -5,7 +5,7 @@ import { useGetFeaturedProducts } from '@workspace/api-client-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-const HERO_URL = '/assets/image_1780982521586.png';
+const HERO_URL = '/assets/image_1780983231382.png';
 
 export default function Home() {
   const { t } = useTranslation();

@@ -1,0 +1,95 @@
+🗺️ Página de Rastreio (/rastreio)
+Como acessa:
+
+URL direta: /rastreio?codigo=PANAB1234 (já preenche e busca automático)
+Ou o cliente digita o código manualmente
+O que exibe:
+
+Bloco	Conteúdo
+Header	Logo Panini + "Seguimiento de pedido FIFA World Cup 2026"
+Campo de busca	Input código (ex: PANAB1234) + botão Buscar
+Card do pedido	Nome do cliente, produto, valor ARS, forma de pagamento, data, entrega estimada (paid_at + 20 dias)
+Status de pagamento	Badge verde (pago), amarelo (aguardando), vermelho (recusado)
+Estado atual	Destaque visual do milestone em que está (ex: "En camino para entregar")
+Timeline completa	9 etapas do pedido, ícones coloridos (verde = concluído, vermelho = atual, cinza = futuro)
+9 milestones da timeline:
+
+Pedido confirmado (dia 1)
+Preparação logística (dia 2)
+Entregado ao transportista (dia 4)
+Centro logístico internacional (dia 7)
+Actualización de transporte (dia 10)
+Llegada al centro local (dia 13)
+Preparación de la entrega (dia 16)
+En camino para entregar (dia 18)
+Entrega prevista (dia 20)
+💬 Widget de Suporte automático
+Botão flutuante vermelho fixo no canto inferior direito (ícone MessageCircle). Abre um drawer de 88% da altura da tela.
+
+Conteúdo do drawer:
+
+1. FAQ automático (4 perguntas, accordion expandível):
+
+📦 ¿Dónde está mi pedido? — explica o processo logístico
+⏳ ¿Cuál es el plazo de entrega? — 5 a 10 dias hábeis
+🚚 Mi seguimiento no se actualiza — tranquiliza o cliente
+💬 Contactar al soporte — 24 a 72h de resposta
+2. Formulário de reembolso (accordion):
+Campos: nome completo, número do pedido, e-mail, motivo (textarea), opção desejada (radio):
+
+Continuar con el pedido
+Recibir una actualización prioritaria
+Solicitar un análisis de reembolso
+Ao enviar: POST /api/public/support — mostra mensagem de confirmação ("Solicitud recibida").
+
+O que acontece com esse POST:
+Vai para o endpoint /api/public/support no servidor. Vou verificar o que esse endpoint faz:
+
+
+2 actions
+Aqui o resumo completo:
+
+/rastreio — Página de Rastreio
+Acesso: /rastreio?codigo=PANAB1234 (abre e busca automaticamente) ou digitação manual.
+
+Campos exibidos:
+
+Código de rastreio, nome do cliente (primeiro nome), produto, valor em ARS, data do pedido
+Entrega estimada = data do pagamento + 20 dias
+Badge de status: ✅ Pago / ⏳ Aguardando / ❌ Recusado
+Timeline — 9 etapas:
+
+Dia	Etapa
+1	Pedido confirmado
+2	Preparación logística
+4	Entregado al transportista
+7	Centro logístico internacional
+10	Actualización de transporte
+13	Llegada al centro local
+16	Preparación de la entrega
+18	En camino para entregar
+20	Entrega prevista
+Ícones: verde = etapas já passadas, vermelho = etapa atual (com badge "Ahora"), cinza = futuras.
+
+Suporte automático — Widget flutuante
+Botão: fixo no canto inferior direito, vermelho, ícone de chat. Abre drawer de 88% da tela.
+
+FAQ (accordion, 4 perguntas automáticas sem humano):
+
+📦 ¿Dónde está mi pedido? — explica o processo logístico
+⏳ ¿Cuál es el plazo de entrega? — 5 a 10 dias hábeis
+🚚 Mi seguimiento no se actualiza — tranquiliza o cliente
+💬 Contactar al soporte — resposta em 24 a 72h
+Formulário de reembolso (accordion separado):
+
+Campos: nome completo, número do pedido (PANXXXXX), e-mail, motivo (texto livre), opção desejada:
+
+Continuar con el pedido
+Recibir una actualización prioritaria
+Solicitar un análisis de reembolso
+O que acontece ao enviar:
+
+POST /api/public/support no servidor
+Servidor envia email via Resend para panini@confirmedorder.site com os dados do formulário
+Cliente vê tela de confirmação ("Solicitud recibida")
+Ou seja: nenhum humano precisa estar online — o FAQ resolve a maioria das dúvidas sozinho, e quando o cliente pede reembolso você recebe um email automático para analisar manualmente.

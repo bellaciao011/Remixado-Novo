@@ -1,0 +1,73 @@
+Como funciona o código de rastreio por cliente + banco de dados
+🔢 O código de rastreio (tracking_code)
+Formato: PAN + 6 caracteres aleatórios — ex: PANTP5YHA, PAN4X7K2B
+
+Quando é gerado: no momento exato em que o cliente clica em "Pagar" no checkout, antes mesmo de cobrar o cartão.
+
+Cliente preenche checkout
+        ↓
+Servidor gera: order_id  = "cf12cae4-54c4-..." (UUID interno)
+               tracking_code = "PAN4X7K2"      (código do cliente)
+        ↓
+Salva no banco de dados
+Coloca no metadata do Stripe
+        ↓
+Cliente paga → webhook recebe → pedido vira PAID
+
+Cada cliente tem um código único — o servidor gera um novo PAN + 6 aleatórios a cada pedido. Colisão é praticamente impossível (34⁶ = ~1.5 bilhão de combinações).
+
+🗄️ Banco de dados — tabela panini_orders
+Cada linha = um pedido de um cliente. As colunas principais:
+
+Campo	O que guarda	Exemplo
+id	UUID interno do pedido	cf12cae4-54c4-...
+tracking_code	Código que o cliente usa	PAN4X7K2
+status	Status do pagamento	PENDING → PAID → FAILED
+order_status	Etapa logística	preparing → shipped → delivered
+customer_name	Nome do cliente	Juan Pérez
+customer_email	Email do cliente	juan@gmail.com
+customer_phone	Telefone	+54 11 1234-5678
+customer_document	DNI	35123456
+shipping_address	Endereço completo	Av. Corrientes 1234
+shipping_city	Cidade	Buenos Aires
+shipping_postal_code	CEP	C1043
+kit_id	Kit comprado	basico, iniciante, box50
+product_name	Nome do produto	Kit Panini FIFA WC26
+quantity	Quantidade	2
+amount_eur	Valor pago em ARS	24999
+stripe_payment_intent_id	ID do Stripe	pi_3Tg06Y...
+paid_at	Quando pagou	2026-06-08 10:27:00
+confirmation_email_sent_at	Quando enviou o email	2026-06-08 10:27:05
+utm_source	De onde veio	facebook, google
+utm_campaign	Qual campanha	wc26_basico_arg
+created_at	Quando criou o pedido	2026-06-08 10:25:00
+🔄 Ciclo de vida completo de um pedido
+1. CHECKOUT
+   Cliente preenche formulário
+   → Servidor cria registro no DB com status = "PENDING"
+   → Cria PaymentIntent no Stripe (com metadata)
+   → Envia UTMify "waiting_payment" (rastreia o lead)
+   → Retorna clientSecret para o frontend processar o cartão
+2. CLIENTE PAGA
+   → Stripe processa o cartão
+   → Stripe dispara webhook para woldcupfrance.com/api/stripe/webhook
+3. WEBHOOK RECEBE (payment_intent.succeeded)
+   → Busca o pedido no DB pelo order_id
+   → Atualiza status = "PAID", salva tracking_code, paid_at
+   → Envia UTMify "paid" (com UTMs, nome, email do cliente)
+   → Envia email de confirmação via Resend (com código PAN...)
+4. CLIENTE ACESSA /rastreio?codigo=PAN4X7K2
+   → Frontend chama GET /api/public/rastreio?codigo=PAN4X7K2
+   → Servidor busca no DB pelo tracking_code
+   → Retorna: nome, produto, valor, status, order_status
+   → Frontend exibe a timeline com a etapa atual
+5. ADMIN ATUALIZA ETAPA LOGÍSTICA
+   → Painel admin altera order_status (ex: "shipped")
+   → Cliente recarrega /rastreio e vê a etapa atualizada
+
+🔍 Como o cliente encontra seu pedido
+O cliente recebe o email de confirmação com o código PAN4X7K2 e o link:
+
+https://worldcupfrance.vercel.app/rastreio?codigo=PAN4X7K2
+
+Ao abrir o link, o frontend detecta ?codigo=PAN4X7K2 na URL e busca automaticamente — o cliente não precisa digitar nada.

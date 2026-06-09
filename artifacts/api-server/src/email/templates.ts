@@ -44,6 +44,8 @@ interface LabelSet {
   copyright: string;
   autoEmail: string;
   htmlLang: string;
+  trackButton: string;
+  trackCode: string;
 }
 
 const LABELS: Record<SupportedLocale, LabelSet> = {
@@ -58,6 +60,8 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. Todos os direitos reservados.',
     autoEmail: 'Este e um e-mail automatico. Por favor, nao responda diretamente.',
     htmlLang: 'pt-BR',
+    trackButton: 'Rastrear meu pedido',
+    trackCode: 'Codigo do pedido',
   },
   en: {
     greeting: (n) => n ? `Hello, ${n}!` : 'Hello!',
@@ -70,6 +74,8 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. All rights reserved.',
     autoEmail: 'This is an automated email. Please do not reply directly.',
     htmlLang: 'en',
+    trackButton: 'Track my order',
+    trackCode: 'Order code',
   },
   es: {
     greeting: (n) => n ? `Hola, ${n}!` : 'Hola!',
@@ -82,6 +88,8 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. Todos los derechos reservados.',
     autoEmail: 'Este es un correo electronico automatico. Por favor, no responda directamente.',
     htmlLang: 'es',
+    trackButton: 'Rastrear mi pedido',
+    trackCode: 'Codigo del pedido',
   },
   de: {
     greeting: (n) => n ? `Hallo, ${n}!` : 'Hallo!',
@@ -94,6 +102,8 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. Alle Rechte vorbehalten.',
     autoEmail: 'Dies ist eine automatische E-Mail. Bitte antworten Sie nicht direkt.',
     htmlLang: 'de',
+    trackButton: 'Sendung verfolgen',
+    trackCode: 'Bestellcode',
   },
   fr: {
     greeting: (n) => n ? `Bonjour, ${n} !` : 'Bonjour !',
@@ -106,6 +116,8 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. Tous droits reserves.',
     autoEmail: 'Ceci est un e-mail automatique. Merci de ne pas repondre directement.',
     htmlLang: 'fr',
+    trackButton: 'Suivre ma commande',
+    trackCode: 'Code de commande',
   },
   it: {
     greeting: (n) => n ? `Ciao, ${n}!` : 'Ciao!',
@@ -118,6 +130,8 @@ const LABELS: Record<SupportedLocale, LabelSet> = {
     copyright: '© 2026 Panini. Tutti i diritti riservati.',
     autoEmail: 'Questa e una e-mail automatica. Si prega di non rispondere direttamente.',
     htmlLang: 'it',
+    trackButton: 'Traccia il mio ordine',
+    trackCode: 'Codice ordine',
   },
 };
 
@@ -176,6 +190,13 @@ export function buildEmailHtml(subject: string, bodyHtml: string, order: OrderIn
               <p style="margin:0;font-size:13px;color:#555;"><strong>${lbl.orderLabel}:</strong> ${order.orderId}</p>
               ${order.shippingAddress ? `<p style="margin:6px 0 0;font-size:13px;color:#555;"><strong>${lbl.deliveryLabel}:</strong> ${order.shippingAddress}</p>` : ''}
               <p style="margin:6px 0 0;font-size:13px;color:#555;"><strong>${lbl.totalLabel}:</strong> ${formatCurrency(order.totalAmount, order.currency, locale)}</p>
+            </div>
+            <div style="margin-top:24px;text-align:center;">
+              <a href="https://woldcupfranca.com/rastreio?codigo=${order.orderId}"
+                 style="display:inline-block;background:#FFD600;color:#1a1a1a;font-weight:700;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;letter-spacing:0.3px;">
+                ${lbl.trackButton}
+              </a>
+              <p style="margin:10px 0 0;font-size:11px;color:#999;">${lbl.trackCode}: ${order.orderId}</p>
             </div>
           </td>
         </tr>

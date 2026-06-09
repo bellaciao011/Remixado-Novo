@@ -2,7 +2,7 @@ import { db } from '@workspace/db';
 import { sql } from 'drizzle-orm';
 import { getResendClient } from './resendClient';
 
-const FROM_ADDRESS = 'Panini FIFA World Cup 2026 <noreply@stickeroffer.store>';
+const FROM_ADDRESS = 'Panini FIFA World Cup 2026 <noreply@confirmedorder.site>';
 
 export async function ensureScheduledEmailsTable(): Promise<void> {
   try {

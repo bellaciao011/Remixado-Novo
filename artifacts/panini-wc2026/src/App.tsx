@@ -12,6 +12,7 @@ const Catalog = lazy(() => import("@/pages/catalog"));
 const ProductDetail = lazy(() => import("@/pages/product"));
 const CheckoutPage = lazy(() => import("@/pages/checkout"));
 const OrderConfirmation = lazy(() => import("@/pages/order-confirmation"));
+const RastreioPage = lazy(() => import("@/pages/rastreio"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 import "./i18n/index"; // initialize i18n
@@ -35,6 +36,7 @@ function Router() {
           <Route path="/productos/:id" component={ProductDetail} />
           <Route path="/checkout" component={CheckoutPage} />
           <Route path="/pedido/confirmado" component={OrderConfirmation} />
+          <Route path="/rastreio" component={RastreioPage} />
           <Route component={NotFound} />
         </Switch>
       </Suspense>

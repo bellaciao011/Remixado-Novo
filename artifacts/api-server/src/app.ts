@@ -73,7 +73,7 @@ app.use("/api", router);
 
 // Serve the built panini-wc2026 frontend in production
 if (process.env.NODE_ENV === 'production') {
-  const frontendDist = path.resolve(import.meta.dirname, '..', '..', '..', 'panini-wc2026', 'dist', 'public');
+  const frontendDist = path.resolve(import.meta.dirname, '..', '..', 'panini-wc2026', 'dist', 'public');
   app.use(express.static(frontendDist, {
     maxAge: '1y',
     immutable: true,

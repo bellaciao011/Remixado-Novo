@@ -71,4 +71,18 @@ app.use('/assets', express.static(path.resolve(import.meta.dirname, '..', '..', 
 
 app.use("/api", router);
 
+// Serve the built panini-wc2026 frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const frontendDist = path.resolve(import.meta.dirname, '..', '..', '..', 'panini-wc2026', 'dist', 'public');
+  app.use(express.static(frontendDist, {
+    maxAge: '1y',
+    immutable: true,
+    index: false,
+  }));
+  // SPA catch-all — serve index.html for any non-API route
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
+
 export default app;

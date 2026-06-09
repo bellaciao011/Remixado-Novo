@@ -3,6 +3,17 @@ import { logger } from "./lib/logger";
 import { getUncachableStripeClient, setWebhookSecret } from "./stripeClient";
 import { ensureScheduledEmailsTable, startEmailWorker } from "./email/emailScheduler";
 
+// Catch uncaught errors and log them clearly before exiting
+process.on('uncaughtException', (err) => {
+  console.error('[FATAL] Uncaught exception:', err.message);
+  console.error(err.stack);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[FATAL] Unhandled rejection:', reason);
+  process.exit(1);
+});
+
 async function initStripe() {
   try {
     // If STRIPE_WEBHOOK_SECRET is manually set (recommended for production), trust it
@@ -16,9 +27,6 @@ async function initStripe() {
     const webhookBaseUrl = `https://${process.env.REPLIT_DOMAINS?.split(',')[0]}`;
     const webhookUrl = `${webhookBaseUrl}/api/stripe/webhook`;
 
-    // Delete existing webhook at this URL so we can recreate and obtain a fresh secret.
-    // Stripe only returns the signing secret at creation time, so we must recreate on every
-    // cold start when STRIPE_WEBHOOK_SECRET is not persisted in env.
     const existing = await stripe.webhookEndpoints.list({ limit: 100 });
     const found = existing.data.find(w => w.url === webhookUrl);
     if (found) {
@@ -32,30 +40,40 @@ async function initStripe() {
     });
     setWebhookSecret(created.secret!);
     logger.info('Stripe webhook created and signing secret stored in memory');
-    logger.info(
-      'TIP: Set STRIPE_WEBHOOK_SECRET in Replit Secrets to avoid recreating webhook on each restart'
-    );
   } catch (error: any) {
     logger.warn({ err: error }, 'Failed to initialize Stripe webhook — continuing without it');
+  }
+}
+
+async function initDatabase() {
+  try {
+    if (!process.env.DATABASE_URL) {
+      logger.warn('DATABASE_URL not set — database features (order tracking, email scheduler) will be disabled');
+      return;
+    }
+    await ensureScheduledEmailsTable();
+    startEmailWorker(60_000);
+    logger.info('Database initialized and email worker started');
+  } catch (error: any) {
+    logger.warn({ err: error }, 'Database initialization failed — continuing without database features. Check DATABASE_URL.');
   }
 }
 
 const rawPort = process.env["PORT"];
 
 if (!rawPort) {
-  throw new Error("PORT environment variable is required but was not provided.");
+  console.error('[FATAL] PORT environment variable is required but was not provided.');
+  process.exit(1);
 }
 
 const port = Number(rawPort);
 
 if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
+  console.error(`[FATAL] Invalid PORT value: "${rawPort}"`);
+  process.exit(1);
 }
 
-// Create scheduled_emails table if it doesn't exist, then start email worker
-await ensureScheduledEmailsTable();
-startEmailWorker(60_000);
-
+await initDatabase();
 await initStripe();
 
 app.listen(port, (err?: Error) => {

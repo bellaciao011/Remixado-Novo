@@ -23,6 +23,23 @@
     <link rel="dns-prefetch" href="https://connect.facebook.net" />
     <link rel="dns-prefetch" href="https://cdn.utmify.com.br" />
 
+    <!-- UTMify — pixel + UTM capture, always active on all pages -->
+    <script>
+      window.pixelId = "6a27aca7051f6e6870a34ec1";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+      async
+      defer
+    ></script>
+
     <!-- Google Fonts — non-blocking via preload + onload swap -->
     <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap"
@@ -67,9 +84,9 @@
       var UTMIFY_PIXEL_ID = '%VITE_UTMIFY_PIXEL_ID%';
 
       function initAnalytics() {
-        if (!FB_PIXEL_ID || !UTMIFY_PIXEL_ID) return;
+        if (!FB_PIXEL_ID) return;
 
-        // ── 1. Facebook Pixel ─────────────────────────────────────────
+        // ── Facebook Pixel ────────────────────────────────────────────
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
         n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -77,18 +94,7 @@
         document,'script','https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', FB_PIXEL_ID);
         fbq('track', 'PageView');
-
-        // ── 2. UTMify ─────────────────────────────────────────────────
-        var utms = document.createElement('script');
-        utms.async = true;
-        utms.src = 'https://cdn.utmify.com.br/scripts/utms/latest.js';
-        document.head.appendChild(utms);
-
-        window.pixelId = UTMIFY_PIXEL_ID;
-        var px = document.createElement('script');
-        px.async = true;
-        px.src = 'https://cdn.utmify.com.br/scripts/pixel/pixel.js';
-        document.head.appendChild(px);
+        // UTMify is loaded statically above — no duplication needed here
       }
 
       if (window.location.href.indexOf('pedido/confirmado') !== -1) {

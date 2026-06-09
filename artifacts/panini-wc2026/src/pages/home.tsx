@@ -5,7 +5,7 @@ import { useGetFeaturedProducts } from '@workspace/api-client-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
-const HERO_URL = '/assets/PAN-INT-WC-STK-BANNER-1920X500-INT_EN_(1)_1780517958151.webp';
+const HERO_URL = '/assets/image_1780982521586.png';
 
 export default function Home() {
   const { t } = useTranslation();

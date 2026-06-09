@@ -5,31 +5,13 @@ import { ShoppingCart } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCart } from '../contexts/CartContext';
 import { Button } from './ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import logo from '@assets/Panini-logo_1780421261996.webp';
-import { saveExplicitLang } from '../i18n';
-
-const languages = [
-  { code: 'pt-BR', label: 'Português', flag: '🇧🇷' },
-  { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
-  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-  { code: 'it', label: 'Italiano', flag: '🇮🇹' },
-];
 
 export function Header() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { totalItems, setIsCartOpen } = useCart();
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
-
-  const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
 
   const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -49,34 +31,13 @@ export function Header() {
             <a href="/" onClick={handleHomeClick} className="transition-colors hover:text-primary text-foreground/80 cursor-pointer">
               {t('nav.home')}
             </a>
-            <Link href="/produtos" className="transition-colors hover:text-primary text-foreground/80">
+            <Link href="/productos" className="transition-colors hover:text-primary text-foreground/80">
               {t('nav.catalog')}
             </Link>
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="w-14 px-2 text-lg font-bold flex gap-1">
-                <span>{currentLang.flag}</span>
-                <span className="sr-only">{t('nav.language')}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {languages.map((lang) => (
-                <DropdownMenuItem
-                  key={lang.code}
-                  onClick={() => { saveExplicitLang(lang.code); i18n.changeLanguage(lang.code); }}
-                  className="cursor-pointer flex items-center gap-2 font-medium"
-                >
-                  <span className="text-lg w-6">{lang.flag}</span>
-                  <span>{lang.label}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
           <Button
             variant="ghost"
             size="icon"
@@ -91,7 +52,6 @@ export function Header() {
             )}
             <span className="sr-only">{t('nav.cart')}</span>
           </Button>
-
         </div>
       </div>
     </header>

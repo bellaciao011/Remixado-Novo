@@ -506,7 +506,7 @@ export default function CheckoutPage() {
         <ShoppingCart className="h-16 w-16 text-muted-foreground mb-4" />
         <h2 className="text-2xl font-bold mb-2">{t('cart.empty')}</h2>
         <Button asChild className="mt-4">
-          <Link href="/produtos">{t('buttons.continueShopping')}</Link>
+          <Link href="/productos">{t('buttons.continueShopping')}</Link>
         </Button>
       </div>
     );
@@ -537,7 +537,7 @@ export default function CheckoutPage() {
       <div className="container max-w-3xl px-4 mx-auto">
         <div className="mb-8">
           <Button variant="ghost" asChild className="mb-4 -ml-2 text-muted-foreground">
-            <Link href="/produtos">
+            <Link href="/productos">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {t('buttons.continueShopping')}
             </Link>

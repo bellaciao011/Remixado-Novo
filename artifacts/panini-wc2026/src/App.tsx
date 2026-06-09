@@ -31,8 +31,8 @@ function Router() {
       <Suspense fallback={null}>
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/produtos" component={Catalog} />
-          <Route path="/produtos/:id" component={ProductDetail} />
+          <Route path="/productos" component={Catalog} />
+          <Route path="/productos/:id" component={ProductDetail} />
           <Route path="/checkout" component={CheckoutPage} />
           <Route path="/pedido/confirmado" component={OrderConfirmation} />
           <Route component={NotFound} />

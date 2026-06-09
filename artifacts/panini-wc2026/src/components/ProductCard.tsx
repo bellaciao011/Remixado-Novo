@@ -61,7 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
     ).format(val);
 
   return (
-    <Link href={`/produtos/${product.id}`}>
+    <Link href={`/productos/${product.id}`}>
       <div className="panini-card group cursor-pointer flex flex-col h-full bg-white border border-[#e0e0e0] hover:border-[#999] transition-colors duration-200">
         {/* Image area */}
         <div className="relative bg-white p-4 flex items-center justify-center" style={{ minHeight: '220px' }}>

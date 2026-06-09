@@ -120,7 +120,7 @@ export default function ProductDetail() {
         <nav className="text-[13px] text-[#666] mb-6">
           <Link href="/" className="hover:underline">{t('nav.home')}</Link>
           <span className="mx-2">›</span>
-          <Link href="/produtos" className="hover:underline">{t('nav.catalog')}</Link>
+          <Link href="/productos" className="hover:underline">{t('nav.catalog')}</Link>
           <span className="mx-2">›</span>
           <span className="text-[#1a1a1a]">{translation.name}</span>
         </nav>

@@ -220,7 +220,7 @@ export default function OrderConfirmation() {
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-4">
         <h1 className="text-2xl font-bold mb-4">{t('checkout.invalidSession')}</h1>
         <Button asChild>
-          <Link href="/produtos">{t('buttons.backToStore')}</Link>
+          <Link href="/productos">{t('buttons.backToStore')}</Link>
         </Button>
       </div>
     );
@@ -244,7 +244,7 @@ export default function OrderConfirmation() {
         <p className="text-destructive font-bold text-xl mb-4">{t('checkout.verifyError')}</p>
         <p className="text-muted-foreground mb-8">{t('checkout.verifyErrorDetail')}</p>
         <Button asChild>
-          <Link href="/produtos">{t('buttons.backToStore')}</Link>
+          <Link href="/productos">{t('buttons.backToStore')}</Link>
         </Button>
       </div>
     );

@@ -34,7 +34,7 @@ export default function Home() {
               {t('labels.featured')}
             </h2>
             <Button variant="outline" asChild className="font-semibold border border-border hover:bg-muted text-sm h-9 flex-shrink-0">
-              <Link href="/produtos">
+              <Link href="/productos">
                 {t('buttons.viewMore')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

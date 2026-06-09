@@ -24,9 +24,11 @@ export const paymentsTable = pgTable("payments", {
   lastPaymentError: text("last_payment_error"),
   shipping: jsonb("shipping"),
   paymentMethod: text("payment_method"),
+  trackingCode: text("tracking_code"),
   syncedAt: timestamp("synced_at", { withTimezone: true }).defaultNow(),
 }, (table) => [
   index("payments_created_at_idx").on(table.createdAt),
+  index("payments_tracking_code_idx").on(table.trackingCode),
 ]);
 
 export type Payment = typeof paymentsTable.$inferSelect;

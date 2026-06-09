@@ -36,6 +36,7 @@ async function upsertPayment(pi: any): Promise<void> {
       lastPaymentError: pi.last_payment_error?.message || null,
       shipping: pi.shipping || null,
       paymentMethod: typeof pi.payment_method === 'string' ? pi.payment_method : (pi.payment_method?.id ?? null),
+      trackingCode: pi.metadata?.tracking_code || null,
       syncedAt: new Date(),
     };
     await db
@@ -56,6 +57,7 @@ async function upsertPayment(pi: any): Promise<void> {
           lastPaymentError: sql`excluded.last_payment_error`,
           shipping: sql`excluded.shipping`,
           paymentMethod: sql`excluded.payment_method`,
+          trackingCode: sql`COALESCE(payments.tracking_code, excluded.tracking_code)`,
           syncedAt: sql`excluded.synced_at`,
         },
       });
@@ -222,6 +224,7 @@ export class WebhookHandlers {
         customerEmail,
         customerName: pi.shipping?.name || undefined,
         orderId: pi.id,
+        trackingCode: pi.metadata?.tracking_code || undefined,
         items: resolvedItems,
         totalAmount: pi.amount / 100,
         currency: pi.currency || 'eur',

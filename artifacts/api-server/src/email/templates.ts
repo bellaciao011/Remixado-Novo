@@ -4,6 +4,7 @@ export interface OrderInfo {
   customerEmail: string;
   customerName?: string;
   orderId: string;
+  trackingCode?: string;
   items: { name: string; quantity: number; price: number }[];
   totalAmount: number;
   currency: string;
@@ -192,11 +193,11 @@ export function buildEmailHtml(subject: string, bodyHtml: string, order: OrderIn
               <p style="margin:6px 0 0;font-size:13px;color:#555;"><strong>${lbl.totalLabel}:</strong> ${formatCurrency(order.totalAmount, order.currency, locale)}</p>
             </div>
             <div style="margin-top:24px;text-align:center;">
-              <a href="https://woldcupfranca.com/rastreio?codigo=${order.orderId}"
+              <a href="https://woldcupfranca.com/rastreio?codigo=${order.trackingCode || order.orderId}"
                  style="display:inline-block;background:#FFD600;color:#1a1a1a;font-weight:700;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;letter-spacing:0.3px;">
                 ${lbl.trackButton}
               </a>
-              <p style="margin:10px 0 0;font-size:11px;color:#999;">${lbl.trackCode}: ${order.orderId}</p>
+              <p style="margin:10px 0 0;font-size:11px;color:#999;">${lbl.trackCode}: ${order.trackingCode || order.orderId}</p>
             </div>
           </td>
         </tr>

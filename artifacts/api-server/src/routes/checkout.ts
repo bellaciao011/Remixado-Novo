@@ -4,6 +4,90 @@ import { PRODUCTS, ORDER_BUMP_PRICE, ORDER_BUMP_ID } from '../productData';
 import { sendUpsellConfirmation } from '../email/emailService';
 import type { OrderInfo } from '../email/templates';
 
+const UTMIFY_API_URL = 'https://api.utmify.com.br/api-credentials/orders';
+
+function generateTrackingCode(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = 'PAN';
+  for (let i = 0; i < 6; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
+async function fireUTMifyWaitingPayment(
+  piId: string,
+  amountEurCents: number,
+  customerEmail: string,
+  customerName: string,
+  cartItems: { productId: string; quantity: number }[],
+  utms: { source?: string; medium?: string; campaign?: string; content?: string; term?: string },
+): Promise<void> {
+  const apiToken = process.env.VITE_UTMIFY_TOKEN;
+  if (!apiToken) return;
+
+  try {
+    // Fetch spot EUR/BRL rate for UTMify (which requires BRL values)
+    let totalBrlCents = amountEurCents;
+    try {
+      const rateRes = await fetch('https://open.er-api.com/v6/latest/EUR');
+      if (rateRes.ok) {
+        const rateData = await rateRes.json() as { rates?: { BRL?: number } };
+        const rate = rateData?.rates?.BRL;
+        if (rate && rate > 0) totalBrlCents = Math.round(amountEurCents * rate);
+      }
+    } catch { /* rate fetch optional — proceed with EUR amount */ }
+
+    const totalEurCents = cartItems.reduce((sum, ci) => {
+      const p = PRODUCTS.find(pr => pr.id === ci.productId);
+      return sum + (p?.price ?? 0) * ci.quantity;
+    }, 0) || amountEurCents;
+
+    const toBrl = (eur: number) => Math.round(totalBrlCents * eur / totalEurCents);
+
+    const products = cartItems.map(ci => {
+      const p = PRODUCTS.find(pr => pr.id === ci.productId);
+      const name = p?.translations?.['pt-BR']?.name || ci.productId;
+      const eur = (p?.price ?? 0) * ci.quantity;
+      return { id: ci.productId, planId: ci.productId, planName: name, name, quantity: ci.quantity, priceInCents: toBrl(eur) };
+    });
+    if (products.length === 0) {
+      products.push({ id: 'panini-wc2026', planId: 'panini-wc2026', planName: 'Panini FIFA World Cup 2026', name: 'Panini FIFA World Cup 2026', quantity: 1, priceInCents: totalBrlCents });
+    }
+
+    const now = new Date().toISOString();
+    const payload = {
+      orderId: piId,
+      platform: 'other',
+      paymentMethod: 'credit_card',
+      status: 'waiting_payment',
+      currency: 'BRL',
+      createdAt: now,
+      approvedDate: now,
+      customer: { name: customerName || customerEmail, email: customerEmail, phone: null, document: null },
+      trackingParameters: {
+        utm_source: utms.source || null,
+        utm_medium: utms.medium || null,
+        utm_campaign: utms.campaign || null,
+        utm_content: utms.content || null,
+        utm_term: utms.term || null,
+      },
+      commission: { totalPriceInCents: totalBrlCents, gatewayFeeInCents: 0, userCommissionInCents: totalBrlCents },
+      products,
+    };
+
+    const res = await fetch(UTMIFY_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-token': apiToken },
+      body: JSON.stringify(payload),
+    });
+    const result = await res.json() as any;
+    console.log(`[checkout] UTMify waiting_payment for PI ${piId}:`, result?.OK ? 'OK' : JSON.stringify(result));
+  } catch (err: any) {
+    console.warn('[checkout] UTMify waiting_payment error:', err?.message);
+  }
+}
+
 const router = Router();
 
 router.get('/checkout/config', async (_req: Request, res: Response): Promise<void> => {
@@ -138,6 +222,8 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       typeof lastName  === 'string' ? lastName.trim()  : '',
     ].filter(Boolean).join(' ');
 
+    const trackingCode = generateTrackingCode();
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
       currency: 'eur',
@@ -151,6 +237,8 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
         // Real customer data — used by webhook for transactional email sequences
         customer_email: realEmail,
         customer_name: customerName,
+        // Friendly tracking code shown to the customer (PAN + 6 chars)
+        tracking_code: trackingCode,
         // UTM parameters captured by UTMify's utms.js in the browser
         utm_source: typeof utmSource === 'string' ? utmSource.slice(0, 500) : '',
         utm_medium: typeof utmMedium === 'string' ? utmMedium.slice(0, 500) : '',
@@ -160,9 +248,26 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       },
     });
 
+    // Fire-and-forget: register lead with UTMify as waiting_payment (does not block checkout response)
+    void fireUTMifyWaitingPayment(
+      paymentIntent.id,
+      amountTotal,
+      realEmail,
+      customerName,
+      cartItems,
+      {
+        source:   typeof utmSource   === 'string' ? utmSource   : undefined,
+        medium:   typeof utmMedium   === 'string' ? utmMedium   : undefined,
+        campaign: typeof utmCampaign === 'string' ? utmCampaign : undefined,
+        content:  typeof utmContent  === 'string' ? utmContent  : undefined,
+        term:     typeof utmTerm     === 'string' ? utmTerm     : undefined,
+      },
+    );
+
     res.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
+      trackingCode,
       amountTotal: amountTotal / 100,
       currency: 'eur',
       stripeCustomerId: null,

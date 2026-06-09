@@ -3,6 +3,8 @@ import { createHash } from 'crypto';
 import { getUncachableStripeClient } from '../stripeClient';
 import { PRODUCTS } from '../productData';
 import { getResendClient } from '../email/resendClient';
+import { db } from '@workspace/db';
+import { sql } from 'drizzle-orm';
 
 const router = Router();
 const FB_API_VERSION = 'v18.0';
@@ -69,14 +71,38 @@ router.post('/tracking/event', async (req: Request, res: Response): Promise<void
 router.get('/orders/track/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params as { id: string };
 
-  if (!id || !id.startsWith('pi_')) {
-    res.status(400).json({ error: 'Ungültiger Bestellcode. Der Code muss mit pi_ beginnen.' });
+  if (!id) {
+    res.status(400).json({ error: 'Bestellcode fehlt.' });
     return;
   }
 
   try {
+    // Resolve PI id — accept both PAN codes and raw pi_ ids
+    let piId: string;
+    if (id.startsWith('PAN')) {
+      try {
+        const row = await db.execute(
+          sql`SELECT id FROM payments WHERE tracking_code = ${id} LIMIT 1`
+        );
+        if (!row.rows || row.rows.length === 0) {
+          res.status(404).json({ error: 'Bestellung nicht gefunden. Bitte prüfen Sie den Bestellcode.' });
+          return;
+        }
+        piId = row.rows[0].id as string;
+      } catch (dbErr: any) {
+        console.warn('[tracking] DB lookup failed, DB may be unavailable:', dbErr?.message);
+        res.status(503).json({ error: 'Datenbank temporär nicht verfügbar. Bitte versuchen Sie es später erneut.' });
+        return;
+      }
+    } else if (id.startsWith('pi_')) {
+      piId = id;
+    } else {
+      res.status(400).json({ error: 'Ungültiger Bestellcode. Der Code beginnt mit PAN oder pi_.' });
+      return;
+    }
+
     const stripe = await getUncachableStripeClient();
-    const pi = await stripe.paymentIntents.retrieve(id);
+    const pi = await stripe.paymentIntents.retrieve(piId);
 
     // Parse cart items and resolve product names
     let cartItems: { productId: string; quantity: number }[] = [];

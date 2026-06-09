@@ -450,7 +450,7 @@ export default function RastreioPage() {
                   type="text"
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
-                  placeholder="Bestellcode eingeben (z. B. pi_XXXXXX)"
+                  placeholder="Bestellcode eingeben (z. B. PANTP5YHA)"
                   className="w-full pl-9 pr-3 py-2.5 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD600]"
                 />
               </div>

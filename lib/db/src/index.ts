@@ -5,12 +5,17 @@ import * as schema from "./schema";
 const { Pool } = pg;
 
 function createPool() {
-  if (!process.env.DATABASE_URL) {
+  const connectionString = process.env.SUPABASE_DB_URL || process.env.DATABASE_URL;
+  if (!connectionString) {
     throw new Error(
-      "DATABASE_URL must be set. Did you forget to provision a database?",
+      "SUPABASE_DB_URL (or DATABASE_URL) must be set.",
     );
   }
-  return new Pool({ connectionString: process.env.DATABASE_URL });
+  const isSupabase = !!process.env.SUPABASE_DB_URL;
+  return new Pool({
+    connectionString,
+    ssl: isSupabase ? { rejectUnauthorized: false } : undefined,
+  });
 }
 
 let _pool: pg.Pool | null = null;

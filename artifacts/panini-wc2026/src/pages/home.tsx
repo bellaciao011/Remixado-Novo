@@ -42,7 +42,7 @@ export default function Home() {
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="h-[400px] bg-muted/20 animate-pulse rounded" />
               ))}
@@ -52,7 +52,7 @@ export default function Home() {
               <p className="text-destructive font-medium">{t('general.error')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {featuredProducts?.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

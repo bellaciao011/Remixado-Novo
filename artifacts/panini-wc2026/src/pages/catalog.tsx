@@ -20,7 +20,7 @@ export default function Catalog() {
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="h-[420px] bg-muted/20 animate-pulse rounded-xl" />
             ))}
@@ -30,7 +30,7 @@ export default function Catalog() {
             <p className="text-destructive font-medium text-lg">{t('general.error')}</p>
           </div>
         ) : products && products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-8">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

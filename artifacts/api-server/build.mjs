@@ -115,6 +115,9 @@ import __bannerUrl from 'node:url';
 globalThis.require = __bannerCrReq(import.meta.url);
 globalThis.__filename = __bannerUrl.fileURLToPath(import.meta.url);
 globalThis.__dirname = __bannerPath.dirname(globalThis.__filename);
+
+// Startup diagnostic — runs before any module code
+console.error('[STARTUP] Process started. NODE_ENV=' + process.env.NODE_ENV + ' PORT=' + process.env.PORT + ' DATABASE_URL=' + (process.env.DATABASE_URL ? 'SET' : 'MISSING') + ' STRIPE_SECRET_KEY=' + (process.env.STRIPE_SECRET_KEY ? 'SET' : 'MISSING'));
     `,
     },
   });

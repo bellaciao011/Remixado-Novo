@@ -423,7 +423,7 @@ export class WebhookHandlers {
         body: JSON.stringify(payload),
       });
 
-      const result = await res.json();
+      const result = await res.json() as any;
       if (result.OK) {
         console.log(`[webhook] UTMify order registered for PI ${pi.id}:`, JSON.stringify(result));
       } else {

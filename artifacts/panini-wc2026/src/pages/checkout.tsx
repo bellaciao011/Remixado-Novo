@@ -850,14 +850,7 @@ export default function CheckoutPage() {
                         colorPrimary: 'hsl(220 70% 30%)',
                       },
                     },
-                    defaultValues: {
-                      billingDetails: {
-                        address: {
-                          country: shipping.country || detectedCountry,
-                        },
-                      },
-                    },
-                  }}
+                  } as any}
                 >
                   <PaymentForm
                     amountTotal={amountTotal}

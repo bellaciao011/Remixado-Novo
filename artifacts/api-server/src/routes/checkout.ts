@@ -188,7 +188,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
 
 router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { addOrderBump1 } = req.body as { addOrderBump1?: boolean };
 
     const stripe = await getUncachableStripeClient();

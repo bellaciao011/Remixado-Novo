@@ -66,6 +66,7 @@
     "verifyErrorDetail": "No se pudo confirmar el pago de esta sesión.",
     "securePayment": "Pago seguro procesado por Stripe",
     "proceedToPayment": "Completar Pago",
+    "orPayWithCard": "o pagar con tarjeta",
     "paymentDetails": "Datos de Pago",
     "shippingAddress": "Dirección de Envío",
     "emailAddress": "Correo Electrónico",

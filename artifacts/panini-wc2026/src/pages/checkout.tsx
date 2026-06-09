@@ -4,7 +4,7 @@ import { Link, useLocation } from 'wouter';
 import { loadStripe } from '@stripe/stripe-js';
 import { fbq, utmifyEvent, sendCapiEvent } from '@/lib/tracking';
 
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, ExpressCheckoutElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart, CartItem } from '@/contexts/CartContext';
 import { useCreatePaymentIntent, useGetCheckoutConfig } from '@workspace/api-client-react';
 import { Button } from '@/components/ui/button';
@@ -209,8 +209,95 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
     }
   };
 
+  const handleExpressConfirm = async () => {
+    if (!stripe || !elements) return;
+
+    try {
+      const baseOrderItems = items.map(item => ({
+        name: item.name,
+        translations: item.translations,
+        quantity: item.quantity,
+        price: item.price,
+        originalPrice: item.originalPrice,
+        currency: item.currency,
+        image: item.image,
+      }));
+      const allOrderItems = [
+        ...baseOrderItems,
+        ...(orderBump1Selected ? [{
+          name: ORDER_BUMP.translations[i18n.language]?.name || ORDER_BUMP.translations['en']?.name || ORDER_BUMP.translations['pt-BR'].name,
+          translations: ORDER_BUMP.translations,
+          quantity: 1,
+          price: ORDER_BUMP.price / 100,
+          originalPrice: ORDER_BUMP.originalPrice / 100,
+          currency: 'eur',
+          image: ORDER_BUMP.image,
+        }] : []),
+      ];
+      sessionStorage.setItem('panini_order_items', JSON.stringify(allOrderItems));
+      sessionStorage.setItem('panini_order_shipping', JSON.stringify(shipping));
+      sessionStorage.setItem('panini_order_bump', JSON.stringify(orderBump1Selected));
+      if (paymentIntentId) {
+        sessionStorage.setItem('panini_payment_intent_id', paymentIntentId);
+      }
+    } catch {}
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      redirect: 'if_required',
+      confirmParams: {
+        return_url: `${window.location.origin}/pedido/confirmado`,
+        receipt_email: shipping.email,
+        shipping: {
+          name: `${shipping.firstName} ${shipping.lastName}`,
+          address: {
+            line1: shipping.streetAddress,
+            city: shipping.city,
+            state: shipping.county || undefined,
+            postal_code: shipping.postCode,
+            country: shipping.country,
+          },
+        },
+      },
+    });
+
+    if (error) {
+      setStripeError(error.message || t('general.error'));
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      navigate(`/pedido/confirmado?payment_intent=${paymentIntent.id}`);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Apple Pay / Google Pay — Express Checkout */}
+      <div className="space-y-3">
+        <ExpressCheckoutElement
+          onConfirm={handleExpressConfirm}
+          options={{
+            buttonHeight: 52,
+            buttonTheme: {
+              applePay: 'black',
+              googlePay: 'black',
+            },
+            buttonType: {
+              applePay: 'buy',
+              googlePay: 'buy',
+            },
+            layout: { maxColumns: 1, maxRows: 3 },
+          }}
+        />
+      </div>
+
+      {/* Divider */}
+      <div className="relative flex items-center gap-3">
+        <div className="flex-1 h-px bg-border" />
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest px-1">
+          {t('checkout.orPayWithCard') || 'ou paga com cartão'}
+        </span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+
       <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' } }} />
 
       {stripeError && (

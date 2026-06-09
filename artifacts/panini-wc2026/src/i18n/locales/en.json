@@ -66,6 +66,7 @@
     "verifyErrorDetail": "Could not confirm payment for this session.",
     "securePayment": "Secure payment processed by Stripe",
     "proceedToPayment": "Complete Payment",
+    "orPayWithCard": "or pay with card",
     "paymentDetails": "Payment Details",
     "shippingAddress": "Shipping Address",
     "emailAddress": "Email Address",

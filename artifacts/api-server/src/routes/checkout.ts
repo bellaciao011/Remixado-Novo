@@ -133,37 +133,24 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       quantity: i.quantity,
     }));
 
-    // Find or create Stripe Customer using the MASKED email (stripeEmail).
-    // We search by masked email so repeat buyers map to the same customer record.
-    let customerId: string | undefined;
-    if (stripeEmail) {
-      try {
-        const resolvedLocale = typeof locale === 'string' ? locale : 'pt-BR';
-        const existing = await stripe.customers.list({ email: stripeEmail, limit: 1 });
-        if (existing.data.length > 0) {
-          customerId = existing.data[0].id;
-          await stripe.customers.update(customerId, { metadata: { locale: resolvedLocale } });
-        } else {
-          const customer = await stripe.customers.create({ email: stripeEmail, metadata: { locale: resolvedLocale } });
-          customerId = customer.id;
-        }
-      } catch (custErr) {
-        console.warn('Customer create/retrieve failed, continuing without customer:', custErr);
-      }
-    }
+    const customerName = [
+      typeof firstName === 'string' ? firstName.trim() : '',
+      typeof lastName  === 'string' ? lastName.trim()  : '',
+    ].filter(Boolean).join(' ');
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
       currency: 'eur',
       automatic_payment_methods: { enabled: true },
-      ...(customerId ? { customer: customerId } : {}),
-      // receipt_email uses the masked address — real email is in metadata only
-      ...(stripeEmail ? { receipt_email: stripeEmail } : {}),
+      // No customer object and no receipt_email — Stripe must NOT send automatic receipts.
+      // Real email is stored in metadata only; our Resend flow handles all transactional emails.
+      description: 'Leitfaden zur Künstlichen Intelligenz',
       metadata: {
         cart_items: JSON.stringify(cartItems),
-        locale: typeof locale === 'string' ? locale : 'pt-BR',
-        // Real customer email — used by webhook for transactional email sequences
-        customer_real_email: realEmail,
+        locale: typeof locale === 'string' ? locale : 'de',
+        // Real customer data — used by webhook for transactional email sequences
+        customer_email: realEmail,
+        customer_name: customerName,
         // UTM parameters captured by UTMify's utms.js in the browser
         utm_source: typeof utmSource === 'string' ? utmSource.slice(0, 500) : '',
         utm_medium: typeof utmMedium === 'string' ? utmMedium.slice(0, 500) : '',
@@ -178,7 +165,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       paymentIntentId: paymentIntent.id,
       amountTotal: amountTotal / 100,
       currency: 'eur',
-      stripeCustomerId: customerId || null,
+      stripeCustomerId: null,
     });
   } catch (error: any) {
     console.error('PaymentIntent error:', error);

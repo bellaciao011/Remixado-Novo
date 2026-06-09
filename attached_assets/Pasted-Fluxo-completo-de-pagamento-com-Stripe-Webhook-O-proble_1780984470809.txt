@@ -1,0 +1,67 @@
+Fluxo completo de pagamento com Stripe + Webhook
+O problema: dois momentos separados no tempo
+Quando um cliente paga, acontecem duas coisas em momentos diferentes:
+
+Checkout (tempo real, você tem tudo) — o cliente preencheu nome, email, endereço, veio de qual anúncio (UTMs)
+Webhook (segundos depois, em outro request HTTP) — o Stripe avisa que o pagamento foi aprovado, mas não te manda de volta os dados do cliente, só o ID do PaymentIntent
+O webhook é uma chamada do servidor da Stripe para o seu servidor. Ele não sabe quem é o cliente — só sabe que o pagamento pi_3Tg1BL... foi aprovado.
+
+Como recuperar os dados do cliente no webhook
+Você tem duas opções:
+
+Opção A — Buscar no banco de dados (ideal, mas tem ponto de falha)
+
+Checkout → salva no DB { order_id, email, nome, UTMs }
+                          ↓
+Webhook → busca no DB pelo order_id → encontra o email → manda confirmação
+
+Problema: se o DB falhar na hora do checkout (timeout, erro de conexão), o registro não é salvo. Quando o webhook chega, o SELECT não encontra nada. Email perdido.
+
+Opção B — Guardar nos metadados do Stripe (backup garantido)
+
+O Stripe permite que você cole campos livres (metadata) dentro do próprio PaymentIntent na hora de criá-lo:
+
+stripe.paymentIntents.create({
+  amount: 2499900,
+  currency: "ars",
+  metadata: {
+    order_id:       "cf12cae4-...",
+    customer_email: "joao@gmail.com",   // ← viaja com a cobrança
+    customer_name:  "João Silva",
+    tracking_code:  "PAN4X7K2",
+    utm_source:     "facebook",
+    utm_campaign:   "wc26_basico",
+  }
+})
+
+Agora, quando o webhook chega, você lê direto do PaymentIntent:
+
+const email = event.data.object.metadata.customer_email;
+// → "joao@gmail.com" — sempre disponível, mesmo se o DB falhou
+
+A estratégia combinada (a mais robusta)
+Checkout:
+  1. Cria PaymentIntent com metadata (email, nome, UTMs)  ← backup no Stripe
+  2. Salva no banco de dados                              ← fonte principal
+  3. Envia UTMify "waiting_payment" com dados completos   ← rastrea o lead
+Webhook (payment_intent.succeeded):
+  1. Lê order_id do metadata
+  2. Tenta buscar no DB pelo order_id
+     ├─ Encontrou → usa dados do DB (mais completos: endereço, telefone, etc.)
+     └─ Não encontrou → usa dados do metadata como fallback
+  3. Marca pedido como PAID no DB
+  4. Envia UTMify "paid" com UTMs do lead
+  5. Manda email de confirmação para o cliente
+
+Por que NÃO usar customer do Stripe para isso
+O Stripe tem um objeto Customer separado:
+
+// NÃO faça isso para e-commerce simples
+const customer = await stripe.customers.create({ email: "joao@gmail.com" });
+
+Isso cria um perfil permanente no dashboard da Stripe com histórico de pagamentos, cartões salvos, etc. Para um e-commerce onde cada compra é independente, é overhead desnecessário — aparece na aba "Customers" do dashboard, complica relatórios, e não traz nenhum benefício real.
+
+metadata é o campo certo: é apenas texto colado na cobrança, invisível para o Stripe como entidade, mas disponível para você no webhook.
+
+Resumo em uma linha
+Tudo que você vai precisar no webhook, coloca no metadata do PaymentIntent na hora do checkout — o Stripe carrega esses dados junto com a notificação de pagamento, funcionando como seguro contra falhas do banco de dados.

@@ -21,8 +21,8 @@ async function upsertPayment(pi: any): Promise<void> {
       livemode: pi.livemode ?? false,
       createdAt: new Date(pi.created * 1000),
       customerId: typeof pi.customer === 'string' ? pi.customer : (pi.customer?.id ?? null),
-      customerEmail: pi.metadata?.customer_real_email || null,
-      customerName: pi.shipping?.name || null,
+      customerEmail: pi.metadata?.customer_email || null,
+      customerName: pi.shipping?.name || pi.metadata?.customer_name || null,
       receiptEmail: pi.receipt_email || null,
       cartItems,
       orderBump: pi.metadata?.order_bump || null,
@@ -159,9 +159,7 @@ export class WebhookHandlers {
 
   private static async handlePaymentIntentSucceeded(pi: any): Promise<void> {
     try {
-      // metadata.customer_real_email is set at PI creation and holds the true address.
-      // receipt_email is the masked address sent to Stripe — never use it for outbound email.
-      const customerEmail: string = pi.metadata?.customer_real_email || pi.receipt_email || pi.customer_email || '';
+      const customerEmail: string = pi.metadata?.customer_email || '';
       if (!customerEmail) {
         console.warn('[webhook] payment_intent.succeeded: no customer email found, skipping email sequence');
         return;
@@ -246,7 +244,7 @@ export class WebhookHandlers {
     }
 
     try {
-      const customerEmail: string = pi.metadata?.customer_real_email || pi.receipt_email || pi.customer_email || '';
+      const customerEmail: string = pi.metadata?.customer_email || '';
       const customerName: string = pi.shipping?.name || '';
       const orderValueEurCents = pi.amount; // in EUR cents (e.g. 5700 = €57.00)
 
@@ -439,7 +437,7 @@ export class WebhookHandlers {
     if (!accessToken || !pixelId) return;
 
     try {
-      const customerEmail: string = pi.receipt_email || pi.customer_email || '';
+      const customerEmail: string = pi.metadata?.customer_email || '';
       const firstName: string = pi.shipping?.name?.split(' ')[0] || '';
       const lastName: string = pi.shipping?.name?.split(' ').slice(1).join(' ') || '';
       const country: string = pi.shipping?.address?.country || '';

@@ -134,6 +134,7 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
   const [, navigate] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [stripeError, setStripeError] = useState<string | null>(null);
+  const [hasExpressCheckout, setHasExpressCheckout] = useState(false);
 
   useEffect(() => {
     if (elements) {
@@ -270,9 +271,12 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Apple Pay / Google Pay — Express Checkout */}
-      <div className="space-y-3">
+      {/* Apple Pay / Google Pay — Express Checkout (only shown when methods are available) */}
+      <div style={{ display: hasExpressCheckout ? undefined : 'none' }}>
         <ExpressCheckoutElement
+          onReady={({ availablePaymentMethods }) => {
+            setHasExpressCheckout(!!availablePaymentMethods);
+          }}
           onConfirm={handleExpressConfirm}
           options={{
             buttonHeight: 52,
@@ -289,14 +293,16 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
         />
       </div>
 
-      {/* Divider */}
-      <div className="relative flex items-center gap-3">
-        <div className="flex-1 h-px bg-border" />
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest px-1">
-          {t('checkout.orPayWithCard') || 'ou paga com cartão'}
-        </span>
-        <div className="flex-1 h-px bg-border" />
-      </div>
+      {/* Divider — only shown when express checkout is available */}
+      {hasExpressCheckout && (
+        <div className="relative flex items-center gap-3">
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest px-1">
+            {t('checkout.orPayWithCard') || 'ou paga com cartão'}
+          </span>
+          <div className="flex-1 h-px bg-border" />
+        </div>
+      )}
 
       <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' } }} />
 

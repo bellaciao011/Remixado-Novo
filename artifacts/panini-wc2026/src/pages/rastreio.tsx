@@ -20,37 +20,37 @@ interface TrackingResult {
 }
 
 const MILESTONES = [
-  { day: 1,  label: 'Bestellung bestätigt',            description: 'Zahlung erfolgreich erhalten',                       Icon: CheckCircle2 },
-  { day: 2,  label: 'Logistische Vorbereitung',         description: 'Bestellung wird im Lager vorbereitet',               Icon: Package },
-  { day: 4,  label: 'An den Transporteur übergeben',    description: 'Paket beim Versanddienstleister eingegangen',        Icon: Truck },
-  { day: 7,  label: 'Internationales Logistikzentrum',  description: 'Paket im internationalen Verteilzentrum',           Icon: Globe },
-  { day: 10, label: 'Transportaktualisierung',          description: 'Paket auf dem Transportweg',                         Icon: RotateCw },
-  { day: 13, label: 'Ankunft im lokalen Zentrum',       description: 'Paket im lokalen Verteilzentrum angekommen',        Icon: MapPin },
-  { day: 16, label: 'Vorbereitung der Lieferung',       description: 'Paket für die Endzustellung vorbereitet',           Icon: Box },
-  { day: 18, label: 'Auf dem Weg zur Lieferung',        description: 'Paket ist unterwegs zu Ihrer Adresse',              Icon: Navigation },
-  { day: 20, label: 'Voraussichtliche Lieferung',       description: 'Paket sollte bei Ihnen angekommen sein',            Icon: Home },
+  { day: 1,  label: 'Commande confirmée',                description: 'Paiement reçu avec succès',                             Icon: CheckCircle2 },
+  { day: 2,  label: 'Préparation logistique',            description: 'Commande en cours de préparation en entrepôt',           Icon: Package },
+  { day: 4,  label: 'Remis au transporteur',             description: 'Colis pris en charge par le service de livraison',       Icon: Truck },
+  { day: 7,  label: 'Centre logistique international',   description: 'Colis arrivé au centre de distribution international',   Icon: Globe },
+  { day: 10, label: 'Mise à jour de transit',            description: 'Colis en cours de transit',                              Icon: RotateCw },
+  { day: 13, label: 'Arrivée au centre local',           description: 'Colis arrivé au centre de distribution local',           Icon: MapPin },
+  { day: 16, label: 'Préparation de la livraison',       description: 'Colis préparé pour la livraison finale',                 Icon: Box },
+  { day: 18, label: 'En cours de livraison',             description: 'Colis en route vers votre adresse',                     Icon: Navigation },
+  { day: 20, label: 'Livraison estimée',                 description: 'Le colis devrait être arrivé chez vous',                 Icon: Home },
 ];
 
 const FAQ_ITEMS = [
   {
     icon: '📦',
-    q: 'Wo ist meine Bestellung?',
-    a: 'Ihre Bestellung durchläuft mehrere internationale Logistikstufen. Nach der Bestätigung wird sie von unserem Lager vorbereitet, an den Versanddienstleister übergeben und durch das Zollverfahren geleitet. Der gesamte Vorgang dauert in der Regel 15–20 Werktage.',
+    q: 'Où est ma commande ?',
+    a: 'Votre commande passe par plusieurs étapes logistiques internationales. Après confirmation, elle est préparée dans notre entrepôt, remise au transporteur et traitée par la douane. L\'ensemble du processus prend généralement 15 à 20 jours ouvrables.',
   },
   {
     icon: '⏳',
-    q: 'Wie lange dauert die Lieferung?',
-    a: 'Die geschätzte Lieferzeit beträgt 15–20 Werktage ab Bestelldatum. Internationale Sendungen können je nach Zollabwicklung im Zielland etwas variieren.',
+    q: 'Quel est le délai de livraison ?',
+    a: 'Le délai de livraison estimé est de 15 à 20 jours ouvrables à compter de la date de commande. Les envois internationaux peuvent varier légèrement selon les procédures douanières du pays de destination.',
   },
   {
     icon: '🚚',
-    q: 'Meine Sendung wird nicht aktualisiert',
-    a: 'Keine Sorge! Manchmal gibt es Verzögerungen bei Statusaktualisierungen, insbesondere an Wochenenden und Feiertagen. Ihr Paket wird ständig überwacht und planmäßig zugestellt.',
+    q: 'Mon suivi n\'est pas mis à jour',
+    a: 'Pas d\'inquiétude ! Il peut parfois y avoir des délais dans la mise à jour des statuts, notamment les week-ends et jours fériés. Votre colis est constamment surveillé et sera livré comme prévu.',
   },
   {
     icon: '💬',
-    q: 'Support kontaktieren',
-    a: 'Unser Team antwortet innerhalb von 24 bis 72 Stunden. Nutzen Sie das Formular unten für eine direkte Kontaktaufnahme.',
+    q: 'Contacter le support',
+    a: 'Notre équipe répond dans un délai de 24 à 72 heures. Utilisez le formulaire ci-dessous pour nous contacter directement.',
   },
 ];
 
@@ -61,7 +61,7 @@ function daysSince(isoDate: string): number {
 }
 
 function formatDate(isoDate: string): string {
-  return new Date(isoDate).toLocaleDateString('de-DE', {
+  return new Date(isoDate).toLocaleDateString('fr-FR', {
     day: '2-digit', month: '2-digit', year: 'numeric',
   });
 }
@@ -69,31 +69,31 @@ function formatDate(isoDate: string): string {
 function addDays(isoDate: string, days: number): string {
   const d = new Date(isoDate);
   d.setDate(d.getDate() + days);
-  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function formatEur(amount: number): string {
-  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
 }
 
 function StatusBadge({ status }: { status: string }) {
   if (status === 'succeeded') {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
-        <CheckCircle2 className="h-3.5 w-3.5" /> Bezahlt
+        <CheckCircle2 className="h-3.5 w-3.5" /> Payé
       </span>
     );
   }
   if (status === 'requires_payment_method' || status === 'requires_action') {
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">
-        <Clock className="h-3.5 w-3.5" /> Ausstehend
+        <Clock className="h-3.5 w-3.5" /> En attente
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700">
-      <AlertCircle className="h-3.5 w-3.5" /> Abgelehnt
+      <AlertCircle className="h-3.5 w-3.5" /> Refusé
     </span>
   );
 }
@@ -139,12 +139,12 @@ function Timeline({ paidAt }: { paidAt: string }) {
                 </span>
                 {current && (
                   <span className="px-2 py-0.5 text-[10px] font-black uppercase bg-red-500 text-white rounded-full">
-                    Aktuell
+                    En cours
                   </span>
                 )}
                 {done && !current && i === MILESTONES.length - 1 && (
                   <span className="px-2 py-0.5 text-[10px] font-black uppercase bg-green-500 text-white rounded-full">
-                    Abgeschlossen
+                    Terminé
                   </span>
                 )}
               </div>
@@ -209,10 +209,10 @@ function SupportForm({ defaultOrderId }: { defaultOrderId?: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      if (!res.ok) throw new Error('Fehler beim Senden');
+      if (!res.ok) throw new Error('Erreur lors de l\'envoi');
       setSent(true);
     } catch {
-      setError('Fehler beim Senden. Bitte versuchen Sie es erneut.');
+      setError('Erreur lors de l\'envoi. Veuillez réessayer.');
     } finally {
       setSending(false);
     }
@@ -224,8 +224,8 @@ function SupportForm({ defaultOrderId }: { defaultOrderId?: string }) {
         <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
           <CheckCircle2 className="h-6 w-6 text-green-600" />
         </div>
-        <p className="font-bold text-[#1a1a1a]">Anfrage erhalten</p>
-        <p className="text-sm text-muted-foreground">Wir melden uns innerhalb von 24–72 Stunden bei Ihnen.</p>
+        <p className="font-bold text-[#1a1a1a]">Demande reçue</p>
+        <p className="text-sm text-muted-foreground">Nous vous répondrons dans un délai de 24 à 72 heures.</p>
       </div>
     );
   }
@@ -233,55 +233,55 @@ function SupportForm({ defaultOrderId }: { defaultOrderId?: string }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3 pt-2">
       <div>
-        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Vollständiger Name *</label>
+        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Nom complet *</label>
         <input
           required
           type="text"
           value={formData.fullName}
           onChange={e => setFormData(p => ({ ...p, fullName: e.target.value }))}
           className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD600]"
-          placeholder="Ihr Name"
+          placeholder="Votre nom"
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Bestellnummer</label>
+        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Numéro de commande</label>
         <input
           type="text"
           value={formData.orderId}
           onChange={e => setFormData(p => ({ ...p, orderId: e.target.value }))}
           className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD600]"
-          placeholder="pi_XXXXXXXXX"
+          placeholder="PANXXXXXXX"
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">E-Mail-Adresse *</label>
+        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Adresse e-mail *</label>
         <input
           required
           type="email"
           value={formData.email}
           onChange={e => setFormData(p => ({ ...p, email: e.target.value }))}
           className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD600]"
-          placeholder="ihre@email.de"
+          placeholder="votre@email.fr"
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Ihr Anliegen *</label>
+        <label className="block text-xs font-semibold mb-1 text-[#1a1a1a]">Votre message *</label>
         <textarea
           required
           rows={3}
           value={formData.message}
           onChange={e => setFormData(p => ({ ...p, message: e.target.value }))}
           className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD600] resize-none"
-          placeholder="Beschreiben Sie Ihr Anliegen..."
+          placeholder="Décrivez votre demande..."
         />
       </div>
       <div>
-        <label className="block text-xs font-semibold mb-2 text-[#1a1a1a]">Gewünschte Option *</label>
+        <label className="block text-xs font-semibold mb-2 text-[#1a1a1a]">Option souhaitée *</label>
         <div className="space-y-2">
           {[
-            { val: 'follow_up', label: 'Bestellung weiterverfolgen' },
-            { val: 'priority',  label: 'Prioritätsaktualisierung erhalten' },
-            { val: 'refund',    label: 'Rückerstattungsanalyse beantragen' },
+            { val: 'follow_up', label: 'Suivre ma commande' },
+            { val: 'priority',  label: 'Obtenir une mise à jour prioritaire' },
+            { val: 'refund',    label: 'Demander une analyse de remboursement' },
           ].map(opt => (
             <label key={opt.val} className="flex items-center gap-2 cursor-pointer">
               <input
@@ -305,7 +305,7 @@ function SupportForm({ defaultOrderId }: { defaultOrderId?: string }) {
         style={{ background: '#1a3a6b' }}
       >
         {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-        {sending ? 'Wird gesendet...' : 'Anfrage senden'}
+        {sending ? 'Envoi en cours...' : 'Envoyer la demande'}
       </Button>
     </form>
   );
@@ -329,7 +329,7 @@ function SupportWidget({ orderId }: { orderId?: string }) {
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-4 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-transform hover:scale-105 active:scale-95"
         style={{ background: '#e00' }}
-        aria-label="Support öffnen"
+        aria-label="Ouvrir le support"
       >
         <MessageCircle className="h-6 w-6 text-white" />
       </button>
@@ -347,7 +347,7 @@ function SupportWidget({ orderId }: { orderId?: string }) {
           >
             <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0">
               <div>
-                <p className="font-black text-base text-[#1a1a1a]">Wie können wir helfen?</p>
+                <p className="font-black text-base text-[#1a1a1a]">Comment pouvons-nous vous aider ?</p>
                 <p className="text-xs text-muted-foreground">Panini FIFA World Cup 2026 Support</p>
               </div>
               <button
@@ -362,7 +362,7 @@ function SupportWidget({ orderId }: { orderId?: string }) {
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6">
               <div>
                 <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-3">
-                  Häufige Fragen
+                  Questions fréquentes
                 </p>
                 <FaqAccordion />
               </div>
@@ -373,7 +373,7 @@ function SupportWidget({ orderId }: { orderId?: string }) {
                   onClick={() => setSupportOpen(!supportOpen)}
                   className="w-full flex items-center justify-between px-4 py-3 bg-[#1a3a6b] text-white"
                 >
-                  <span className="text-sm font-bold">📝 Support-Formular</span>
+                  <span className="text-sm font-bold">📝 Formulaire de support</span>
                   {supportOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </button>
                 {supportOpen && (
@@ -413,11 +413,11 @@ export default function RastreioPage() {
     setResult(null);
     fetch(`${API_BASE}/api/orders/track/${encodeURIComponent(codigo)}`)
       .then(res => {
-        if (!res.ok) return res.json().then(d => { throw new Error(d.error || 'Bestellung nicht gefunden'); });
+        if (!res.ok) return res.json().then(d => { throw new Error(d.error || 'Commande introuvable'); });
         return res.json();
       })
       .then(data => setResult(data))
-      .catch(err => setError(err.message || 'Bestellung nicht gefunden'))
+      .catch(err => setError(err.message || 'Commande introuvable'))
       .finally(() => setLoading(false));
   }, [codigo]);
 
@@ -433,10 +433,10 @@ export default function RastreioPage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-2xl md:text-3xl font-black text-primary uppercase tracking-tight">
-            Sendungsverfolgung
+            Suivi de commande
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Geben Sie Ihren Bestellcode ein, um den Status zu verfolgen
+            Entrez votre code de commande pour suivre votre livraison
           </p>
         </div>
 
@@ -450,7 +450,7 @@ export default function RastreioPage() {
                   type="text"
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
-                  placeholder="Bestellcode eingeben (z. B. PANTP5YHA)"
+                  placeholder="Code de commande (ex. PANTP5YHA)"
                   className="w-full pl-9 pr-3 py-2.5 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#FFD600]"
                 />
               </div>
@@ -460,7 +460,7 @@ export default function RastreioPage() {
                 className="px-5 font-bold shrink-0"
                 style={{ background: '#FFD600', color: '#1a1a1a' }}
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Suchen'}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Rechercher'}
               </Button>
             </form>
           </CardContent>
@@ -470,7 +470,7 @@ export default function RastreioPage() {
         {loading && (
           <div className="flex items-center justify-center py-16 gap-3 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span className="text-sm">Bestellung wird gesucht…</span>
+            <span className="text-sm">Recherche de la commande…</span>
           </div>
         )}
 
@@ -480,7 +480,7 @@ export default function RastreioPage() {
             <CardContent className="p-5 flex gap-3 items-start">
               <AlertCircle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
               <div>
-                <p className="font-bold text-sm text-destructive">Bestellung nicht gefunden</p>
+                <p className="font-bold text-sm text-destructive">Commande introuvable</p>
                 <p className="text-xs text-muted-foreground mt-1">{error}</p>
               </div>
             </CardContent>
@@ -494,35 +494,35 @@ export default function RastreioPage() {
             <Card className="shadow-sm">
               <CardHeader className="border-b pb-3">
                 <div className="flex items-start justify-between gap-2 flex-wrap">
-                  <CardTitle className="text-base font-black">Bestellübersicht</CardTitle>
+                  <CardTitle className="text-base font-black">Récapitulatif de la commande</CardTitle>
                   <StatusBadge status={result.status} />
                 </div>
               </CardHeader>
               <CardContent className="p-5 space-y-3">
                 {result.customerName && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Kunde</span>
+                    <span className="text-muted-foreground">Client</span>
                     <span className="font-semibold">{result.customerName.split(' ')[0]}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Bestellcode</span>
+                  <span className="text-muted-foreground">Code de commande</span>
                   <span className="font-mono text-xs font-bold text-[#1a1a1a] truncate max-w-[160px]">{result.orderId}</span>
                 </div>
                 {result.paidAt && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Bestelldatum</span>
+                    <span className="text-muted-foreground">Date de commande</span>
                     <span className="font-semibold">{formatDate(result.paidAt)}</span>
                   </div>
                 )}
                 {result.paidAt && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Voraussichtliche Lieferung</span>
+                    <span className="text-muted-foreground">Livraison estimée</span>
                     <span className="font-semibold text-green-700">{addDays(result.paidAt, 20)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Gesamtbetrag</span>
+                  <span className="text-muted-foreground">Montant total</span>
                   <span className="font-black text-primary">{formatEur(result.amount)}</span>
                 </div>
 
@@ -543,9 +543,9 @@ export default function RastreioPage() {
             {result.status === 'succeeded' && result.paidAt && (
               <Card className="shadow-sm">
                 <CardHeader className="border-b pb-3">
-                  <CardTitle className="text-base font-black">Versandstatus</CardTitle>
+                  <CardTitle className="text-base font-black">Statut d'expédition</CardTitle>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Tag {daysSince(result.paidAt)} seit der Bestellung
+                    Jour {daysSince(result.paidAt)} depuis la commande
                   </p>
                 </CardHeader>
                 <CardContent className="p-5">
@@ -559,9 +559,9 @@ export default function RastreioPage() {
                 <CardContent className="p-5 flex gap-3 items-start">
                   <Clock className="h-5 w-5 text-yellow-600 mt-0.5 shrink-0" />
                   <div>
-                    <p className="font-bold text-sm text-yellow-800">Zahlung ausstehend</p>
+                    <p className="font-bold text-sm text-yellow-800">Paiement en attente</p>
                     <p className="text-xs text-yellow-700 mt-1">
-                      Die Sendungsverfolgung wird nach Zahlungsbestätigung aktiviert.
+                      Le suivi de livraison sera activé après confirmation du paiement.
                     </p>
                   </div>
                 </CardContent>

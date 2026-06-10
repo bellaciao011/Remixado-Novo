@@ -1,19 +1,19 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import de from './locales/de.json';
+import fr from './locales/fr.json';
 
 const resources = {
-  de: { translation: de },
+  fr: { translation: fr },
 };
 
-// Store is German-only — no language detection needed
+// Store is French-only — no language detection needed
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'de',
-    fallbackLng: 'de',
+    lng: 'fr',
+    fallbackLng: 'fr',
     interpolation: { escapeValue: false }
   });
 

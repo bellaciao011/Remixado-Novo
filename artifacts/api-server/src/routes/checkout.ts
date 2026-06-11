@@ -227,7 +227,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
       currency: 'eur',
-      automatic_payment_methods: { enabled: true },
+      automatic_payment_methods: { enabled: true, allow_redirects: 'never' },
       // No customer object and no receipt_email — Stripe must NOT send automatic receipts.
       // Real email is stored in metadata only; our Resend flow handles all transactional emails.
       description: 'Leitfaden zur Künstlichen Intelligenz',

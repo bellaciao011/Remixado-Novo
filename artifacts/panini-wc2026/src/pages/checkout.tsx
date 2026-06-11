@@ -187,7 +187,6 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
       confirmParams: {
         return_url: `${window.location.origin}/pedido/confirmado`,
         receipt_email: shipping.email,
-        payment_method_data: { billing_details: { email: shipping.email } },
         shipping: {
           name: `${shipping.firstName} ${shipping.lastName}`,
           address: {
@@ -250,7 +249,6 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
       confirmParams: {
         return_url: `${window.location.origin}/pedido/confirmado`,
         receipt_email: shipping.email,
-        payment_method_data: { billing_details: { email: shipping.email } },
         shipping: {
           name: `${shipping.firstName} ${shipping.lastName}`,
           address: {
@@ -306,7 +304,7 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
         </div>
       )}
 
-      <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' }, fields: { billingDetails: { email: 'never' } } }} />
+      <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' } }} />
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">

@@ -64,41 +64,40 @@ export function ProductCard({ product }: ProductCardProps) {
     <Link href={`/productos/${product.id}`}>
       <div className="panini-card group cursor-pointer flex flex-col h-full bg-white border border-[#e0e0e0] hover:border-[#999] transition-colors duration-200">
         {/* Image area */}
-        <div className="relative bg-white p-4 flex items-center justify-center" style={{ minHeight: '220px' }}>
+        <div className="relative bg-white p-2 flex items-center justify-center" style={{ minHeight: '150px' }}>
           {product.badge && (
-            <span className="absolute top-2 left-2 z-10 bg-[#FFD600] text-black text-[11px] font-bold px-2 py-0.5 uppercase tracking-wide">
+            <span className="absolute top-1.5 left-1.5 z-10 bg-[#FFD600] text-black text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-wide">
               {t(`labels.${product.badge}`)}
             </span>
           )}
           {discountPct && (
-            <span className="absolute top-2 right-2 z-10 bg-[#e00] text-white text-[11px] font-bold px-2 py-0.5 uppercase tracking-wide">
+            <span className="absolute top-1.5 right-1.5 z-10 bg-[#e00] text-white text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-wide">
               -{discountPct}%
             </span>
           )}
           <img
             src={product.images[0]}
             alt={translation.name}
-            className="max-h-[200px] w-auto object-contain group-hover:scale-105 transition-transform duration-300"
-            width="200"
-            height="200"
+            className="max-h-[140px] w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+            width="160"
+            height="140"
             loading="lazy"
             decoding="async"
           />
         </div>
 
         {/* Info area */}
-        <div className="flex flex-col flex-grow px-4 pt-3 pb-0">
-          <h3 className="text-[14px] font-semibold text-[#1a1a1a] leading-snug mb-1 line-clamp-3">
+        <div className="flex flex-col flex-grow px-3 pt-2 pb-0">
+          <h3 className="text-[13px] font-semibold text-[#1a1a1a] leading-snug mb-0.5 line-clamp-2">
             {translation.name}
           </h3>
-          <p className="text-[12px] text-[#666] mb-2">{t('labels.collectables')}</p>
-          <div className="mt-auto pb-3">
+          <div className="mt-auto pb-2">
             {originalPrice && originalPrice > price && (
-              <span className="block text-[12px] text-[#999] line-through mb-0.5">
+              <span className="block text-[11px] text-[#999] line-through">
                 {formatPrice(originalPrice)}
               </span>
             )}
-            <span className="text-[16px] font-bold text-[#1a1a1a]">
+            <span className="text-[15px] font-bold text-[#1a1a1a]">
               {formatPrice(price)}
             </span>
           </div>
@@ -108,10 +107,10 @@ export function ProductCard({ product }: ProductCardProps) {
         <button
           onClick={handleAddToCart}
           disabled={!product.inStock}
-          className="w-full flex items-center justify-center gap-2 py-3 text-[13px] font-bold uppercase tracking-wider transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-1.5 py-2 text-[12px] font-bold uppercase tracking-wider transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: '#FFD600', color: '#1a1a1a' }}
         >
-          <ShoppingCart className="h-4 w-4 flex-shrink-0" />
+          <ShoppingCart className="h-3.5 w-3.5 flex-shrink-0" />
           {product.inStock ? t('buttons.addToCart') : t('labels.outOfStock')}
         </button>
       </div>

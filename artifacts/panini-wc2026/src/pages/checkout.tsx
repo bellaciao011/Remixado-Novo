@@ -186,7 +186,6 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
       redirect: 'if_required',
       confirmParams: {
         return_url: `${window.location.origin}/pedido/confirmado`,
-        receipt_email: shipping.email,
         shipping: {
           name: `${shipping.firstName} ${shipping.lastName}`,
           address: {
@@ -248,7 +247,6 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
       redirect: 'if_required',
       confirmParams: {
         return_url: `${window.location.origin}/pedido/confirmado`,
-        receipt_email: shipping.email,
         shipping: {
           name: `${shipping.firstName} ${shipping.lastName}`,
           address: {

@@ -304,7 +304,7 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
         </div>
       )}
 
-      <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' } }} />
+      <PaymentElement options={{ terms: { card: 'never', applePay: 'never', googlePay: 'never', paypal: 'never' }, fields: { billingDetails: { email: 'never' } } }} />
 
       {stripeError && (
         <div className="flex gap-3 rounded-lg border border-destructive/40 bg-destructive/5 p-4">

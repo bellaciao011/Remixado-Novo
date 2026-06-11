@@ -1,0 +1,211 @@
+Evento
+payment_intent.succeeded
+ID do evento
+evt_3Th1wWPMmgUDduuq0Oho8xu7
+Data de origem
+11 de jun. de 2026, 03:20:42 -03
+Origem
+API
+Ver logs
+Descrição
+O pagamento pi_3Th1wWPMmgUDduuq0ypfU5uz de EUR 89,00 foi bem-sucedido
+Entregas para endpoints de webhook
+Tentativas de enviar este evento para seus endpoints de webhook nos últimos 15 dias.
+Todas
+Concluídas
+Malsucedidas
+
+200 OK
+https://malvexpanels.live/api/public/payments/webhook
+11 de jun. de 2026, 03:20:42
+Reenviar
+
+200 OK
+https://woldcupfranca.com/api/stripe/webhook
+11 de jun. de 2026, 03:20:42
+Reenviar
+Entregas para plataformas conectadas
+Tentativas de enviar este evento para endpoints de plataformas conectadas nos últimos 15 dias.
+Todas
+Concluídas
+Malsucedidas
+Nenhuma tentativa de entrega recente
+Entregas para os ouvintes locais
+Tentativas de enviar este evento para seus ouvintes locais de CLI nos últimos 7 dias.
+Todas
+Concluídas
+Malsucedidas
+Nenhuma tentativa de entrega recente
+Dados do evento
+{
+"object"
+: {
+"id": 
+"pi_3Th1wWPMmgUDduuq0ypfU5uz",
+"object": 
+"payment_intent",
+"amount": 
+8900,
+"amount_capturable": 
+0,
+"amount_details"
+: {
+"tip"
+:
+{}
+,
+},
+"amount_received": 
+8900,
+"application": 
+null,
+"application_fee_amount": 
+null,
+"automatic_payment_methods"
+: {
+"allow_redirects": 
+"always",
+"enabled": 
+true,
+},
+"canceled_at": 
+null,
+"cancellation_reason": 
+null,
+"capture_method": 
+"automatic_async",
+"client_secret": 
+"pi_3Th1wWPMmgUDduuq0ypfU5uz_secret_pz3eqflS5pcJ0EfX5NFFT9rRZ",
+"confirmation_method": 
+"automatic",
+"created": 
+1781158700,
+"currency": 
+"eur",
+"customer": 
+null,
+"customer_account": 
+null,
+"description": 
+"Leitfaden zur Künstlichen Intelligenz",
+"excluded_payment_method_types": 
+null,
+"last_payment_error": 
+null,
+"latest_charge": 
+"ch_3Th1wWPMmgUDduuq09kISOXQ",
+"livemode": 
+true,
+"managed_payments"
+: {
+"enabled": 
+false,
+},
+"metadata"
+: {
+"cart_items": 
+"[{"productId":"pack-5","quantity":2}]",
+"customer_email": 
+"philippe.martin5656@gmail.com",
+"customer_name": 
+"Philippe Martin",
+"locale": 
+"fr",
+"order_bump": 
+"order-bump-50packs",
+"tracking_code": 
+"PAN7YR459",
+"utm_campaign": 
+"FR - FOTOS — Cópia|120247938738050103",
+"utm_content": 
+"Ads|120247938738130103::IwZXh0bgNhZW0BMABhZGlkAas03PuaaIdzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEez7W0zAn6YPqjRXyf4lyud16FgPyB8G3tyQP8Q-422iNv_3m5s6Qq5cVko9s_aem_du-FzqIKfMnTJEFV1g6j0Q::",
+"utm_medium": 
+"Conjunto|120247938738140103",
+"utm_source": 
+"FBjLj6a2a50c9aa7a606fa19504fc",
+"utm_term": 
+"Facebook_Mobile_Feed",
+},
+"next_action": 
+null,
+"on_behalf_of": 
+null,
+"payment_method": 
+"pm_1Th1ymPMmgUDduuqgnu9kRfF",
+"payment_method_configuration_details"
+: {
+"id": 
+"pmc_1TZG3SPMmgUDduuqso4Pmg7n",
+"parent": 
+null,
+},
+"payment_method_options"
+: {
+"card"
+: {
+"installments": 
+null,
+"mandate_options": 
+null,
+"network": 
+null,
+"request_three_d_secure": 
+"automatic",
+},
+},
+"payment_method_types"
+: [
+"card",
+],
+"processing": 
+null,
+"receipt_email": 
+"philippe.martin5656@gmail.com",
+"review": 
+null,
+"setup_future_usage": 
+null,
+"shared_payment_granted_token": 
+null,
+"shipping"
+: {
+"address"
+: {
+"city": 
+"Feytiat ",
+"country": 
+"FR",
+"line1": 
+"6 place Louis tailleur ",
+"line2": 
+null,
+"postal_code": 
+"87220",
+"state": 
+"87",
+},
+"carrier": 
+null,
+"name": 
+"Philippe Martin",
+"phone": 
+null,
+"tracking_number": 
+null,
+},
+"source": 
+null,
+"statement_descriptor": 
+null,
+"statement_descriptor_suffix": 
+null,
+"status": 
+"succeeded",
+"transfer_data": 
+null,
+"transfer_group": 
+null,
+},
+"previous_attributes": 
+null,
+}

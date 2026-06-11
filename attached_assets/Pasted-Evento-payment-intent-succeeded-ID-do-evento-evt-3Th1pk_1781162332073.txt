@@ -1,0 +1,209 @@
+Evento
+payment_intent.succeeded
+ID do evento
+evt_3Th1pkPMmgUDduuq0YDQrNFg
+Data de origem
+11 de jun. de 2026, 03:14:17 -03
+Origem
+API
+Ver logs
+Descrição
+O pagamento pi_3Th1pkPMmgUDduuq0HQND5SD de EUR 32,00 foi bem-sucedido
+Entregas para endpoints de webhook
+Tentativas de enviar este evento para seus endpoints de webhook nos últimos 15 dias.
+Todas
+Concluídas
+Malsucedidas
+
+200 OK
+https://malvexpanels.live/api/public/payments/webhook
+11 de jun. de 2026, 03:14:17
+Reenviar
+
+200 OK
+https://woldcupfranca.com/api/stripe/webhook
+11 de jun. de 2026, 03:14:17
+Reenviar
+Entregas para plataformas conectadas
+Tentativas de enviar este evento para endpoints de plataformas conectadas nos últimos 15 dias.
+Todas
+Concluídas
+Malsucedidas
+Nenhuma tentativa de entrega recente
+Entregas para os ouvintes locais
+Tentativas de enviar este evento para seus ouvintes locais de CLI nos últimos 7 dias.
+Todas
+Concluídas
+Malsucedidas
+Nenhuma tentativa de entrega recente
+Dados do evento
+{
+"object"
+: {
+"id": 
+"pi_3Th1pkPMmgUDduuq0HQND5SD",
+"object": 
+"payment_intent",
+"amount": 
+3200,
+"amount_capturable": 
+0,
+"amount_details"
+: {
+"tip"
+:
+{}
+,
+},
+"amount_received": 
+3200,
+"application": 
+null,
+"application_fee_amount": 
+null,
+"automatic_payment_methods"
+: {
+"allow_redirects": 
+"always",
+"enabled": 
+true,
+},
+"canceled_at": 
+null,
+"cancellation_reason": 
+null,
+"capture_method": 
+"automatic_async",
+"client_secret": 
+"pi_3Th1pkPMmgUDduuq0HQND5SD_secret_oNC1pfMGiqmACIjWMtGBIEEAP",
+"confirmation_method": 
+"automatic",
+"created": 
+1781158280,
+"currency": 
+"eur",
+"customer": 
+null,
+"customer_account": 
+null,
+"description": 
+"Leitfaden zur Künstlichen Intelligenz",
+"excluded_payment_method_types": 
+null,
+"last_payment_error": 
+null,
+"latest_charge": 
+"ch_3Th1pkPMmgUDduuq0QJK5tf0",
+"livemode": 
+true,
+"managed_payments"
+: {
+"enabled": 
+false,
+},
+"metadata"
+: {
+"cart_items": 
+"[{"productId":"pack-5","quantity":1}]",
+"customer_email": 
+"thierryhamon74@gmail.com",
+"customer_name": 
+"Mahé Hamon",
+"locale": 
+"fr",
+"tracking_code": 
+"PAN1AD8RC",
+"utm_campaign": 
+"FR - VIDEOS — Cópia|120247938738030103",
+"utm_content": 
+"Ads 1|120247938738150103",
+"utm_medium": 
+"Conjunto|120247938738090103",
+"utm_source": 
+"FBjLj6a2a500c257474d41832f7be",
+"utm_term": 
+"Instagram_Feed",
+},
+"next_action": 
+null,
+"on_behalf_of": 
+null,
+"payment_method": 
+"pm_1Th1sZPMmgUDduuqV8ZV9kun",
+"payment_method_configuration_details"
+: {
+"id": 
+"pmc_1TZG3SPMmgUDduuqso4Pmg7n",
+"parent": 
+null,
+},
+"payment_method_options"
+: {
+"card"
+: {
+"installments": 
+null,
+"mandate_options": 
+null,
+"network": 
+null,
+"request_three_d_secure": 
+"automatic",
+},
+},
+"payment_method_types"
+: [
+"card",
+],
+"processing": 
+null,
+"receipt_email": 
+"thierryhamon74@gmail.com",
+"review": 
+null,
+"setup_future_usage": 
+null,
+"shared_payment_granted_token": 
+null,
+"shipping"
+: {
+"address"
+: {
+"city": 
+"Arenthon ",
+"country": 
+"FR",
+"line1": 
+"660 route de Reignier ",
+"line2": 
+null,
+"postal_code": 
+"74800",
+"state": 
+"Haute Savoie ",
+},
+"carrier": 
+null,
+"name": 
+"Mahé Hamon ",
+"phone": 
+null,
+"tracking_number": 
+null,
+},
+"source": 
+null,
+"statement_descriptor": 
+null,
+"statement_descriptor_suffix": 
+null,
+"status": 
+"succeeded",
+"transfer_data": 
+null,
+"transfer_group": 
+null,
+},
+"previous_attributes": 
+null,
+}

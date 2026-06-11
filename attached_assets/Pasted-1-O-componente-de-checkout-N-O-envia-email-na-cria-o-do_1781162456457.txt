@@ -1,0 +1,62 @@
+1. O componente de checkout NÃO envia email na criação do PaymentIntent
+Em StripeEmbeddedCheckout.tsx, quando o carrinho muda e o useEffect dispara (linha 83), ele chama:
+
+createCartPaymentIntent({ data: { items, locale, utm, tracking } })
+Observe: falta customerEmail e customer no objeto data. O componente RECEBE essas props (linha 55-56), mas NÃO as repassa para a server function.
+
+Resultado: o PaymentIntent é criado sem qualquer dado do cliente.
+
+2. A server function cria o PaymentIntent "limpo"
+Em payments.functions.ts, no handler de createCartPaymentIntent (linha 63):
+
+const intent = await stripe.paymentIntents.create({
+  amount,
+  currency,
+  automatic_payment_methods: { enabled: true },
+  description: "...",
+  metadata: { ... },  // só metadados de rastreio, NADA de cliente
+});
+O que falta aqui:
+
+receipt_email: string — se existisse, a Stripe mandaria recibo automático
+customer: string — ID de cliente Stripe
+shipping: object — dados de envio
+Qualquer campo de billing
+Portanto a Stripe recebe o pagamento sem saber o email do comprador.
+
+3. O email é coletado no formulário, mas só vai para O TEU banco
+No PaymentForm (StripeEmbeddedCheckout.tsx, linha 140-159):
+
+const onSubmit = async (e) => {
+  // 1. Salva no teu banco (Supabase)
+  await updateOrderCustomer({
+    data: {
+      orderId,
+      customer: customerRef.current.customer,
+      customerEmail: customerRef.current.customerEmail,
+    },
+  });
+
+  // 2. Confirma pagamento NA STRIPE — SEM atualizar o PaymentIntent
+  await stripe.confirmPayment({ elements, confirmParams: { return_url: ... } });
+};
+O updateOrderCustomer grava o email em panini_orders.customer_email, mas nunca chama a Stripe para atualizar o PaymentIntent.
+
+4. O PaymentElement da Stripe coleta dados lado CLIENTE, mas isso fica lá
+O usuário digita email no formulário embedado da Stripe. Esses dados vão direto para os servidores da Stripe durante o confirmPayment, mas:
+
+Não são guardados nos metadata do PaymentIntent
+Não são enviados para o teu webhook (a não ser que a Stripe o faça automaticamente em payment_intent.succeeded — mas neste caso, o webhook lê email do teu banco, não da Stripe)
+No webhook (webhook.ts, linha 16-20), quando o pagamento é confirmado:
+
+if (order.customer_email && !order.confirmation_email_sent_at) {
+  await sendConfirmationEmail({ ... });  // usa email do TEU banco
+}
+Resumo para o outro projeto
+Passo	O que fazer para NÃO enviar email à Stripe
+Criar PaymentIntent	Não passar receipt_email nem customer
+Formulário de checkout	Guardar email no teu próprio estado/banco
+Antes de confirmar	Chamar tua API para salvar dados do cliente
+Confirmar na Stripe	stripe.confirmPayment() apenas com return_url
+Webhook	Ler email do teu banco, não do objeto da Stripe
+Dessa forma a Stripe processa o pagamento sem nunca ter o email do comprador no registro do PaymentIntent.

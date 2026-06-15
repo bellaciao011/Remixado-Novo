@@ -17,7 +17,7 @@ function generateTrackingCode(): string {
 
 async function fireUTMifyWaitingPayment(
   piId: string,
-  amountEurCents: number,
+  amountUsdCents: number,
   customerEmail: string,
   customerName: string,
   cartItems: { productId: string; quantity: number }[],
@@ -27,29 +27,29 @@ async function fireUTMifyWaitingPayment(
   if (!apiToken) return;
 
   try {
-    // Fetch spot EUR/BRL rate for UTMify (which requires BRL values)
-    let totalBrlCents = amountEurCents;
+    // Fetch spot USD/BRL rate for UTMify (which requires BRL values)
+    let totalBrlCents = amountUsdCents;
     try {
-      const rateRes = await fetch('https://open.er-api.com/v6/latest/EUR');
+      const rateRes = await fetch('https://open.er-api.com/v6/latest/USD');
       if (rateRes.ok) {
         const rateData = await rateRes.json() as { rates?: { BRL?: number } };
         const rate = rateData?.rates?.BRL;
-        if (rate && rate > 0) totalBrlCents = Math.round(amountEurCents * rate);
+        if (rate && rate > 0) totalBrlCents = Math.round(amountUsdCents * rate);
       }
-    } catch { /* rate fetch optional — proceed with EUR amount */ }
+    } catch { /* rate fetch optional — proceed with USD amount */ }
 
-    const totalEurCents = cartItems.reduce((sum, ci) => {
+    const totalUsdCents = cartItems.reduce((sum, ci) => {
       const p = PRODUCTS.find(pr => pr.id === ci.productId);
       return sum + (p?.price ?? 0) * ci.quantity;
-    }, 0) || amountEurCents;
+    }, 0) || amountUsdCents;
 
-    const toBrl = (eur: number) => Math.round(totalBrlCents * eur / totalEurCents);
+    const toBrl = (usd: number) => Math.round(totalBrlCents * usd / totalUsdCents);
 
     const products = cartItems.map(ci => {
       const p = PRODUCTS.find(pr => pr.id === ci.productId);
       const name = p?.translations?.['pt-BR']?.name || ci.productId;
-      const eur = (p?.price ?? 0) * ci.quantity;
-      return { id: ci.productId, planId: ci.productId, planName: name, name, quantity: ci.quantity, priceInCents: toBrl(eur) };
+      const usd = (p?.price ?? 0) * ci.quantity;
+      return { id: ci.productId, planId: ci.productId, planName: name, name, quantity: ci.quantity, priceInCents: toBrl(usd) };
     });
     if (products.length === 0) {
       products.push({ id: 'panini-wc2026', planId: 'panini-wc2026', planName: 'Panini FIFA World Cup 2026', name: 'Panini FIFA World Cup 2026', quantity: 1, priceInCents: totalBrlCents });

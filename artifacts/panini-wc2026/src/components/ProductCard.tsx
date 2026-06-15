@@ -56,7 +56,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const cur = product.currency.toUpperCase();
   const formatPrice = (val: number) =>
     new Intl.NumberFormat(
-      cur === 'EUR' ? 'de-DE' : 'pt-BR',
+      cur === 'USD' ? 'en-US' : cur === 'EUR' ? 'fr-FR' : 'en-US',
       { style: 'currency', currency: cur }
     ).format(val);
 

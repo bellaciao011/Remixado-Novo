@@ -13,7 +13,7 @@ function piToPayment(pi: any) {
     id: pi.id,
     amount: pi.amount,
     amountReceived: pi.amount_received ?? null,
-    currency: pi.currency || 'eur',
+    currency: pi.currency || 'usd',
     status: pi.status,
     livemode: pi.livemode ?? false,
     createdAt: new Date(pi.created * 1000),

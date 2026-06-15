@@ -167,7 +167,7 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
           quantity: 1,
           price: ORDER_BUMP.price / 100,
           originalPrice: ORDER_BUMP.originalPrice / 100,
-          currency: 'eur',
+          currency: 'usd',
           image: ORDER_BUMP.image,
         }] : []),
       ];
@@ -230,7 +230,7 @@ function PaymentForm({ amountTotal, shipping, items, orderBump1Selected, payment
           quantity: 1,
           price: ORDER_BUMP.price / 100,
           originalPrice: ORDER_BUMP.originalPrice / 100,
-          currency: 'eur',
+          currency: 'usd',
           image: ORDER_BUMP.image,
         }] : []),
       ];
@@ -378,7 +378,7 @@ export default function CheckoutPage() {
   }, []);
 
   const formatPrice = (val: number) =>
-    new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
   const handleShipping = (field: ShippingField) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -463,9 +463,9 @@ export default function CheckoutPage() {
           const icContentIds = items.map(i => i.productId);
           const icNumItems = items.reduce((s, i) => s + i.quantity, 0);
 
-          try { fbq('InitiateCheckout', { value: icValue, currency: 'EUR', content_ids: icContentIds, num_items: icNumItems }); } catch { /* ignore */ }
-          try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'EUR' }); } catch { /* ignore */ }
-          sendCapiEvent('InitiateCheckout', { value: icValue, currency: 'EUR', contentIds: icContentIds, numItems: icNumItems, eventSourceUrl: window.location.href });
+          try { fbq('InitiateCheckout', { value: icValue, currency: 'USD', content_ids: icContentIds, num_items: icNumItems }); } catch { /* ignore */ }
+          try { utmifyEvent('InitiateCheckout', { value: icValue, currency: 'USD' }); } catch { /* ignore */ }
+          sendCapiEvent('InitiateCheckout', { value: icValue, currency: 'USD', contentIds: icContentIds, numItems: icNumItems, eventSourceUrl: window.location.href });
         },
         onError: (err: any) => {
           setIsProceedingToPayment(false);

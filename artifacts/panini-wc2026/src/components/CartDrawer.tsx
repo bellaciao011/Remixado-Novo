@@ -7,9 +7,9 @@ import { Button } from './ui/button';
 import { ScrollArea } from './ui/scroll-area';
 import { Minus, Plus, Trash2, ShoppingCart, ArrowLeft, X } from 'lucide-react';
 
-const formatPrice = (price: number, currency = 'eur') => {
+const formatPrice = (price: number, currency = 'usd') => {
   const cur = currency.toUpperCase();
-  const locale = cur === 'EUR' ? 'de-DE' : 'pt-BR';
+  const locale = cur === 'USD' ? 'en-US' : cur === 'EUR' ? 'fr-FR' : 'en-US';
   return new Intl.NumberFormat(locale, { style: 'currency', currency: cur }).format(price);
 };
 
@@ -33,7 +33,7 @@ export function CartDrawer() {
     navigate('/checkout');
   };
 
-  const totalCurrency = items.length > 0 ? (items[0].currency || 'eur') : 'eur';
+  const totalCurrency = items.length > 0 ? (items[0].currency || 'usd') : 'usd';
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>

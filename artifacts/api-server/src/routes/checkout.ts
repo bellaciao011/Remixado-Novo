@@ -135,7 +135,7 @@ router.post('/checkout/session', async (req: Request, res: Response): Promise<vo
 
       lineItems.push({
         price_data: {
-          currency: 'eur',
+          currency: 'usd',
           product_data: {
             name: productName,
             ...(imageUrl ? { images: [imageUrl] } : {}),
@@ -226,14 +226,14 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountTotal,
-      currency: 'eur',
+      currency: 'usd',
       payment_method_types: ['card'],
       // No customer object and no receipt_email — Stripe must NOT send automatic receipts.
       // Real email is stored in metadata only; our Resend flow handles all transactional emails.
-      description: 'Leitfaden zur Künstlichen Intelligenz',
+      description: 'Panini FIFA World Cup 2026',
       metadata: {
         cart_items: JSON.stringify(cartItems),
-        locale: typeof locale === 'string' ? locale : 'de',
+        locale: typeof locale === 'string' ? locale : 'en',
         // Real customer data — used by webhook for transactional email sequences
         customer_email: realEmail,
         customer_name: customerName,
@@ -269,7 +269,7 @@ router.post('/checkout/payment-intent', async (req: Request, res: Response): Pro
       paymentIntentId: paymentIntent.id,
       trackingCode,
       amountTotal: amountTotal / 100,
-      currency: 'eur',
+      currency: 'usd',
       stripeCustomerId: null,
     });
   } catch (error: any) {
@@ -318,7 +318,7 @@ router.put('/checkout/payment-intent/:id', async (req: Request, res: Response): 
       },
     });
 
-    res.json({ amountTotal: amountTotal / 100, currency: 'eur' });
+    res.json({ amountTotal: amountTotal / 100, currency: 'usd' });
   } catch (error: any) {
     console.error('Update PaymentIntent error:', error);
     res.status(400).json({ error: error.message || 'Failed to update payment intent' });
@@ -427,7 +427,7 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: upsellAmount,
-      currency: 'eur',
+      currency: 'usd',
       customer: customerId,
       payment_method: paymentMethodId,
       off_session: true,
@@ -453,7 +453,7 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
             orderId: paymentIntent.id,
             items: [],
             totalAmount: upsellAmount / 100,
-            currency: 'eur',
+            currency: 'usd',
             locale: customerLocale,
           };
           await sendUpsellConfirmation(order, upsellProductName, upsellAmount / 100);
@@ -466,7 +466,7 @@ router.post('/checkout/upsell', async (req: Request, res: Response): Promise<voi
     res.json({
       status: paymentIntent.status,
       amountCharged: upsellAmount / 100,
-      currency: 'eur',
+      currency: 'usd',
       paymentIntentId: paymentIntent.id,
     });
   } catch (error: any) {

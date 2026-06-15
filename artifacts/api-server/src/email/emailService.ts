@@ -110,7 +110,7 @@ export async function sendTestEmail(templateNumber: number, toEmail: string, loc
       { name: 'Box-Bundle FIFA World Cup 2026™', quantity: 1, price: 36 },
     ],
     totalAmount: 36,
-    currency: 'eur',
+    currency: 'usd',
     shippingAddress: 'Rua Teste, 123 – São Paulo, SP',
     locale: locale || 'pt-BR',
   };

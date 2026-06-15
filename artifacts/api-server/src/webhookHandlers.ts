@@ -16,7 +16,7 @@ async function upsertPayment(pi: any): Promise<void> {
       id: pi.id,
       amount: pi.amount,
       amountReceived: pi.amount_received ?? null,
-      currency: pi.currency || 'eur',
+      currency: pi.currency || 'usd',
       status: pi.status,
       livemode: pi.livemode ?? false,
       createdAt: new Date(pi.created * 1000),
@@ -227,7 +227,7 @@ export class WebhookHandlers {
         trackingCode: pi.metadata?.tracking_code || undefined,
         items: resolvedItems,
         totalAmount: pi.amount / 100,
-        currency: pi.currency || 'eur',
+        currency: pi.currency || 'usd',
         shippingAddress: shippingAddr,
         locale,
       };
@@ -249,7 +249,7 @@ export class WebhookHandlers {
     try {
       const customerEmail: string = pi.metadata?.customer_email || '';
       const customerName: string = pi.shipping?.name || '';
-      const orderValueEurCents = pi.amount; // in EUR cents (e.g. 5700 = €57.00)
+      const orderValueUsdCents = pi.amount; // in USD cents (e.g. 5700 = $57.00)
 
       // Map Stripe payment method to UTMify's paymentMethod enum
       const stripeMethod = (pi.payment_method_types?.[0] || 'card') as string;
@@ -264,8 +264,8 @@ export class WebhookHandlers {
 
       // Fetch the balance_transaction from the latest charge to get the BRL amount.
       // The UTMify dashboard is configured in BRL, so we must send the Stripe-converted
-      // BRL value (e.g. €57 EUR → R$336.08 BRL) rather than the raw EUR amount.
-      let totalBrlCents = orderValueEurCents; // will be overwritten below
+      // BRL value (e.g. $57 USD → R$316.26 BRL) rather than the raw USD amount.
+      let totalBrlCents = orderValueUsdCents; // will be overwritten below
       let utmifyCurrency = 'BRL'; // UTMify dashboard is always in BRL
       let brlResolved = false;
 
@@ -281,12 +281,12 @@ export class WebhookHandlers {
             // Level 1 (best): Stripe settled this charge in BRL — exact amount
             totalBrlCents = bt.amount;
             brlResolved = true;
-            console.log(`[webhook] UTMify BRL [L1-exact]: €${(orderValueEurCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
+            console.log(`[webhook] UTMify BRL [L1-exact]: $${(orderValueUsdCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
           } else if (bt && bt.exchange_rate > 0) {
-            // Level 2: Stripe settled in EUR but provided exchange_rate for this transaction
-            totalBrlCents = Math.round(orderValueEurCents * bt.exchange_rate);
+            // Level 2: Stripe settled in USD but provided exchange_rate for this transaction
+            totalBrlCents = Math.round(orderValueUsdCents * bt.exchange_rate);
             brlResolved = true;
-            console.log(`[webhook] UTMify BRL [L2-rate ${bt.exchange_rate}]: €${(orderValueEurCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
+            console.log(`[webhook] UTMify BRL [L2-rate ${bt.exchange_rate}]: $${(orderValueUsdCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
           }
         } catch (btErr) {
           console.warn('[webhook] Could not fetch balance_transaction:', btErr);
@@ -294,20 +294,20 @@ export class WebhookHandlers {
       }
 
       if (!brlResolved) {
-        // Level 3 (last resort): fetch current EUR/BRL spot rate from a free public API (no key required)
+        // Level 3 (last resort): fetch current USD/BRL spot rate from a free public API (no key required)
         try {
-          const rateRes = await fetch('https://open.er-api.com/v6/latest/EUR');
+          const rateRes = await fetch('https://open.er-api.com/v6/latest/USD');
           if (rateRes.ok) {
             const rateData = await rateRes.json() as { rates?: { BRL?: number } };
-            const eurBrl = rateData?.rates?.BRL;
-            if (eurBrl && eurBrl > 0) {
-              totalBrlCents = Math.round(orderValueEurCents * eurBrl);
-              console.log(`[webhook] UTMify BRL [L3-er-api rate ${eurBrl}]: €${(orderValueEurCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
+            const usdBrl = rateData?.rates?.BRL;
+            if (usdBrl && usdBrl > 0) {
+              totalBrlCents = Math.round(orderValueUsdCents * usdBrl);
+              console.log(`[webhook] UTMify BRL [L3-er-api rate ${usdBrl}]: $${(orderValueUsdCents/100).toFixed(2)} → R$${(totalBrlCents/100).toFixed(2)}`);
             } else {
-              console.warn('[webhook] UTMify BRL [L3]: no BRL rate in er-api response — sending EUR amount as fallback');
+              console.warn('[webhook] UTMify BRL [L3]: no BRL rate in er-api response — sending USD amount as fallback');
             }
           } else {
-            console.warn('[webhook] UTMify BRL [L3]: er-api returned', rateRes.status, '— sending EUR amount as fallback');
+            console.warn('[webhook] UTMify BRL [L3]: er-api returned', rateRes.status, '— sending USD amount as fallback');
           }
         } catch (rateErr) {
           console.warn('[webhook] UTMify BRL [L3]: rate fetch failed —', rateErr);
@@ -320,33 +320,33 @@ export class WebhookHandlers {
       try { cartItems = JSON.parse(cartItemsRaw); } catch { /* ignore */ }
 
       // Distribute totalBrlCents proportionally across products based on their
-      // share of the total EUR amount.
-      const totalEurCents = cartItems.reduce((sum, ci) => {
+      // share of the total USD amount.
+      const totalUsdCents = cartItems.reduce((sum, ci) => {
         const product = PRODUCTS.find(p => p.id === ci.productId);
         return sum + (product?.price ?? 0) * ci.quantity;
       }, 0);
       const orderBumpId = pi.metadata?.order_bump || '';
       const orderBump2Id = pi.metadata?.order_bump_2 || '';
-      const totalEurWithBump = totalEurCents
+      const totalUsdWithBump = totalUsdCents
         + (orderBumpId === ORDER_BUMP_ID ? ORDER_BUMP_PRODUCT.price : 0)
         + (orderBump2Id === ORDER_BUMP_2_ID ? ORDER_BUMP_2_PRODUCT.price : 0);
-      const totalEurBase = totalEurWithBump > 0 ? totalEurWithBump : orderValueEurCents;
+      const totalUsdBase = totalUsdWithBump > 0 ? totalUsdWithBump : orderValueUsdCents;
 
-      // Proportional conversion: product_brl = round(totalBrl * product_eur / total_eur)
-      const toBrl = (eurCents: number) =>
-        totalEurBase > 0 ? Math.round(totalBrlCents * eurCents / totalEurBase) : eurCents;
+      // Proportional conversion: product_brl = round(totalBrl * product_usd / total_usd)
+      const toBrl = (usdCents: number) =>
+        totalUsdBase > 0 ? Math.round(totalBrlCents * usdCents / totalUsdBase) : usdCents;
 
       const products = cartItems.map(ci => {
         const product = PRODUCTS.find(p => p.id === ci.productId);
         const name = product?.translations?.['pt-BR']?.name || ci.productId;
-        const eurCents = (product?.price ?? 0) * ci.quantity;
+        const usdCents = (product?.price ?? 0) * ci.quantity;
         return {
           id: ci.productId,
           planId: ci.productId,
           planName: name,
           name,
           quantity: ci.quantity,
-          priceInCents: toBrl(eurCents),
+          priceInCents: toBrl(usdCents),
         };
       });
 
@@ -463,8 +463,8 @@ export class WebhookHandlers {
             user_data: userData,
             custom_data: {
               value: orderValue,
-              // Facebook requires uppercase ISO 4217 currency codes (EUR not eur)
-              currency: (pi.currency || 'eur').toUpperCase(),
+              // Facebook requires uppercase ISO 4217 currency codes (USD not usd)
+              currency: (pi.currency || 'usd').toUpperCase(),
               content_type: 'product',
             },
           },

@@ -6,3 +6,4 @@
 - [Checkout two-step flow](checkout-flow.md) — PI only created on step 2 (after shipping validated); sessionStorage saves cart+shipping before navigate; verify-payment expands payment_method for card brand/last4
 - [Purchase tracking reliability](purchase-tracking.md) — UTMify race condition + duplicate FB Pixel + must use event_id for Pixel+CAPI dedup
 - [Payments table + Stripe sync](payments-sync.md) — public.payments table stores all PI events; POST /api/admin/stripe-sync bulk-fetches from Stripe; drizzle push needs TTY, use executeSql for migrations
+- [EUR→USD migration](eur-usd-migration.md) — full funnel converted to USD; backward EUR refs kept in formatPrice fallbacks for legacy orders; locale URL param strategy for old FR customers

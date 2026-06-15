@@ -36,12 +36,12 @@ export default function ProductDetail() {
       content_ids: [product.id],
       content_name: tr.name,
       value: price,
-      currency: 'EUR',
+      currency: 'USD',
     });
     sendCapiEvent('ViewContent', {
       contentIds: [product.id],
       value: price,
-      currency: 'EUR',
+      currency: 'USD',
       eventSourceUrl: window.location.href,
     });
   }, [product?.id]);
@@ -85,7 +85,7 @@ export default function ProductDetail() {
   const cur = product.currency.toUpperCase();
   const formatPrice = (val: number) =>
     new Intl.NumberFormat(
-      cur === 'EUR' ? 'de-DE' : 'pt-BR',
+      cur === 'USD' ? 'en-US' : cur === 'EUR' ? 'fr-FR' : 'en-US',
       { style: 'currency', currency: cur }
     ).format(val);
 

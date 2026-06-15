@@ -141,14 +141,14 @@ export default function OrderConfirmation() {
 
       // UTMify — Purchase (with retry if pixel not yet loaded)
       try {
-        utmifyEvent('Purchase', { value: orderValue, currency: 'EUR' });
+        utmifyEvent('Purchase', { value: orderValue, currency: 'USD' });
       } catch { /* ignore */ }
 
       // Facebook Pixel — Purchase (event_id for deduplication with CAPI)
       try {
         fbq('Purchase', {
           value: orderValue,
-          currency: 'EUR',
+          currency: 'USD',
           content_ids: contentIds,
           num_items: numItems || 1,
           eventID: eventId,
@@ -163,7 +163,7 @@ export default function OrderConfirmation() {
 
   const formatPrice = (amount: number | null) => {
     if (amount === null || amount === undefined) return '';
-    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
   };
 
   const getItemName = (item: typeof storedItems[0]) => {

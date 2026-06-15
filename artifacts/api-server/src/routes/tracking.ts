@@ -126,7 +126,7 @@ router.get('/orders/track/:id', async (req: Request, res: Response): Promise<voi
       status: pi.status,
       customerName: pi.shipping?.name || pi.metadata?.customer_name || null,
       amount: pi.amount / 100,
-      currency: pi.currency || 'eur',
+      currency: pi.currency || 'usd',
       paidAt: pi.status === 'succeeded' ? new Date(pi.created * 1000).toISOString() : null,
       items,
     });

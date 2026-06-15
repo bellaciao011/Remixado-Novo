@@ -27,7 +27,7 @@ export interface ProductData {
   };
 }
 
-export const ORDER_BUMP_PRICE = 2700;
+export const ORDER_BUMP_PRICE = 1350;
 export const ORDER_BUMP_ORIGINAL_PRICE = 5400;
 export const ORDER_BUMP_ID = 'order-bump-50packs';
 
@@ -83,7 +83,7 @@ export const ORDER_BUMP_PRODUCT: OrderBumpProduct = {
   },
 };
 
-export const ORDER_BUMP_2_PRICE = 5100;
+export const ORDER_BUMP_2_PRICE = 2550;
 export const ORDER_BUMP_2_ORIGINAL_PRICE = 10200;
 export const ORDER_BUMP_2_ID = 'order-bump-100packs';
 
@@ -137,7 +137,7 @@ export const PRODUCTS: ProductData[] = [
       '/assets/de2-boxbundle-008_1780429019744.webp',
       '/assets/de2-boxbundle-009_1780429019741.webp',
     ],
-    price: 3900,
+    price: 2150,
     originalPrice: 8600,
     currency: 'usd',
     priceId: '',
@@ -308,7 +308,7 @@ Cosa ti aspetta nella grande collezione della FIFA World Cup 2026™:
       '/assets/de-boxbundle-007_1780428541010.webp',
       '/assets/de-boxbundle-008_1780428541010.webp',
     ],
-    price: 7200,
+    price: 5050,
     originalPrice: 20200,
     currency: 'usd',
     priceId: '',
@@ -457,7 +457,7 @@ Cosa ti aspetta nella piu grande collezione 2026 per la FIFA World Cup 2026™:
       '/assets/de3-boxbundle-005_1780437582881.webp',
       '/assets/de3-boxbundle-006_1780437582876.webp',
     ],
-    price: 3500,
+    price: 1750,
     originalPrice: 7000,
     currency: 'usd',
     priceId: '',
@@ -606,7 +606,7 @@ Cosa ti aspetta nella collezione FIFA World Cup 2026™:
       '/assets/de4-boxbundle-005_1780437762794.webp',
       '/assets/de4-boxbundle-006_1780437762789.webp',
     ],
-    price: 7300,
+    price: 4775,
     originalPrice: 19100,
     currency: 'usd',
     priceId: '',
@@ -763,7 +763,7 @@ Cosa ti aspetta nella collezione FIFA World Cup 2026™:
       '/assets/de5-boxbundle-007_1780437996279.webp',
       '/assets/de5-boxbundle-008_1780437996269.webp',
     ],
-    price: 8600,
+    price: 5825,
     originalPrice: 23300,
     currency: 'usd',
     priceId: '',
@@ -929,7 +929,7 @@ Cosa offre la collezione di figurine FIFA World Cup 2026:
       '/assets/de11-boxbundle-004_1780458779149.webp',
       '/assets/de11-boxbundle-005_1780458779146.webp',
     ],
-    price: 12800,
+    price: 6650,
     originalPrice: 26600,
     currency: 'usd',
     priceId: '',
@@ -1115,7 +1115,7 @@ Cosa ti aspetta nella collezione FIFA World Cup 2026™:
       '/assets/de10-boxbundle-008_1780458366581.webp',
       '/assets/de10-boxbundle-009_1780458366571.webp',
     ],
-    price: 22600,
+    price: 13750,
     originalPrice: 55000,
     currency: 'usd',
     priceId: '',
@@ -1235,7 +1235,7 @@ L'affascinante esperienza completa della FIFA Coppa del Mondo™ Adrenalyn XL™
     images: [
       '/assets/de9-boxbundle-001_1780458133952.webp',
     ],
-    price: 14200,
+    price: 7875,
     originalPrice: 31500,
     currency: 'usd',
     priceId: '',
@@ -1321,7 +1321,7 @@ In questa scatola limitata:
       '/assets/de8-boxbundle-002_1780457763794.webp',
       '/assets/de8-boxbundle-003_1780457763792.webp',
     ],
-    price: 2600,
+    price: 1325,
     originalPrice: 5300,
     currency: 'usd',
     priceId: '',
@@ -1408,7 +1408,7 @@ Questa Treasure Box contiene:
       '/assets/de7-boxbundle-003_1780457266079.webp',
       '/assets/de7-boxbundle-004_1780457266077.webp',
     ],
-    price: 14900,
+    price: 9850,
     originalPrice: 39400,
     currency: 'usd',
     priceId: '',
@@ -1508,7 +1508,7 @@ Il bundle ideale per chi vuole fare un grande salto nella propria collezione e c
       '/assets/de6-boxbundle-004_1780438501216.webp',
       '/assets/de6-boxbundle-005_1780438501216.webp',
     ],
-    price: 7400,
+    price: 3625,
     originalPrice: 14500,
     currency: 'usd',
     priceId: '',
@@ -1613,7 +1613,7 @@ Le Pocket Tins e Classic Tins vengono spedite in design casuali – una sorpresa
       '/assets/de13-boxbundle-003_1780460546575.webp',
       '/assets/de13-boxbundle-004_1780460546571.webp',
     ],
-    price: 8100,
+    price: 5050,
     originalPrice: 20200,
     currency: 'usd',
     priceId: '',
@@ -1738,7 +1738,7 @@ Contenuto della Super Premium Box:
       '/assets/de14-boxbundle-004_1780461095017.webp',
       '/assets/de14-boxbundle-005_1780461095014.webp',
     ],
-    price: 17900,
+    price: 11100,
     originalPrice: 44400,
     currency: 'usd',
     priceId: '',
@@ -1867,7 +1867,7 @@ Contenuto del Kit Esclusivo Stadio:
       '/assets/de12-boxbundle-003_1780459830770.webp',
       '/assets/de12-boxbundle-004_1780459830764.webp',
     ],
-    price: 11100,
+    price: 6625,
     originalPrice: 26500,
     currency: 'usd',
     priceId: '',

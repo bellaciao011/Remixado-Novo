@@ -1,0 +1,67 @@
+Perfeito, fica bem mais simples então — você só precisa que o banco grave os dados certos (email real, nome, produtos, etc.) quando o pagamento for confirmado, sem nenhum envio automático de email pelo sistema. Aqui está o prompt completo:
+
+Prompt para o Replit:
+
+Quero ajustar a integração do checkout da Whop (whop.ts e checkout.tsx) para resolver o problema de email duplicado/captura pela Whop, seguindo esta lógica:
+1. Gerar um "email fake" para enviar ao embed da Whop
+No backend, ao receber os dados do formulário (nome, email real, endereço), criar uma função utilitária:
+typescriptfunction generateFakeEmail(fullName: string): string {
+  return fullName
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove acentos
+    .replace(/[^a-z0-9]/g, "")        // remove espaços/caracteres especiais
+    + "@email.com";
+}
+Exemplo: "João Silva" → joaosilva@email.com
+2. Na rota POST /api/whop/checkout
+
+Continuar salvando o pedido como PENDING na tabela paniniOrdersTable, incluindo agora também: customerName, customerEmail (o email REAL do cliente), customerAddress, cartItems (JSON), locale, utmSource, utmMedium, utmCampaign, utmContent, utmTerm — adicionar essas colunas na tabela se não existirem.
+Ao criar o checkout_configuration na Whop, incluir no metadata:
+
+typescriptmetadata: {
+  order_id: orderId,
+  customer_email: realEmail,
+  customer_name: fullName,
+}
+
+Gerar o fakeEmail com a função acima e retornar no JSON de resposta junto com purchaseUrl, planId, sessionId, orderId.
+
+3. No frontend (checkout.tsx)
+No WhopCheckoutEmbed (ou no div com data-whop-checkout-plan-id), adicionar:
+tsx<WhopCheckoutEmbed
+  planId={embedPlanId}
+  sessionId={embedSessionId}
+  hideEmail={true}
+  hideAddressForm={true}
+  hideTermsAndConditions={true}
+  prefill={{
+    email: fakeEmail,
+    address: {
+      name: formData.name,
+      country: "US",
+      line1: formData.address,
+      city: formData.city,
+      state: formData.state,
+      postalCode: formData.postcode,
+    }
+  }}
+/>
+(manter todas as outras props/lógica existentes do popup/iframe)
+4. Na rota POST /api/whop/webhook
+Quando o evento for payment.succeeded ou membership.went_valid:
+
+Buscar o order_id em webhookData.data.metadata.order_id (já existe essa lógica)
+Atualizar o pedido na tabela para status: "PAID", paidAt: new Date(), gerar o trackingCode (já existe)
+Também salvar/confirmar: customerEmail (real, já estava salvo desde o passo 1, não precisa vir do webhook), e logar no console um resumo do pedido pago (nome, email, produtos, total) para eu poder ver no log do Replit
+
+5. Não implementar nenhum envio de email automático
+O sistema não deve disparar nenhum email (nem para o cliente, nem interno). Eu vou cuidar disso manualmente/separadamente. O objetivo aqui é só: o banco de dados ficar com todos os dados corretos do cliente real quando a venda for confirmada, e o checkout da Whop não deve coletar/expor o email real do cliente (usa o email fake).
+Mantém toda a lógica de popup/iframe/polling que já existe, só adiciona os campos acima.
+
+
+Isso garante:
+
+✅ Email real só fica no seu banco
+✅ Whop recebe email fake (não dispara nada relevante pro seu cliente)
+✅ Quando o pagamento é confirmado, tudo que você precisa (nome, email, endereço, produtos, tracking code) está salvo e pronto pra você disparar manualmente

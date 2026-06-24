@@ -1,0 +1,177 @@
+# INTEGRAÇÃO DE PAGAMENTO — SUBSTITUIR STRIPE PELA WAYMB
+
+## CONTEXTO
+O projeto actualmente usa Stripe como gateway de pagamento. Deves remover toda a integração Stripe e substituí-la pela WayMB (gateway português).
+
+## BASE URL
+https://api.waymb.com
+
+NÃO uses a URL antiga (api.zangiway.com). A base URL correcta e definitiva é:
+https://api.waymb.com
+
+---
+
+## IDIOMA DO PROJECTO
+Todo o projecto deve ser convertido para Português de Portugal (PT-PT).
+Exemplos obrigatórios de vocabulário:
+- "carrinho" (não "carrinho de compras" brasileiro)
+- "referência" (não "referência")
+- "pagamento" → manter
+- "valor" → manter
+- "encomenda" (em vez de "pedido")
+- "telemóvel" (em vez de "celular")
+- "NIF" (em vez de "CPF" ou "documento")
+- "MB WAY" e "Multibanco" como métodos de pagamento (remover qualquer menção a Pix, boleto, cartão de crédito, etc.)
+
+---
+
+## CRIAR TRANSAÇÃO
+
+Endpoint: POST https://api.waymb.com/transactions/create
+
+Corpo da requisição (JSON):
+{
+  "client_id": "[WAYMB_CLIENT_ID da variável de ambiente]",
+  "client_secret": "[WAYMB_CLIENT_SECRET da variável de ambiente]",
+  "account_email": "[WAYMB_ACCOUNT_EMAIL da variável de ambiente]",
+  "amount": [valor numérico float, ex: 49.90],
+  "method": "multibanco",  // ou "mbway" conforme escolha do utilizador
+  "payer": {
+    "email": "[email do cliente]",
+    "name": "[nome completo do cliente]",
+    "document": "[NIF do cliente]",
+    "phone": "[telemóvel do cliente]"
+  },
+  "paymentDescription": "[nome do produto, máx 50 caracteres]",
+  "currency": "EUR"
+}
+
+IMPORTANTE — callbackUrl:
+- NÃO incluas callbackUrl no corpo da requisição.
+- O webhook será configurado directamente na plataforma WayMB com o domínio + slug do projecto.
+- Não geres nem registas nenhum URL de callback no código.
+
+IMPORTANTE — success_url e failed_url:
+- Não uses success_url nem failed_url via API.
+- O redirecionamento pós-pagamento será gerido internamente pelo projecto.
+
+---
+
+## RESPOSTA DA CRIAÇÃO (o que usar)
+
+Após criar a transação, a API retorna:
+{
+  "transactionID": "...",
+  "id": "...",
+  "amount": 49.90,
+  "method": "multibanco",
+  "referenceData": {
+    "entity": "12345",
+    "reference": "123 456 789",
+    "expiresAt": "2025-12-31"
+  },
+  "generatedMBWay": true  // apenas se method = mbway
+}
+
+Usa estes campos para montar a tela de aguardo de pagamento (ver abaixo).
+
+---
+
+## TELA DE AGUARDO DE PAGAMENTO (obrigatório)
+
+Após o cliente submeter a encomenda e a transação ser criada com sucesso, o projecto deve exibir uma página/ecrã de "Aguardar Pagamento" com:
+
+### Se método = Multibanco:
+- Título: "Pagamento por Multibanco"
+- Entidade: [referenceData.entity]
+- Referência: [referenceData.reference] — em destaque, com botão "Copiar Referência"
+- Valor a pagar: [amount] €
+- Válido até: [referenceData.expiresAt]
+- Mensagem: "Dirija-se a qualquer caixa Multibanco ou utilize o seu homebanking para efectuar o pagamento com os dados acima."
+
+### Se método = MB WAY:
+- Título: "Pagamento por MB WAY"
+- Mensagem: "Foi enviada uma notificação para o seu telemóvel. Abra a aplicação MB WAY e confirme o pagamento de [amount] €."
+- Indicador visual de aguardo (spinner ou animação)
+
+### Comportamento comum a ambos os métodos:
+- Exibir sempre o ID da transação como referência de encomenda: [transactionID]
+- Botão "Já efectuei o pagamento" — ao clicar, pode fazer polling ao endpoint /transactions/info para verificar o status
+- A tela não deve redirecionar automaticamente; aguarda confirmação via webhook
+- NÃO gerar nem exibir QR codes de Pix, nem qualquer elemento brasileiro
+
+---
+
+## WEBHOOK — RECEBER CONFIRMAÇÕES
+
+O projecto já tem lógica de webhook para tracking, upsell e envio de email.
+Deves apenas garantir que:
+
+1. O endpoint de webhook do projecto retorna SEMPRE HTTP 200, independentemente do que aconteça internamente. Nunca retornes 4xx ou 5xx ao gateway.
+
+2. O corpo recebido pelo webhook terá este formato:
+{
+  "transactionId": "...",
+  "id": "...",
+  "amount": 49.90,
+  "currency": "EUR",
+  "status": "COMPLETED",  // PENDING | COMPLETED | DECLINED
+  "payer": {
+    "email": "...",
+    "name": "...",
+    "document": "..."
+  }
+}
+
+3. Usa o campo "status" para acionar as lógicas já existentes no projecto:
+- COMPLETED → confirmar venda, disparar email de confirmação, activar upsell, enviar evento de tracking
+- DECLINED → marcar encomenda como falhada, notificar cliente
+- PENDING → ignorar ou actualizar status na base de dados
+
+4. NÃO configurar callbackUrl via código — o URL do webhook está configurado directamente na plataforma WayMB.
+
+---
+
+## VARIÁVEIS DE AMBIENTE NECESSÁRIAS (adicionar ao .env)
+
+WAYMB_CLIENT_ID=
+WAYMB_CLIENT_SECRET=
+WAYMB_ACCOUNT_EMAIL=
+
+Remover do .env (ou deixar apenas se ainda usado noutro contexto):
+STRIPE_SECRET_KEY
+STRIPE_PUBLISHABLE_KEY
+STRIPE_WEBHOOK_SECRET
+
+---
+
+## CONSULTAR STATUS DE TRANSAÇÃO (polling opcional)
+
+Endpoint: POST https://api.waymb.com/transactions/info
+Corpo: { "id": "[transactionID]" }
+
+Resposta inclui: id, status, amount, method, referenceData, payer
+
+Usa isto apenas se quiseres verificar o status manualmente (ex: botão "Já paguei").
+
+---
+
+## O QUE NÃO DEVES FAZER
+
+❌ NÃO criar nenhuma transação de teste automática durante a integração
+❌ NÃO usar a URL base antiga api.zangiway.com
+❌ NÃO incluir callbackUrl na chamada à API
+❌ NÃO usar success_url ou failed_url na chamada à API
+❌ NÃO deixar qualquer referência a Stripe, Pix, boleto ou Real (BRL) no frontend
+❌ NÃO retornar status diferente de 200 no endpoint de webhook
+❌ NÃO usar linguagem brasileira — o projecto é em Português de Portugal
+
+---
+
+## RESUMO DO FLUXO
+
+1. Cliente preenche dados → escolhe método (Multibanco ou MB WAY)
+2. Backend chama POST /transactions/create → recebe transactionID + referenceData
+3. Frontend exibe ecrã de aguardo com referência de pagamento para o cliente copiar e ir ao banco pagar
+4. WayMB notifica o webhook do projecto quando o pagamento muda de status
+5. Webhook retorna 200 e aciona lógicas internas (tracking, upsell, email)

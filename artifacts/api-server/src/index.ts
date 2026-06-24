@@ -74,7 +74,8 @@ if (Number.isNaN(port) || port <= 0) {
 }
 
 await initDatabase();
-await initStripe();
+// Stripe desactivado — gateway substituído por WayMB
+// await initStripe();
 
 app.listen(port, (err?: Error) => {
   if (err) {

@@ -3,6 +3,7 @@
 - [React dedupe + i18next](react-dedupe.md) — adding react-i18next and i18next to Vite resolve.dedupe prevents multiple-React errors when local node_modules shadow workspace root
 - [i18n language persistence](i18n-persistence.md) — never auto-save detected language to localStorage; only save explicit user choices via saveExplicitLang(); use separate key _panini_lng_manual
 - [Prices in centavos](prices-centavos.md) — productData.ts stores prices in centavos (integer), frontend divides by 100, checkout multiplies by 100 for Stripe — all must be consistent
+- [WayMB integration](waymb-integration.md) — Stripe replaced by WayMB; checkout is 3-step (shipping→payment→waiting); webhook at /api/waymb/webhook needs WAYMB_CLIENT_ID/SECRET/ACCOUNT_EMAIL env vars
 - [Checkout two-step flow](checkout-flow.md) — PI only created on step 2 (after shipping validated); sessionStorage saves cart+shipping before navigate; verify-payment expands payment_method for card brand/last4
 - [Purchase tracking reliability](purchase-tracking.md) — UTMify race condition + duplicate FB Pixel + must use event_id for Pixel+CAPI dedup
 - [Payments table + Stripe sync](payments-sync.md) — public.payments table stores all PI events; POST /api/admin/stripe-sync bulk-fetches from Stripe; drizzle push needs TTY, use executeSql for migrations

@@ -4,6 +4,7 @@ import {
   buildOrderConfirmationEmail,
   buildUpsellConfirmationEmail,
   buildLogisticsEmail,
+  buildEmailHtml,
 } from './templates';
 import { insertScheduledEmail } from './emailScheduler';
 
@@ -99,6 +100,70 @@ export async function scheduleLogisticsSequence(order: OrderInfo): Promise<void>
   }
 
   console.log(`[email] ${scheduled}/${LOGISTICS_DAYS.length} logistics emails queued in DB for ${order.customerEmail} (first send: +1 day)`);
+}
+
+export async function sendOrderPending(order: OrderInfo): Promise<void> {
+  try {
+    const resend = getResendClient();
+    const logoUrl = getLogoUrl();
+    const subject = '⏳ Encomenda recebida — aguarda pagamento MB WAY';
+    const bodyHtml = `
+      <p style="margin:0 0 16px;font-size:15px;color:#333;">
+        A sua encomenda foi gerada com sucesso!
+      </p>
+      <div style="background:#FFF8E1;border-left:4px solid #FFD600;border-radius:4px;padding:16px;margin-bottom:16px;">
+        <p style="margin:0;font-size:14px;color:#333;font-weight:700;">⏳ Pagamento pendente</p>
+        <p style="margin:8px 0 0;font-size:14px;color:#555;">
+          Para activar a sua encomenda, confirme o pagamento na sua app <strong>MB WAY</strong>.
+        </p>
+      </div>
+      <p style="margin:0 0 12px;font-size:14px;color:#555;">
+        Foi enviado um pedido de pagamento para o seu telemóvel. Abra a app MB WAY, verifique as notificações e confirme o pagamento de
+        <strong style="color:#1a1a1a;">${new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(order.totalAmount)}</strong>.
+      </p>
+      <p style="margin:0 0 24px;font-size:14px;color:#555;">
+        Após a confirmação do pagamento, irá receber um email de confirmação da compra com todos os detalhes da sua encomenda.
+      </p>
+    `;
+    const html = buildEmailHtml(subject, bodyHtml, order, logoUrl);
+    await resend.emails.send({ from: FROM_ADDRESS, to: order.customerEmail, subject, html });
+    console.log(`[email] Order pending sent to ${order.customerEmail}`);
+  } catch (err) {
+    console.error('[email] Failed to send order pending:', err);
+  }
+}
+
+export async function sendPaymentDeclined(order: OrderInfo): Promise<void> {
+  try {
+    const resend = getResendClient();
+    const logoUrl = getLogoUrl();
+    const subject = '❌ Pagamento não confirmado — tente novamente';
+    const bodyHtml = `
+      <p style="margin:0 0 16px;font-size:15px;color:#333;">
+        O seu pagamento MB WAY não foi confirmado.
+      </p>
+      <div style="background:#FFF5F5;border-left:4px solid #E53E3E;border-radius:4px;padding:16px;margin-bottom:16px;">
+        <p style="margin:0;font-size:14px;color:#333;font-weight:700;">❌ Pagamento recusado</p>
+        <p style="margin:8px 0 0;font-size:14px;color:#555;">
+          A sua encomenda não pôde ser activada. Pode tentar novamente no nosso site.
+        </p>
+      </div>
+      <p style="margin:0 0 12px;font-size:14px;color:#555;">
+        Se acredita que isto é um erro, verifique a sua app MB WAY ou contacte-nos.
+      </p>
+      <div style="text-align:center;margin-top:24px;">
+        <a href="https://woldcupfranca.com/productos"
+           style="display:inline-block;background:#FFD600;color:#1a1a1a;font-weight:700;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;">
+          Tentar novamente
+        </a>
+      </div>
+    `;
+    const html = buildEmailHtml(subject, bodyHtml, order, logoUrl);
+    await resend.emails.send({ from: FROM_ADDRESS, to: order.customerEmail, subject, html });
+    console.log(`[email] Payment declined sent to ${order.customerEmail}`);
+  } catch (err) {
+    console.error('[email] Failed to send payment declined:', err);
+  }
 }
 
 export async function sendTestEmail(templateNumber: number, toEmail: string, locale?: string): Promise<void> {

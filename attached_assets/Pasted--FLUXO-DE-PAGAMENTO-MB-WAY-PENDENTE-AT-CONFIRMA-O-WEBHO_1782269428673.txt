@@ -1,0 +1,111 @@
+# FLUXO DE PAGAMENTO MB WAY — PENDENTE ATÉ CONFIRMAÇÃO WEBHOOK
+
+## MÉTODO DE PAGAMENTO
+
+O único método de pagamento disponível é MB WAY.
+
+❌ Remover completamente qualquer referência a Multibanco (entidade, referência, expiresAt)
+❌ Remover qualquer campo, UI, lógica ou condição relacionada a Multibanco
+❌ Não exibir selector de método — MB WAY é o único e já deve vir fixo no campo method
+
+Na chamada à API, o campo method deve ser sempre:
+"method": "mbway"
+
+O cliente apenas precisa de introduzir o número de telemóvel.
+A WayMB envia uma notificação push para a app MB WAY e o cliente confirma na app.
+
+---
+
+## REGRA PRINCIPAL — NUNCA CONFIRMAR ANTES DO WEBHOOK
+
+Quando o cliente submete a encomenda e a transação é criada na WayMB,
+o pedido deve ser registado como PENDENTE em TODOS os sistemas.
+NUNCA marcar como pago antes de receber o webhook com status COMPLETED.
+
+---
+
+## AO CRIAR A TRANSAÇÃO (POST /transactions/create)
+
+Imediatamente após a API retornar com sucesso:
+
+1. Gravar o pedido na base de dados com status = "PENDING"
+2. Gravar o transactionID associado ao pedido
+3. Enviar evento PENDENTE para a Utmify com status de pedido pendente
+   (não enviar evento de venda confirmada ainda)
+4. Disparar email de "Encomenda recebida — aguarda pagamento"
+   (não o email de confirmação de compra)
+5. Exibir a tela de aguardo (ver abaixo)
+
+---
+
+## TELA DE AGUARDO DE PAGAMENTO
+
+Design: fundo ou banner em tom amarelo/âmbar (#FFF8E1 ou similar)
+Ícone: relógio ou símbolo de pendente (não verde, não check mark)
+
+Título: "⏳ Encomenda Pendente"
+Subtítulo: "O seu pagamento ainda não foi confirmado."
+
+Mensagem principal:
+"A sua encomenda foi gerada com sucesso. Para a activar,
+confirme o pagamento na sua app MB WAY."
+
+Conteúdo da tela:
+- Mensagem: "Foi enviado um pedido de pagamento de [amount] €
+  para o seu telemóvel [phone]. Abra a app MB WAY e confirme
+  o pagamento."
+- Spinner de aguardo activo
+- ID da encomenda visível: [transactionID]
+
+Timer visível:
+- Contador regressivo de 5 minutos
+- Formato: 04:59, 04:58...
+- Quando chegar a 0 exibir mensagem:
+  "O tempo expirou. Se já confirmou o pagamento na app MB WAY,
+  aguarde — a confirmação pode demorar alguns minutos.
+  Se não confirmou, pode gerar uma nova encomenda."
+- Não redirecionar automaticamente nem cancelar o pedido internamente
+- O pedido continua PENDENTE na base de dados até webhook
+
+Rodapé da tela:
+"Após a confirmação do pagamento, receberá um email de confirmação."
+
+---
+
+## AO RECEBER WEBHOOK COM status = "COMPLETED"
+
+1. Actualizar pedido na base de dados: status = "COMPLETED"
+2. Enviar evento de venda confirmada para a Utmify
+3. Disparar email de confirmação de compra (acesso ao produto, etc.)
+4. Redirecionar o cliente para a página de obrigado / próximo passo do funil
+   (upsell, área de membro, download, etc.)
+5. Retornar HTTP 200 ao gateway
+
+---
+
+## AO RECEBER WEBHOOK COM status = "DECLINED"
+
+1. Actualizar pedido na base de dados: status = "DECLINED"
+2. NÃO enviar evento de venda para a Utmify
+3. Disparar email de "Pagamento não confirmado — tente novamente"
+4. Retornar HTTP 200 ao gateway
+
+---
+
+## AO RECEBER WEBHOOK COM status = "PENDING"
+
+1. Ignorar ou manter o status actual
+2. Retornar HTTP 200 ao gateway
+3. Não accionar nenhum fluxo de email nem tracking
+
+---
+
+## REGRAS GERAIS
+
+❌ NUNCA accionar o funil pós-compra (upsell, email de confirmação,
+   acesso ao produto) antes de receber webhook COMPLETED
+❌ NUNCA enviar conversão confirmada para Utmify antes do webhook COMPLETED
+❌ O timer é apenas visual — não cancela nem expira o pedido internamente
+✅ O pedido permanece PENDING na base de dados enquanto não houver webhook COMPLETED ou DECLINED
+✅ Sempre retornar HTTP 200 no webhook, independentemente do que aconteça internamente
+❌ NÃO criar nenhuma transação de teste automática durante a implementação

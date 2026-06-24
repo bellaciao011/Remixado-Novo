@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { createWayMBTransaction, getWayMBTransactionInfo } from '../waymb';
 import { PRODUCTS, ORDER_BUMP_PRODUCT, ORDER_BUMP_ID } from '../productData';
-import { sendOrderConfirmation, scheduleLogisticsSequence } from '../email/emailService';
+import { sendOrderConfirmation, scheduleLogisticsSequence, sendOrderPending, sendPaymentDeclined } from '../email/emailService';
 import type { OrderInfo } from '../email/templates';
 import { resolveLocale } from '../email/templates';
 import { createHash } from 'crypto';
@@ -40,21 +40,17 @@ const router = Router();
 router.post('/waymb/checkout', async (req: Request, res: Response): Promise<void> => {
   try {
     const {
-      items, email, firstName, lastName, method, nif, phone,
+      items, email, firstName, lastName, phone,
       addOrderBump, locale, utmSource, utmMedium, utmCampaign, utmContent, utmTerm,
     } = req.body;
+    const method = 'mbway';
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       res.status(400).json({ error: 'Items são obrigatórios' });
       return;
     }
 
-    if (!method || !['multibanco', 'mbway'].includes(method)) {
-      res.status(400).json({ error: 'Método de pagamento inválido (multibanco ou mbway)' });
-      return;
-    }
-
-    if (method === 'mbway' && (!phone || typeof phone !== 'string' || !phone.trim())) {
+    if (!phone || typeof phone !== 'string' || !phone.trim()) {
       res.status(400).json({ error: 'Telemóvel é obrigatório para MB WAY' });
       return;
     }
@@ -101,11 +97,10 @@ router.post('/waymb/checkout', async (req: Request, res: Response): Promise<void
 
     const transaction = await createWayMBTransaction({
       amount: amountEur,
-      method: method as 'multibanco' | 'mbway',
+      method: 'mbway',
       payerEmail: email,
       payerName: fullName,
-      payerDocument: typeof nif === 'string' && nif.trim() ? nif.trim() : undefined,
-      payerPhone: typeof phone === 'string' && phone.trim() ? phone.trim() : undefined,
+      payerPhone: phone.trim(),
       paymentDescription,
     });
 
@@ -149,7 +144,22 @@ router.post('/waymb/checkout', async (req: Request, res: Response): Promise<void
       source: utmSource, medium: utmMedium, campaign: utmCampaign, content: utmContent, term: utmTerm,
     });
 
-    console.log(`[waymb/checkout] transactionId=${transactionId} method=${method} amount=€${amountEur} email=${email}`);
+    // Email "encomenda recebida — aguarda pagamento" (fire-and-forget)
+    void sendOrderPending({
+      customerEmail: email,
+      customerName: fullName || undefined,
+      orderId: transactionId,
+      trackingCode,
+      items: cartItems.map(ci => {
+        const p = PRODUCTS.find(pr => pr.id === ci.productId);
+        return { name: p?.translations?.['pt-BR']?.name || ci.productId, quantity: ci.quantity, price: (p?.price ?? 0) / 100 };
+      }),
+      totalAmount: amountEur,
+      currency: 'eur',
+      locale: 'pt',
+    });
+
+    console.log(`[waymb/checkout] transactionId=${transactionId} method=mbway amount=€${amountEur} email=${email}`);
 
     res.json({
       transactionID: transactionId,
@@ -204,10 +214,10 @@ router.post('/waymb/webhook', async (req: Request, res: Response): Promise<void>
 
       if (!transactionId) return;
 
-      // Actualizar estado no banco
-      if (status === 'COMPLETED' || status === 'DECLINED' || status === 'PENDING') {
+      // Actualizar estado no banco (COMPLETED e DECLINED)
+      if (status === 'COMPLETED' || status === 'DECLINED') {
         try {
-          const dbStatus = status === 'COMPLETED' ? 'succeeded' : status.toLowerCase();
+          const dbStatus = status === 'COMPLETED' ? 'succeeded' : 'declined';
           await db.execute(sql`
             UPDATE payments SET status = ${dbStatus}, synced_at = NOW()
             ${status === 'COMPLETED' ? sql`, amount_received = amount` : sql``}
@@ -218,9 +228,13 @@ router.post('/waymb/webhook', async (req: Request, res: Response): Promise<void>
         }
       }
 
-      if (status !== 'COMPLETED') return;
+      // PENDING → não fazer nada
+      if (status === 'PENDING') {
+        console.log(`[waymb/webhook] PENDING ignorado — transactionId=${transactionId}`);
+        return;
+      }
 
-      // Recuperar dados do cliente do banco
+      // Recuperar dados do cliente do banco (necessário para COMPLETED e DECLINED)
       let paymentRecord: any = null;
       try {
         const rows = await db.execute(sql`SELECT * FROM payments WHERE id = ${transactionId} LIMIT 1`);
@@ -238,9 +252,33 @@ router.post('/waymb/webhook', async (req: Request, res: Response): Promise<void>
       const trackingCode: string | undefined = paymentRecord?.tracking_code || undefined;
       const orderBumpId: string = paymentRecord?.order_bump || '';
 
+      // ── DECLINED ──────────────────────────────────────────────────────────
+      if (status === 'DECLINED') {
+        console.log(`[waymb/webhook] DECLINED — transactionId=${transactionId} email=${customerEmail}`);
+        if (customerEmail) {
+          const order: OrderInfo = {
+            customerEmail,
+            customerName: customerName || undefined,
+            orderId: transactionId,
+            items: cartItems.map(ci => {
+              const p = PRODUCTS.find(pr => pr.id === ci.productId);
+              return { name: p?.translations?.['pt-BR']?.name || ci.productId, quantity: ci.quantity, price: (p?.price ?? 0) / 100 };
+            }),
+            totalAmount: amountEurCents / 100,
+            currency: 'eur',
+            locale,
+          };
+          try { await sendPaymentDeclined(order); } catch (e) { console.error('[waymb/webhook] erro email declined:', e); }
+        }
+        // Sem UTMify paid, sem CAPI
+        return;
+      }
+
+      // ── COMPLETED ─────────────────────────────────────────────────────────
+      if (status !== 'COMPLETED') return;
+
       console.log(`[waymb/webhook] COMPLETED — email=${customerEmail} nome=${customerName} valor=€${(amountEurCents / 100).toFixed(2)} carrinho=${JSON.stringify(cartItems)} trackingCode=${trackingCode}`);
 
-      // Enviar email de confirmação
       if (customerEmail) {
         const resolvedItems = cartItems.map(ci => {
           const product = PRODUCTS.find(p => p.id === ci.productId);
@@ -274,10 +312,10 @@ router.post('/waymb/webhook', async (req: Request, res: Response): Promise<void>
         try { await scheduleLogisticsSequence(order); } catch (e) { console.error('[waymb/webhook] erro agendamento email:', e); }
       }
 
-      // UTMify paid (fire-and-forget)
+      // UTMify paid (fire-and-forget) — SÓ no COMPLETED
       void fireUTMifyPaid(transactionId, amountEurCents, customerEmail, customerName, cartItems, orderBumpId, paymentRecord);
 
-      // Facebook CAPI Purchase (fire-and-forget)
+      // Facebook CAPI Purchase (fire-and-forget) — SÓ no COMPLETED
       void fireCAPI(customerEmail, customerName, amountEurCents, transactionId);
 
     } catch (err) {

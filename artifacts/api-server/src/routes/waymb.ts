@@ -352,20 +352,25 @@ async function fireUTMifyWaiting(
       products.push({ id: 'panini-wc2026', planId: 'panini-wc2026', planName: 'Panini FIFA World Cup 2026', name: 'Panini FIFA World Cup 2026', quantity: 1, priceInCents: brlCents });
     }
 
-    await fetch(UTMIFY_API_URL, {
+    const waitingRes = await fetch(UTMIFY_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-token': apiToken },
       body: JSON.stringify({
-        orderId: transactionId, platform: 'other', paymentMethod: 'boleto',
+        orderId: transactionId, platform: 'other', paymentMethod: 'pix',
         status: 'waiting_payment', currency: 'BRL',
-        createdAt: new Date().toISOString(), approvedDate: new Date().toISOString(),
+        createdAt: new Date().toISOString(), approvedDate: null,
         customer: { name: customerName || customerEmail, email: customerEmail, phone: null, document: null },
         trackingParameters: { utm_source: utms.source || null, utm_medium: utms.medium || null, utm_campaign: utms.campaign || null, utm_content: utms.content || null, utm_term: utms.term || null },
         commission: { totalPriceInCents: brlCents, gatewayFeeInCents: 0, userCommissionInCents: brlCents },
         products,
       }),
     });
-    console.log(`[waymb] UTMify waiting_payment enviado para ${transactionId}`);
+    if (!waitingRes.ok) {
+      const errBody = await waitingRes.text().catch(() => '');
+      console.error(`[waymb] UTMify waiting_payment FALHOU (${waitingRes.status}) para ${transactionId}: ${errBody}`);
+    } else {
+      console.log(`[waymb] UTMify waiting_payment enviado para ${transactionId}`);
+    }
   } catch (err: any) {
     console.warn('[waymb] UTMify waiting erro:', err?.message);
   }
@@ -403,11 +408,11 @@ async function fireUTMifyPaid(
       products.push({ id: 'panini-wc2026', planId: 'panini-wc2026', planName: 'Panini FIFA World Cup 2026', name: 'Panini FIFA World Cup 2026', quantity: 1, priceInCents: brlCents });
     }
 
-    await fetch(UTMIFY_API_URL, {
+    const paidRes = await fetch(UTMIFY_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-token': apiToken },
       body: JSON.stringify({
-        orderId: transactionId, platform: 'other', paymentMethod: 'boleto',
+        orderId: transactionId, platform: 'other', paymentMethod: 'pix',
         status: 'paid', currency: 'BRL',
         createdAt: new Date().toISOString(), approvedDate: new Date().toISOString(),
         customer: { name: customerName || customerEmail, email: customerEmail, phone: null, document: null },
@@ -420,7 +425,12 @@ async function fireUTMifyPaid(
         products,
       }),
     });
-    console.log(`[waymb/webhook] UTMify paid enviado para ${transactionId}`);
+    if (!paidRes.ok) {
+      const errBody = await paidRes.text().catch(() => '');
+      console.error(`[waymb/webhook] UTMify paid FALHOU (${paidRes.status}) para ${transactionId}: ${errBody}`);
+    } else {
+      console.log(`[waymb/webhook] UTMify paid enviado para ${transactionId}`);
+    }
   } catch (err: any) {
     console.warn('[waymb] UTMify paid erro:', err?.message);
   }

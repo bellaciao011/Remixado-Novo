@@ -279,7 +279,7 @@ export default function CheckoutPage() {
     const isDeclined = pollingStatus === 'DECLINED';
 
     return (
-      <div className="min-h-screen py-12 md:py-20" style={{ background: '#FFFDE7' }}>
+      <div className="min-h-screen py-12 md:py-20" style={{ background: '#f0f0f0' }}>
         <div className="container max-w-lg px-4 mx-auto space-y-6">
 
           {isPaid ? (
@@ -325,7 +325,7 @@ export default function CheckoutPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border-2 p-6 space-y-4" style={{ background: '#FFF8E1', borderColor: '#FFD600' }}>
+              <div className="rounded-xl border-2 p-6 space-y-4" style={{ background: '#FFF8E1', borderColor: '#FFD600', boxShadow: '0 8px 32px rgba(0,0,0,0.13)' }}>
                 <p className="text-sm text-center" style={{ color: '#37474F' }}>
                   A sua encomenda foi gerada com sucesso. Para a activar,<br />
                   <strong>confirme o pagamento na sua app MB WAY.</strong>

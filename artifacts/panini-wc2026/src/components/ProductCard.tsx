@@ -88,9 +88,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Info area */}
         <div className="flex flex-col flex-grow px-3 pt-2 pb-0">
-          <h3 className="text-[13px] font-semibold text-[#1a1a1a] leading-snug mb-0.5 line-clamp-2">
+          <h3 className="text-[13px] font-semibold text-[#1a1a1a] leading-snug mb-1 line-clamp-2">
             {translation.name}
           </h3>
+          {translation.shortDescription && (
+            <p className="text-[11px] text-[#555] leading-snug mb-1 line-clamp-3">
+              {translation.shortDescription}
+            </p>
+          )}
           <div className="mt-auto pb-2">
             {originalPrice && originalPrice > price && (
               <span className="block text-[11px] text-[#999] line-through">

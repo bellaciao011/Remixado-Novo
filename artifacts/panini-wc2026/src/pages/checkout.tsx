@@ -96,6 +96,9 @@ export default function CheckoutPage() {
   const [transactionData, setTransactionData] = useState<TransactionData | null>(null);
   const [submittedPhone, setSubmittedPhone] = useState('');
   const [pollingStatus, setPollingStatus] = useState<string | null>(null);
+  const [streetSuggestions, setStreetSuggestions] = useState<string[]>([]);
+  const [showStreetSuggestions, setShowStreetSuggestions] = useState(false);
+  const streetDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Countdown: 5 minutos
   const [countdown, setCountdown] = useState(5 * 60);
@@ -167,6 +170,71 @@ export default function CheckoutPage() {
   const handleShipping = (field: ShippingField) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setShipping(prev => ({ ...prev, [field]: e.target.value }));
     if (invalidFields.has(field)) setInvalidFields(prev => { const s = new Set(prev); s.delete(field); return s; });
+  };
+
+  const lookupPostalCode = async (cp: string) => {
+    const normalized = cp.replace(/\s/g, '');
+    if (!/^\d{4}-\d{3}$/.test(normalized)) return;
+    try {
+      const res = await fetch(`https://json.geoapi.pt/cp/${normalized}`, {
+        signal: AbortSignal.timeout(4000),
+      });
+      if (!res.ok) return;
+      const data = await res.json() as any;
+      setShipping(prev => ({
+        ...prev,
+        city: data?.Localidade || prev.city,
+        county: data?.Distrito || prev.county,
+      }));
+    } catch {}
+  };
+
+  const handlePostalCodeChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const val = e.target.value;
+    setShipping(prev => ({ ...prev, postCode: val }));
+    if (invalidFields.has('postCode')) setInvalidFields(prev => { const s = new Set(prev); s.delete('postCode'); return s; });
+    lookupPostalCode(val);
+  };
+
+  const fetchStreetSuggestions = async (query: string) => {
+    if (query.length < 4) { setStreetSuggestions([]); setShowStreetSuggestions(false); return; }
+    try {
+      const res = await fetch(
+        `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=pt&limit=7&lat=39.5&lon=-8.0`,
+        { signal: AbortSignal.timeout(4000) }
+      );
+      if (!res.ok) return;
+      const data = await res.json() as any;
+      const seen = new Set<string>();
+      const suggestions: string[] = [];
+      for (const feature of data.features || []) {
+        const p = feature.properties;
+        if (p.country !== 'Portugal') continue;
+        const parts: string[] = [];
+        if (p.street) parts.push(p.housenumber ? `${p.street} ${p.housenumber}` : p.street);
+        else if (p.name) parts.push(p.name);
+        if (p.city) parts.push(p.city);
+        const suggestion = parts.filter(Boolean).join(', ');
+        if (suggestion && !seen.has(suggestion)) { seen.add(suggestion); suggestions.push(suggestion); }
+        if (suggestions.length >= 5) break;
+      }
+      setStreetSuggestions(suggestions);
+      setShowStreetSuggestions(suggestions.length > 0);
+    } catch {}
+  };
+
+  const handleStreetChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const val = e.target.value;
+    setShipping(prev => ({ ...prev, streetAddress: val }));
+    if (invalidFields.has('streetAddress')) setInvalidFields(prev => { const s = new Set(prev); s.delete('streetAddress'); return s; });
+    if (streetDebounceRef.current) clearTimeout(streetDebounceRef.current);
+    streetDebounceRef.current = setTimeout(() => fetchStreetSuggestions(val), 450);
+  };
+
+  const applyStreetSuggestion = (suggestion: string) => {
+    setShipping(prev => ({ ...prev, streetAddress: suggestion }));
+    setShowStreetSuggestions(false);
+    setStreetSuggestions([]);
   };
 
   const handleProceedToPayment = () => {
@@ -546,9 +614,31 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="relative">
                     <label className={labelClass('streetAddress')}>Morada{requiredMark}</label>
-                    <input type="text" className={inputClass('streetAddress')} value={shipping.streetAddress} onChange={handleShipping('streetAddress')} />
+                    <input
+                      type="text"
+                      className={inputClass('streetAddress')}
+                      value={shipping.streetAddress}
+                      onChange={handleStreetChange}
+                      onBlur={() => setTimeout(() => setShowStreetSuggestions(false), 180)}
+                      autoComplete="off"
+                      placeholder="Ex: Rua da Liberdade, 123"
+                    />
+                    {showStreetSuggestions && streetSuggestions.length > 0 && (
+                      <div className="absolute z-20 w-full mt-1 bg-white border border-input rounded-md shadow-lg max-h-52 overflow-auto">
+                        {streetSuggestions.map((s, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            className="w-full text-left px-3 py-2.5 text-sm hover:bg-muted/60 transition-colors border-b last:border-0 leading-snug"
+                            onMouseDown={() => applyStreetSuggestion(s)}
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -570,7 +660,14 @@ export default function CheckoutPage() {
                     </div>
                     <div>
                       <label className={labelClass('postCode')}>Código Postal{requiredMark}</label>
-                      <input type="text" className={inputClass('postCode')} value={shipping.postCode} onChange={handleShipping('postCode')} />
+                      <input
+                        type="text"
+                        className={inputClass('postCode')}
+                        value={shipping.postCode}
+                        onChange={handlePostalCodeChange}
+                        placeholder="Ex: 1000-001"
+                        maxLength={8}
+                      />
                     </div>
                   </div>
 

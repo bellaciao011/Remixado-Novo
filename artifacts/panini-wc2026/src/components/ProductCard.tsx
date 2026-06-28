@@ -112,11 +112,13 @@ export function ProductCard({ product }: ProductCardProps) {
         <button
           onClick={handleAddToCart}
           disabled={!product.inStock}
-          className="w-full flex items-center justify-center gap-1.5 py-2 text-[12px] font-bold uppercase tracking-wider transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center py-2 text-[11px] font-bold uppercase tracking-wide transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: '#FFD600', color: '#1a1a1a' }}
         >
-          <ShoppingCart className="h-3.5 w-3.5 flex-shrink-0" />
-          {product.inStock ? t('buttons.addToCart') : t('labels.outOfStock')}
+          <span className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <ShoppingCart className="h-3.5 w-3.5 flex-shrink-0" />
+            {product.inStock ? t('buttons.addToCart') : t('labels.outOfStock')}
+          </span>
         </button>
       </div>
     </Link>

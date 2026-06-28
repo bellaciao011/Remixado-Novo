@@ -22,6 +22,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://connect.facebook.net" />
     <link rel="dns-prefetch" href="https://cdn.utmify.com.br" />
+    <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
+
+    <!-- TikTok Pixel via UTMify — always active on all pages -->
+    <script>
+      window.tikTokPixelId = "6a407ec07e39753323e94393";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel-tiktok.js");
+      document.head.appendChild(a);
+    </script>
 
     <!-- UTMify — pixel + UTM capture, always active on all pages -->
     <script>

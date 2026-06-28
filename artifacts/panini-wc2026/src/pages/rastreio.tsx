@@ -79,10 +79,23 @@ const MILESTONES_ES = [
   { day: 20, label: 'Entrega estimada',                description: 'El paquete debería haber llegado',                    Icon: Home },
 ];
 
+const MILESTONES_PT: typeof MILESTONES_EN = [
+  { day: 1,  label: 'Encomenda confirmada',             description: 'Pagamento recebido com sucesso',                       Icon: CheckCircle2 },
+  { day: 2,  label: 'Preparação logística',             description: 'Encomenda a ser preparada no armazém',                 Icon: Package },
+  { day: 4,  label: 'Entregue ao transportador',        description: 'Encomenda recolhida pelo serviço de entrega',          Icon: Truck },
+  { day: 7,  label: 'Centro logístico internacional',   description: 'Encomenda chegada ao centro de distribuição internacional', Icon: Globe },
+  { day: 10, label: 'Atualização de trânsito',          description: 'Encomenda em trânsito',                                Icon: RotateCw },
+  { day: 13, label: 'Chegada ao centro local',          description: 'Encomenda chegada ao centro de distribuição local',    Icon: MapPin },
+  { day: 16, label: 'Preparação da entrega',            description: 'Encomenda preparada para entrega final',               Icon: Box },
+  { day: 18, label: 'Em entrega',                       description: 'Encomenda a caminho da sua morada',                    Icon: Navigation },
+  { day: 20, label: 'Entrega estimada',                 description: 'A encomenda deverá ter chegado à sua morada',          Icon: Home },
+];
+
 const getMilestones = (locale: Locale) => {
   if (locale === 'fr') return MILESTONES_FR;
   if (locale === 'de') return MILESTONES_DE;
   if (locale === 'es') return MILESTONES_ES;
+  if (locale === 'pt-BR') return MILESTONES_PT;
   return MILESTONES_EN;
 };
 
@@ -347,7 +360,61 @@ const ES: Content = {
   dateLocale: 'es-ES',
 };
 
-const CONTENT: Record<Locale, Content> = { en: EN, fr: FR, de: DE, es: ES, it: EN, 'pt-BR': EN };
+const PT: Content = {
+  pageTitle: 'Rastreio de Encomenda',
+  pageSubtitle: 'Introduza o código da sua encomenda para rastrear a entrega',
+  searchPlaceholder: 'Código de encomenda (ex. PANTP5YHA)',
+  searchButton: 'Pesquisar',
+  searching: 'A pesquisar encomenda…',
+  notFound: 'Encomenda não encontrada',
+  orderSummary: 'Resumo da Encomenda',
+  customer: 'Cliente',
+  orderCode: 'Código de Encomenda',
+  orderDate: 'Data da Encomenda',
+  estimatedDelivery: 'Entrega Estimada',
+  totalAmount: 'Valor Total',
+  shippingStatus: 'Estado do Envio',
+  daysSince: (n) => `Dia ${n} desde a encomenda`,
+  statusPaid: 'Pago',
+  statusPending: 'Pendente',
+  statusDenied: 'Recusado',
+  inProgress: 'Em curso',
+  done: 'Entregue',
+  paymentPending: 'Pagamento pendente',
+  paymentPendingDesc: 'O rastreio da entrega será ativado após confirmação do pagamento.',
+  faq: [
+    { icon: '📦', q: 'Onde está a minha encomenda?', a: 'A sua encomenda passa por várias etapas logísticas internacionais. Após a confirmação, é preparada no nosso armazém, entregue ao transportador e processada pela alfândega. O processo completo demora geralmente 15 a 20 dias úteis.' },
+    { icon: '⏳', q: 'Qual é o prazo de entrega?', a: 'O prazo de entrega estimado é de 15 a 20 dias úteis a partir da data da encomenda. Os envios internacionais podem variar ligeiramente consoante os procedimentos aduaneiros do país de destino.' },
+    { icon: '🚚', q: 'O meu rastreio não está a ser atualizado', a: 'Não se preocupe! Por vezes podem ocorrer atrasos nas atualizações de estado, especialmente aos fins de semana e feriados. A sua encomenda está a ser constantemente monitorizada e será entregue conforme previsto.' },
+    { icon: '💬', q: 'Contactar suporte', a: 'A nossa equipa responde em 24 a 72 horas. Utilize o formulário abaixo para nos contactar diretamente.' },
+  ],
+  supportTitle: 'Como podemos ajudar?',
+  supportSubtitle: 'Suporte Panini FIFA World Cup 2026',
+  faqLabel: 'Perguntas frequentes',
+  supportFormLabel: '📝 Formulário de suporte',
+  formName: 'Nome completo *',
+  formNamePlaceholder: 'O seu nome',
+  formOrder: 'Número de encomenda',
+  formEmail: 'Endereço de e-mail *',
+  formEmailPlaceholder: 'o-seu@email.pt',
+  formMessage: 'A sua mensagem *',
+  formMessagePlaceholder: 'Descreva o seu pedido…',
+  formOption: 'Opção pretendida *',
+  formOptions: [
+    { val: 'follow_up', label: 'Rastrear a minha encomenda' },
+    { val: 'priority',  label: 'Obter uma atualização prioritária' },
+    { val: 'refund',    label: 'Solicitar análise de reembolso' },
+  ],
+  formSend: 'Enviar pedido',
+  formSending: 'A enviar…',
+  formSentTitle: 'Pedido recebido',
+  formSentDesc: 'Responderemos em 24 a 72 horas.',
+  formError: 'Erro ao enviar. Por favor, tente novamente.',
+  openSupport: 'Abrir suporte',
+  dateLocale: 'pt-PT',
+};
+
+const CONTENT: Record<Locale, Content> = { en: EN, fr: FR, de: DE, es: ES, it: EN, 'pt-BR': PT };
 
 function daysSince(isoDate: string): number {
   const paid = new Date(isoDate);

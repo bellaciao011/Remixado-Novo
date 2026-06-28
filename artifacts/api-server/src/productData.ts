@@ -148,27 +148,27 @@ export const PRODUCTS: ProductData[] = [
     sortOrder: 2,
     translations: {
       'pt-BR': {
-        name: 'Box-Bundle – Coleção Oficial de Figurinhas FIFA World Cup 2026™',
-        shortDescription: 'Álbum softcover + caixa com 50 envelopes (356 figurinhas no total)',
-        description: `O Box-Bundle Panini para a Copa do Mundo FIFA 2026™ contém um álbum de figurinhas (com 6 figurinhas) e uma caixa com 50 envelopes de 7 figurinhas cada = 356 figurinhas no total para o início perfeito da sua coleção.
+        name: 'Box-Bundle – Coleção Oficial de Cromos FIFA World Cup 2026™',
+        shortDescription: 'Álbum softcover + caixa com 50 pacotes (356 cromos no total)',
+        description: `O Box-Bundle Panini para a Copa do Mundo FIFA 2026™ contém um álbum de cromos (com 6 cromos) e uma caixa com 50 pacotes de 7 cromos cada = 356 cromos no total para o início perfeito da sua coleção.
 
-Como clássico entre os bundles, este set é ideal para mergulhar diretamente no mundo das figurinhas Panini. Iniciante ou colecionador experiente: com este bundle, você nunca erra!
+O clássico entre os bundles, este set é ideal para mergulhar diretamente no mundo dos cromos Panini. Principiante ou colecionador experiente: com este bundle, nunca erra!
 
 Conteúdo do Box-Bundle:
-• 1 Álbum softcover com 112 páginas e 6 figurinhas
-• 1 Caixa com 50 envelopes de 7 figurinhas cada (= 350 figurinhas)
+• 1 Álbum softcover com 112 páginas e 6 cromos
+• 1 Caixa com 50 pacotes de 7 cromos cada (= 350 cromos)
 
-Suas vantagens no Box-Bundle:
-• Começo perfeito: O clássico entre os bundles – ideal para iniciar sua coleção
-• Pronto para colar: 356 figurinhas incluindo o álbum – abra e cole imediatamente
-• Simples e prático: Tudo em um set – pedido rápido e pronto para usar
+Vantagens do Box-Bundle:
+• Início perfeito: O clássico entre os bundles – ideal para iniciar a sua coleção
+• Pronto a colar: 356 cromos incluindo o álbum – abra e cole imediatamente
+• Simples e prático: Tudo num set – encomenda rápida e pronto a usar
 • Original Panini: Embalado com segurança e entregue diretamente pelo fabricante
-• Menos repetidas: Uma caixa oferece melhores chances de menos figurinhas duplicadas do que envelopes avulsos
+• Menos repetidos: Uma caixa oferece melhores hipóteses de menos cromos duplicados do que pacotes avulsos
 
-O que espera você na grande coleção de figurinhas da Copa do Mundo FIFA 2026™:
+O que o espera na grande coleção de cromos da Copa do Mundo FIFA 2026™:
 • Coleção oficialmente licenciada com todas as 48 seleções classificadas
-• Jogadores e equipes: 18 jogadores por seleção, uma foto da equipe e o logotipo oficial da federação
-• 980 figurinhas diferentes para colecionar, trocar e colar
+• Jogadores e equipas: 18 jogadores por seleção, uma foto da equipa e o logótipo oficial da federação
+• 980 cromos diferentes para colecionar, trocar e colar
 • Verdadeiro clima de Copa: Perfeito para momentos de coleção em família e com amigos
 • Tradição Panini: Coleção de alta qualidade para fãs de todas as idades`,
       },
@@ -319,25 +319,25 @@ Cosa ti aspetta nella grande collezione della FIFA World Cup 2026™:
     sortOrder: 3,
     translations: {
       'pt-BR': {
-        name: 'Big Box-Bundle – Coleção Oficial de Figurinhas FIFA World Cup 2026™',
-        shortDescription: 'Álbum softcover + caixa com 100 envelopes (706 figurinhas no total)',
-        description: `O Big Box-Bundle para a Copa do Mundo FIFA 2026™ oferece, além do álbum de figurinhas, um total de 706 figurinhas. A entrada perfeita para sua coleção Panini, seja você colecionador experiente ou iniciante. Você recebe o álbum (com 6 figurinhas inclusas) para colar e uma grande caixa com 100 envelopes.
+        name: 'Big Box-Bundle – Coleção Oficial de Cromos FIFA World Cup 2026™',
+        shortDescription: 'Álbum softcover + caixa com 100 pacotes (706 cromos no total)',
+        description: `O Big Box-Bundle para a Copa do Mundo FIFA 2026™ oferece, além do álbum de cromos, um total de 706 cromos. A entrada perfeita para a sua coleção Panini, seja colecionador experiente ou principiante. Recebe o álbum (com 6 cromos incluídos) para colar e uma grande caixa com 100 pacotes.
 
 Conteúdo do Big Box-Bundle:
-• 1 Álbum softcover com 112 páginas e 6 figurinhas
-• 1 Caixa com 100 envelopes com 7 figurinhas cada (= 700 figurinhas no total)
+• 1 Álbum softcover com 112 páginas e 6 cromos
+• 1 Caixa com 100 pacotes de 7 cromos cada (= 700 cromos no total)
 
-Suas vantagens no Big Box-Bundle:
-• Muita diversão de colecionar: 706 figurinhas incluindo o álbum para colar imediatamente
-• Sem complicação: Adicione o bundle ao carrinho com um único clique
+Vantagens do Big Box-Bundle:
+• Muita diversão a colecionar: 706 cromos incluindo o álbum para colar imediatamente
+• Sem complicações: Adicione o bundle ao carrinho com um único clique
 • Seguro e direto: Os produtos são entregues embalados originalmente pelo fabricante Panini
-• Menos figurinhas repetidas: Estatisticamente, ao comprar uma caixa as chances de duplicatas são menores do que ao comprar envelopes avulsos
+• Menos cromos repetidos: Estatisticamente, ao comprar uma caixa as hipóteses de duplicados são menores do que ao comprar pacotes avulsos
 
-O que espera você na maior coleção de figurinhas de futebol de 2026 para a Copa do Mundo FIFA 2026™:
-• A coleção é um produto oficialmente licenciado para a Copa do Mundo de 2026, abrange todas as 48 seleções classificadas com seus melhores jogadores e oferece uma visão geral da Copa nos EUA, México e Canadá.
-• No total, há 980 figurinhas diferentes para descobrir e colar.
-• Para cada seleção, você encontra 18 jogadores, uma foto da equipe e o logotipo oficial da federação.
-• Leve a paixão e o clima de Copa do Mundo para casa em uma coleção única da tradicional marca Panini – ideal para colecionar, trocar e torcer com amigos e família.`,
+O que o espera na maior coleção de cromos de futebol de 2026 para a Copa do Mundo FIFA 2026™:
+• A coleção é um produto oficialmente licenciado para o Mundial de 2026, abrange todas as 48 seleções classificadas com os seus melhores jogadores e oferece uma visão geral do Mundial nos EUA, México e Canadá.
+• No total, há 980 cromos diferentes para descobrir e colar.
+• Para cada seleção, encontra 18 jogadores, uma foto da equipa e o logótipo oficial da federação.
+• Traga a paixão e o clima do Mundial para casa numa coleção única da tradicional marca Panini – ideal para colecionar, trocar e torcer com amigos e família.`,
       },
       'en': {
         name: 'Big Box-Bundle – Official FIFA World Cup 2026™ Sticker Collection',
@@ -468,24 +468,24 @@ Cosa ti aspetta nella piu grande collezione 2026 per la FIFA World Cup 2026™:
     sortOrder: 4,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Caixa com 50 Envelopes',
-        shortDescription: '50 envelopes com 7 figurinhas cada (350 figurinhas no total)',
-        description: `Com cada caixa você recebe 350 figurinhas, distribuídas em 50 envelopes com 7 figurinhas cada.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Caixa com 50 Pacotes',
+        shortDescription: '50 pacotes com 7 cromos cada (350 cromos no total)',
+        description: `Com cada caixa recebe 350 cromos, distribuídos em 50 pacotes de 7 cromos cada.
 
-A caixa com 50 envelopes forma uma base sólida para construir seu álbum passo a passo ou para completar pontos específicos da coleção.
+A caixa com 50 pacotes forma uma base sólida para construir o seu álbum passo a passo ou para completar pontos específicos da coleção.
 
 Conteúdo da caixa:
-• 50 envelopes com 7 figurinhas cada (= 350 figurinhas no total)
+• 50 pacotes com 7 cromos cada (= 350 cromos no total)
 
-As vantagens da caixa com 50 envelopes:
-• Base sólida: 350 figurinhas para um crescimento real da sua coleção
+Vantagens da caixa com 50 pacotes:
+• Base sólida: 350 cromos para um crescimento real da sua coleção
 • Uso flexível: Ideal para começar ou para complementar a qualquer momento
 • Quantidade certa: Fácil de organizar e colar – perfeito para quem quer colecionar passo a passo
 
-O que espera você na coleção de figurinhas da Copa do Mundo FIFA 2026™:
-• A Copa do Mundo para colecionar: Todas as 48 seleções classificadas para a Copa 2026
-• Futebol para vivenciar: Cada uma das 980 figurinhas te aproxima das emoções do torneio
-• Stars de perto: Descubra os melhores jogadores de cada nação
+O que o espera na coleção de cromos da Copa do Mundo FIFA 2026™:
+• O Mundial para colecionar: Todas as 48 seleções classificadas para o Mundial 2026
+• Futebol para vivenciar: Cada um dos 980 cromos aproxima-o das emoções do torneio
+• Estrelas de perto: Descubra os melhores jogadores de cada nação
 • Colecionar, colar e trocar com amigos e família`,
       },
       'en': {
@@ -617,25 +617,25 @@ Cosa ti aspetta nella collezione FIFA World Cup 2026™:
     sortOrder: 5,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Caixa com 100 Envelopes',
-        shortDescription: '100 envelopes com 7 figurinhas cada (700 figurinhas no total)',
-        description: `Com esta caixa você recebe 700 figurinhas, distribuídas em 100 envelopes com 7 figurinhas cada.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Caixa com 100 Pacotes',
+        shortDescription: '100 pacotes com 7 cromos cada (700 cromos no total)',
+        description: `Com esta caixa recebe 700 cromos, distribuídos em 100 pacotes de 7 cromos cada.
 
-A caixa com 100 envelopes ajuda você a avançar muito mais no álbum e a trabalhar especificamente nas figurinhas que ainda faltam.
+A caixa com 100 pacotes ajuda a avançar muito mais no álbum e a trabalhar especificamente nos cromos que ainda faltam.
 
 Conteúdo da caixa:
-• 100 envelopes com 7 figurinhas cada (= 700 figurinhas no total)
+• 100 pacotes com 7 cromos cada (= 700 cromos no total)
 
-As vantagens da caixa com 100 envelopes:
-• Grande impulso na coleção: 700 figurinhas para um progresso real no álbum
-• Variedade garantida: Mais motivos novos a cada envelope aberto
-• Diversão total: Ideal para sessões longas de figurinhas
+Vantagens da caixa com 100 pacotes:
+• Grande impulso na coleção: 700 cromos para um progresso real no álbum
+• Variedade garantida: Mais motivos novos a cada pacote aberto
+• Diversão total: Ideal para sessões longas de cromos
 • Seguro e direto: Entregue embalado originalmente pelo fabricante
 
-O que espera você na coleção de figurinhas da Copa do Mundo FIFA 2026™:
-• Coleção oficial do torneio: Com todas as 48 seleções da Copa 2026
-• Desafio empolgante: 980 figurinhas diferentes no total para colecionar
-• No meio da ação: Viva o torneio figurinha por figurinha
+O que o espera na coleção de cromos da Copa do Mundo FIFA 2026™:
+• Coleção oficial do torneio: Com todas as 48 seleções do Mundial 2026
+• Desafio empolgante: 980 cromos diferentes no total para colecionar
+• No meio da ação: Viva o torneio cromo a cromo
 • Colecionar, trocar e torcer: O companheiro perfeito para o maior evento do verão de 2026`,
       },
       'en': {
@@ -774,28 +774,28 @@ Cosa ti aspetta nella collezione FIFA World Cup 2026™:
     sortOrder: 6,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Hardcover Big Box-Bundle',
-        shortDescription: '1 Álbum Hardcover + 1 Caixa com 100 Envelopes (700 figurinhas)',
-        description: `Cada Hardcover Big Box-Bundle da Copa do Mundo FIFA 2026™ contém 1 Álbum Hardcover e 700 figurinhas.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Hardcover Big Box-Bundle',
+        shortDescription: '1 Álbum Capa Dura + 1 Caixa com 100 Pacotes (700 cromos)',
+        description: `Cada Hardcover Big Box-Bundle da Copa do Mundo FIFA 2026™ contém 1 Álbum Capa Dura e 700 cromos.
 
-O Hardcover Big Box-Bundle é ideal para quem quer começar a colecionar com tudo e apresentar sua coleção em um álbum premium de capa dura.
+O Hardcover Big Box-Bundle é ideal para quem quer começar a colecionar a sério e apresentar a sua coleção num álbum premium de capa dura.
 
 Conteúdo do Hardcover Big Box-Bundle:
-• 1 Álbum Hardcover com 112 páginas
-• 1 Caixa com 100 envelopes de 7 figurinhas cada (= 700 figurinhas)
+• 1 Álbum Capa Dura com 112 páginas
+• 1 Caixa com 100 pacotes de 7 cromos cada (= 700 cromos)
 
-Suas vantagens com o Treasure-Bundle:
-• Comece agora: Set atraente com álbum Hardcover premium e caixa de 100 envelopes – tudo disponível em um só clique
-• Apresentação de qualidade: O álbum Hardcover garante um visual sofisticado e torna sua coleção um verdadeiro destaque
-• Diversão de colecionar: Com mais de 700 figurinhas, você já completa boa parte do álbum de uma só vez
+Vantagens do Hardcover Big Box-Bundle:
+• Comece já: Set atraente com álbum Capa Dura premium e caixa de 100 pacotes – tudo disponível num só clique
+• Apresentação de qualidade: O álbum Capa Dura garante um visual sofisticado e torna a sua coleção um verdadeiro destaque
+• Diversão a colecionar: Com mais de 700 cromos, completa boa parte do álbum de uma só vez
 • Original do fabricante: Embalado com segurança e enviado diretamente pela Panini
 
-O que a coleção de figurinhas da Copa do Mundo 2026 oferece:
+O que a coleção de cromos do Mundial 2026 oferece:
 • Oficialmente licenciado: Inclui todas as 48 seleções classificadas para a Copa do Mundo FIFA 2026™
-• 980 figurinhas para colecionar: Caça todas as figurinhas da coleção e complete seu álbum
-• Tudo sobre a Copa em um lugar: Descubra todos os participantes do torneio nos EUA, México e Canadá
-• Times & Estrelas: Para cada seleção há 18 figurinhas de jogadores, uma foto do time e o escudo oficial
-• Atmosfera de Copa em casa: Use seu álbum como guia antes e durante o torneio`,
+• 980 cromos para colecionar: Caça todos os cromos da coleção e complete o seu álbum
+• Tudo sobre o Mundial num só lugar: Descubra todos os participantes do torneio nos EUA, México e Canadá
+• Equipas & Estrelas: Para cada seleção há 18 cromos de jogadores, uma foto da equipa e o escudo oficial
+• Atmosfera de Mundial em casa: Use o seu álbum como guia antes e durante o torneio`,
       },
       'en': {
         name: 'Official FIFA World Cup 2026™ Sticker Collection – Hardcover Big Box-Bundle',
@@ -940,31 +940,31 @@ Cosa offre la collezione di figurine FIFA World Cup 2026:
     sortOrder: 12,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Big Collector\'s Bundle',
-        shortDescription: '1 Álbum + Big Collector\'s Box com 143 envelopes (1.007 figurinhas) + 3 Panini EXTRA-Stickers',
-        description: `Com o Big Collector's Bundle exclusivo online, você garante álbum, 1.007 figurinhas + 3 dos raros Panini EXTRA-Stickers da Copa do Mundo FIFA 2026™.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Big Collector\'s Bundle',
+        shortDescription: '1 Álbum + Big Collector\'s Box com 143 pacotes (1.007 cromos) + 3 Panini EXTRA-Stickers',
+        description: `Com o Big Collector's Bundle exclusivo online, garante álbum, 1.007 cromos + 3 dos raros Panini EXTRA-Stickers da Copa do Mundo FIFA 2026™.
 
-Nosso maior bundle é ideal para quem quer começar a coleção com tudo desde o início!
+O nosso maior bundle é ideal para quem quer começar a coleção com tudo desde o início!
 
 Conteúdo do Big Collector's Bundle:
-• 1 Álbum com 112 páginas e 6 figurinhas
-• 1 Big Collector's Box exclusiva online com 143 envelopes de 7 figurinhas cada (= 1.001 figurinhas no total) + 3 Panini EXTRA-Stickers aleatórios
+• 1 Álbum com 112 páginas e 6 cromos
+• 1 Big Collector's Box exclusiva online com 143 pacotes de 7 cromos cada (= 1.001 cromos no total) + 3 Panini EXTRA-Stickers aleatórios
 
 Vantagens do Big Collector's Bundle:
-• Enorme diversão com figurinhas: 1.007 figurinhas + álbum – comece a colar na hora e complete com sorte
+• Enorme diversão com cromos: 1.007 cromos + álbum – comece a colar imediatamente e complete com sorte
 • Compra fácil: adicione o bundle ao carrinho com um clique
 • Direto do fabricante: produtos originais entregues pela Panini
-• Menos repetições: a exclusiva Big Collector's Box oferece as melhores chances de completar o álbum sem muitas figurinhas duplicadas
-• Bônus: apenas na Big Collector's Box você recebe 3 dos 20 raríssimos Panini EXTRA-Stickers* como exclusividade
+• Menos repetições: a exclusiva Big Collector's Box oferece as melhores hipóteses de completar o álbum sem muitos cromos duplicados
+• Bónus: apenas na Big Collector's Box recebe 3 dos 20 raríssimos Panini EXTRA-Stickers* como exclusividade
 
-O que espera você na coleção da Copa do Mundo 2026™:
+O que o espera na coleção do Mundial 2026™:
 • Coleção totalmente licenciada com todas as 48 seleções classificadas
-• Cada seleção com seus principais jogadores, foto do time e logo oficial da federação
-• Visão detalhada da Copa 2026 nos EUA, México e Canadá
-• 980 figurinhas diferentes para colecionar e colar
-• Traz o verdadeiro clima de Copa para casa – perfeito para trocar, colecionar e torcer
+• Cada seleção com os seus principais jogadores, foto da equipa e logótipo oficial da federação
+• Visão detalhada do Mundial 2026 nos EUA, México e Canadá
+• 980 cromos diferentes para colecionar e colar
+• Traz o verdadeiro clima de Mundial para casa – perfeito para trocar, colecionar e torcer
 
-*Os Panini EXTRA-Stickers não fazem parte da coleção principal e são adicionados aleatoriamente em média a cada 100º envelope`,
+*Os Panini EXTRA-Stickers não fazem parte da coleção principal e são adicionados aleatoriamente em média a cada 100º pacote`,
       },
       'en': {
         name: 'Official FIFA World Cup 2026™ Sticker Collection – Big Collector\'s Bundle',
@@ -1126,19 +1126,19 @@ Cosa ti aspetta nella collezione FIFA World Cup 2026™:
     sortOrder: 11,
     translations: {
       'pt-BR': {
-        name: 'FIFA Copa do Mundo 2026™ Adrenalyn XL™ Omni-Set Panini',
-        shortDescription: 'Coleção completa numerada (1/2026 a 2026/2026) – 630 cards + 9 Golden Ballers + 3 Momentum Cards',
-        description: `Mergulhe na experiência definitiva da FIFA Copa do Mundo™ com o conjunto oficial Panini FIFA Copa do Mundo 2026™ Adrenalyn XL™ Omni Set.
+        name: 'FIFA World Cup 2026™ Adrenalyn XL™ Omni-Set Panini',
+        shortDescription: 'Coleção completa numerada individualmente (1/2026 a 2026/2026) – 630 cartas + 9 Golden Ballers + 3 Momentum Cards',
+        description: `Mergulhe na experiência definitiva da FIFA Copa do Mundo™ com o conjunto oficial Panini FIFA World Cup 2026™ Adrenalyn XL™ Omni Set.
 
-Pela primeira vez, a Panini apresenta uma Complete Collection exclusiva em uma Deluxe Box – para verdadeiros colecionadores e fãs do futebol.
+Pela primeira vez, a Panini apresenta uma Complete Collection exclusiva numa Deluxe Box – para verdadeiros colecionadores e fãs do futebol.
 Cada caixa é numerada individualmente – de 1/2026 a 2026/2026.
 
 Conteúdo:
-• Todos os 630 cards oficiais, incluindo os 9 exclusivos Golden Ballers
+• Todas as 630 cartas oficiais, incluindo os 9 exclusivos Golden Ballers
 • O único set com as 3 exclusivas Momentum Cards: Bellingham, Dembélé e Pulisic
-• Pasta Deluxe de colecionador em qualidade premium – para proteger e apresentar sua coleção com exclusividade
-• Código para o jogo online, para desbloquear os cards no jogo digital oficial
-• Checklist completa para acompanhar cada card da coleção
+• Pasta Deluxe de colecionador em qualidade premium – para proteger e apresentar a sua coleção com exclusividade
+• Código para o jogo online, para desbloquear as cartas no jogo digital oficial
+• Checklist completa para acompanhar cada carta da coleção
 
 O fascínio completo da FIFA Copa do Mundo™ Adrenalyn XL™ – exclusivamente online`,
       },
@@ -1247,14 +1247,14 @@ L'affascinante esperienza completa della FIFA Coppa del Mondo™ Adrenalyn XL™
     translations: {
       'pt-BR': {
         name: 'FIFA World Cup 2026™ – Treasure Box United Edition Panini',
-        shortDescription: 'Edição limitada numerada (1/5000 a 5000/5000) – Álbum Hardcover exclusivo + 100 envelopes + 16 pôsteres',
+        shortDescription: 'Edição limitada numerada individualmente (1/5000 a 5000/5000) – Álbum Capa Dura exclusivo + 100 pacotes + 16 pósteres',
         description: `Treasure Box United Edition: criada para colecionadores que procuram algo verdadeiramente especial.
 Cada caixa é numerada individualmente, de 1/5000 a 5000/5000.
 
 Nesta caixa limitada:
-• 1 Álbum Hardcover exclusivo, elegante e resistente, disponível apenas nesta caixa — um lugar de honra para a sua coleção, não vendido separadamente
-• 100 envelopes de figurinhas, com um total de 700 figurinhas — 100 vezes o som único do rasgar, 100 vezes a chance de encontrar as suas estrelas e 100 vezes a expectativa da próxima troca
-• 16 pôsteres exclusivos das cidades-sede — leve a atmosfera de todos os palcos do mundial diretamente para as suas paredes. Esses pôsteres artísticos das cidades-sede da Copa do Mundo 2026 são peças únicas, disponíveis exclusivamente nesta Treasure Box`,
+• 1 Álbum Capa Dura exclusivo, elegante e resistente, disponível apenas nesta caixa — um lugar de honra para a sua coleção, não vendido separadamente
+• 100 pacotes de cromos, com um total de 700 cromos — 100 vezes o som único do rasgar, 100 vezes a hipótese de encontrar as suas estrelas e 100 vezes a expectativa da próxima troca
+• 16 pósteres exclusivos das cidades-sede — leve a atmosfera de todos os palcos do mundial diretamente para as suas paredes. Estes pósteres artísticos das cidades-sede da Copa do Mundo 2026 são peças únicas, disponíveis exclusivamente nesta Treasure Box`,
       },
       'en': {
         name: 'FIFA World Cup 2026™ Sticker Collection – Treasure Box United Edition Panini',
@@ -1332,15 +1332,15 @@ In questa scatola limitata:
     sortOrder: 9,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Treasure Box Panini',
-        shortDescription: '24 envelopes de 7 figurinhas + Álbum Hardcover oficial',
-        description: `Descubra a Coleção Oficial de Figurinhas Panini FIFA World Cup 2026™, dedicada à Copa do Mundo FIFA 2026™: o primeiro torneio com 48 seleções, realizado na América do Norte. Uma viagem pelas estrelas do futebol e pelos novos talentos em uma das coleções mais completas de sempre.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Treasure Box Panini',
+        shortDescription: '24 pacotes de 7 cromos + Álbum Oficial Capa Dura',
+        description: `Descubra a Coleção Oficial de Cromos Panini FIFA World Cup 2026™, dedicada ao Mundial FIFA 2026™: o primeiro torneio com 48 seleções, realizado na América do Norte. Uma viagem pelas estrelas do futebol e pelos novos talentos numa das coleções mais completas de sempre.
 
-O álbum tem 112 páginas com 980 figurinhas no total, incluindo 68 figurinhas especiais em material premium.
+O álbum tem 112 páginas com 980 cromos no total, incluindo 68 cromos especiais em material premium.
 
 Esta Treasure Box contém:
-• 24 envelopes com 7 figurinhas cada
-• 1 Álbum com capa dura`,
+• 24 pacotes com 7 cromos cada
+• 1 Álbum Capa Dura`,
       },
       'en': {
         name: 'FIFA World Cup 2026™ Official Sticker Collection – Treasure Box Panini',
@@ -1419,17 +1419,17 @@ Questa Treasure Box contiene:
     sortOrder: 8,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – 3 Caixas de 50 Envelopes + Álbum Hardcover',
-        shortDescription: '3 Caixas de 50 envelopes + 1 Álbum Hardcover. Cada envelope contém 7 figurinhas.',
-        description: `A coleção oficial de figurinhas Panini FIFA World Cup 2026™ chegou!
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – 3 Caixas de 50 Pacotes + Álbum Capa Dura',
+        shortDescription: '3 Caixas de 50 pacotes + 1 Álbum Capa Dura. Cada pacote contém 7 cromos.',
+        description: `A coleção oficial de cromos Panini FIFA World Cup 2026™ chegou!
 
 Este bundle inclui:
-• 3 Caixas de 50 envelopes (= 1.050 figurinhas no total)
-• 1 Álbum Hardcover oficial
+• 3 Caixas de 50 pacotes (= 1.050 cromos no total)
+• 1 Álbum Capa Dura oficial
 
-Cada envelope contém 7 figurinhas.
+Cada pacote contém 7 cromos.
 
-O pacote ideal para quem quer dar um grande salto na coleção e guardar tudo no álbum premium de capa dura.`,
+O bundle ideal para quem quer dar um grande salto na coleção e guardar tudo no álbum premium de capa dura.`,
       },
       'en': {
         name: 'Official FIFA World Cup 2026™ Sticker Collection – 3 Boxes of 50 Packets + Hardcover Album',
@@ -1519,18 +1519,18 @@ Il bundle ideale per chi vuole fare un grande salto nella propria collezione e c
     sortOrder: 7,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Caixa 50 Envelopes + Pocket Tin + Classic Tin',
-        shortDescription: 'Caixa com 50 envelopes + 1 Pocket Tin (8 envelopes) + 1 Classic Tin (16 envelopes)',
-        description: `A coleção oficial de figurinhas Panini FIFA World Cup 2026™ chegou!
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Caixa 50 Pacotes + Pocket Tin + Classic Tin',
+        shortDescription: 'Caixa com 50 pacotes + 1 Pocket Tin (8 pacotes) + 1 Classic Tin (16 pacotes)',
+        description: `A coleção oficial de cromos Panini FIFA World Cup 2026™ chegou!
 
 Este bundle exclusivo inclui:
-• 1 Caixa com 50 envelopes
-• 1 Pocket Tin aleatória com 8 envelopes
-• 1 Classic Tin aleatória com 16 envelopes
+• 1 Caixa com 50 pacotes
+• 1 Pocket Tin aleatória com 8 pacotes
+• 1 Classic Tin aleatória com 16 pacotes
 
-Cada envelope contém 7 figurinhas.
+Cada pacote contém 7 cromos.
 
-As Pocket Tins e Classic Tins são enviadas em designs aleatórios – uma surpresa a mais para os fãs da coleção!`,
+As Pocket Tins e Classic Tins são enviadas em designs aleatórios – uma surpresa extra para os fãs da coleção!`,
       },
       'en': {
         name: 'Official FIFA World Cup 2026™ Sticker Collection – Box of 50 Packets + Pocket Tin + Classic Tin',
@@ -1624,21 +1624,21 @@ Le Pocket Tins e Classic Tins vengono spedite in design casuali – una sorpresa
     sortOrder: 14,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Box Super Premium com 60 Envelopes',
-        shortDescription: 'Álbum Capa Dura Ouro + 60 envelopes com 420 figurinhas oficiais',
-        description: `Este Exclusivo Box Super Premium inclui 1 Álbum Capa Dura Ouro, 60 envelopes com 420 figurinhas oficiais que podem ajudar você a completar seu álbum com jogadores, escudos das seleções e momentos inesquecíveis do torneio. Abrir cada envelope é como reviver a emoção da Copa do Mundo e compartilhar sua paixão pelo futebol com a família e os amigos.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Box Super Premium com 60 Pacotes',
+        shortDescription: 'Álbum Capa Dura Ouro + 60 pacotes com 420 cromos oficiais',
+        description: `Este Exclusivo Box Super Premium inclui 1 Álbum Capa Dura Ouro e 60 pacotes com 420 cromos oficiais que podem ajudá-lo a completar o seu álbum com jogadores, escudos das seleções e momentos inesquecíveis do torneio. Abrir cada pacote é como reviver a emoção do Mundial e partilhar a sua paixão pelo futebol com a família e os amigos.
 
 FIFA World Cup 2026™ – Livro Ilustrado Oficial
-As emoções do maior espetáculo esportivo do mundo eternizadas no maior álbum de figurinhas de todos os tempos! Uma coleção completa, com todas as seleções classificadas, cromos especiais e todos os detalhes para você acompanhar de pertinho a disputa pela taça da FIFA World Cup 2026™!
+As emoções do maior espetáculo desportivo do mundo eternizadas no maior álbum de cromos de todos os tempos! Uma coleção completa, com todas as seleções classificadas, cromos especiais e todos os detalhes para acompanhar de perto a disputa pela taça da FIFA World Cup 2026™!
 
-O álbum tem 980 cromos, sendo 68 deles especiais, e contempla as 48 seleções que participam do Mundial de 2026, que acontece entre junho e julho no México, nos Estados Unidos e no Canadá.
+O álbum tem 980 cromos, sendo 68 deles especiais, e contempla as 48 seleções que participam do Mundial de 2026, que decorre entre junho e julho no México, nos Estados Unidos e no Canadá.
 
 Conteúdo do Box Super Premium:
 • 1 Álbum Capa Dura Ouro – FIFA World Cup 2026™ Livro Ilustrado Oficial
-• 60 envelopes com 7 figurinhas cada (420 figurinhas no total)
+• 60 pacotes com 7 cromos cada (420 cromos no total)
 • 980 cromos no álbum, sendo 68 especiais
 • 48 seleções participantes do Mundial 2026
-• Perfeito para começar sua coleção ou adicionar peças exclusivas`,
+• Perfeito para começar a sua coleção ou adicionar peças exclusivas`,
       },
       'en': {
         name: 'Official FIFA World Cup 2026™ Collection – Super Premium Box with 60 Packets',
@@ -1749,20 +1749,20 @@ Contenuto della Super Premium Box:
     sortOrder: 15,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Kit Exclusivo Estádio Numerado Com 150 Envelopes',
-        shortDescription: 'Álbum Capa Dura Ouro Numerado + 150 envelopes + Voucher 50 Figurinhas',
-        description: `Kit Exclusivo na Livraria Leitura — Para os apaixonados por coleção, o Super Kit Especial Estádio PANINI FIFA World Cup 2026 é uma edição especial pensada para transformar a experiência de colecionar em algo ainda mais memorável.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Kit Exclusivo Estádio Numerado com 150 Pacotes',
+        shortDescription: 'Álbum Capa Dura Ouro Numerado + 150 pacotes + Voucher 50 cromos',
+        description: `Kit Exclusivo — Para os apaixonados por coleção, o Super Kit Especial Estádio PANINI FIFA World Cup 2026 é uma edição especial pensada para transformar a experiência de colecionar em algo ainda mais memorável.
 
-Este kit exclusivo e em quantidade limitada contém 1 Álbum Capa Dura Ouro Numerado e 150 envelopes, com um total de 1.050 figurinhas oficiais, reunindo jogadores, escudos das seleções e momentos marcantes do torneio.
+Este kit exclusivo e em quantidade limitada contém 1 Álbum Capa Dura Ouro Numerado e 150 pacotes, com um total de 1.050 cromos oficiais, reunindo jogadores, escudos das seleções e momentos marcantes do torneio.
 
-Como diferencial, o kit ainda acompanha um voucher exclusivo de Missing Stickers, com direito a 50 figurinhas à sua escolha no site da Panini, ideal para ajudar na reta final da coleção.
+Como diferencial, o kit ainda acompanha um voucher exclusivo de Missing Stickers, com direito a 50 cromos à sua escolha no site da Panini, ideal para ajudar na reta final da coleção.
 
-Perfeito para quem deseja começar sua coleção com um item de destaque ou garantir uma edição especial para o seu acervo.
+Perfeito para quem deseja começar a sua coleção com um item de destaque ou garantir uma edição especial para o seu acervo.
 
 Conteúdo do Kit Exclusivo Estádio:
 • 1 Álbum Capa Dura Ouro Numerado – FIFA World Cup 2026™
-• 150 envelopes com 7 figurinhas cada (1.050 figurinhas no total)
-• 1 Voucher exclusivo de Missing Stickers (50 figurinhas à escolha)
+• 150 pacotes com 7 cromos cada (1.050 cromos no total)
+• 1 Voucher exclusivo de Missing Stickers (50 cromos à escolha)
 • Edição limitada e numerada
 • Produto oficial licenciado pela FIFA`,
       },
@@ -1878,18 +1878,18 @@ Contenuto del Kit Esclusivo Stadio:
     sortOrder: 13,
     translations: {
       'pt-BR': {
-        name: 'Coleção Oficial FIFA World Cup 2026™ – Stadium Collection Box',
-        shortDescription: 'Caixa selada com 280 figurinhas de todas as nações participantes',
-        description: `A Stadium Collection Box 2026 da Panini FIFA World Cup é uma caixa selada com 280 figurinhas apresentando todas as nações participantes da Copa do Mundo FIFA. Oficialmente licenciada pela FIFA, esta coleção original inclui figurinhas de diversas seleções e atletas.
+        name: 'Coleção Oficial de Cromos FIFA World Cup 2026™ – Stadium Collection Box',
+        shortDescription: 'Caixa selada com 280 cromos de todas as nações participantes',
+        description: `A Stadium Collection Box 2026 da Panini FIFA World Cup é uma caixa selada com 280 cromos apresentando todas as nações participantes da Copa do Mundo FIFA. Oficialmente licenciada pela FIFA, esta coleção original inclui cromos de diversas seleções e atletas.
 
-Cada figurinha é fabricada pela Panini, tornando este produto indispensável para fãs de futebol e colecionadores que desejam eternizar o torneio da Copa do Mundo 2026.
+Cada cromo é fabricado pela Panini, tornando este produto indispensável para fãs de futebol e colecionadores que desejam eternizar o torneio do Mundial 2026.
 
-Esta coleção oferece uma visão abrangente do esporte mais popular do mundo por meio de uma série de figurinhas empolgantes e detalhadas.
+Esta coleção oferece uma visão abrangente do desporto mais popular do mundo através de uma série de cromos emocionantes e detalhados.
 
 Conteúdo da caixa:
-• 280 figurinhas oficiais
-• Figurinhas de todas as nações participantes da Copa do Mundo FIFA 2026
-• 7 figurinhas por envelope
+• 280 cromos oficiais
+• Cromos de todas as nações participantes da Copa do Mundo FIFA 2026
+• 7 cromos por pacote
 • Produto licenciado oficialmente pela FIFA
 • Fabricado pela Panini`,
       },

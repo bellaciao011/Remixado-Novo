@@ -14,8 +14,8 @@ const ORDER_BUMP_ORIGINAL_PRICE = 5400; // cêntimos antes de 75% off
 
 const ORDER_BUMP_PT = {
   image: '/assets/figurinhas_1780497538703.webp',
-  name: 'Caixa com 50 Envelopes – 350 Figurinhas Oficiais',
-  shortDescription: '50 envelopes × 7 figurinhas = 350 figurinhas oficiais FIFA World Cup 2026™',
+  name: 'Caixa com 50 Pacotes – 350 Cromos Oficiais',
+  shortDescription: '50 pacotes × 7 cromos = 350 cromos oficiais FIFA World Cup 2026™',
 };
 
 interface ShippingData {
